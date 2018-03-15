@@ -1,0 +1,412 @@
+<div class="panel-box">    
+    <div class="page-title">
+        <form class="filter-search" >            
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <label>供货商&nbsp;</label>
+                <select id="filter_nwsupplierid" style="width:343px;" name="nwsupplierid" >
+                    <option value="0">--全部--</option>
+                </select>
+            </div>            
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <label>激活&nbsp;</label>
+                <select id="filter_active" style="width:100px;" name="active" >
+                    <option value="">--全部--</option>
+                    <option value="2">未激活</option>
+                    <option value="4">已激活</option>
+                </select>
+            </div>
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <label>物联卡号&nbsp;</label>
+                <input id="filter_nwcardid" name="nwcardid" style="width:170px;"  type="text" placeholder="物联卡号" >
+            </div>
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <label>批次时间&nbsp;</label>
+                <input id="filter_starttime" style="width:100px;"  type="text"> 至 <input id="filter_endtime" style="width:100px;" type="text">
+            </div>
+            <br/>
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <label>运营商&nbsp;</label>
+                <select id="filter_mobnet" style="width:100px;" name="mobnet" >
+                    <option value="0">--全部--</option>
+                    <option value="2">移动</option>
+                    <option value="4">联通</option>
+                    <option value="8">电信</option>
+                </select>
+            </div>   
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <label>初始套餐&nbsp;</label>
+                <select id="filter_initnwpkgid" style="width:150px;" name="initnwpkgid" >
+                    <option value="0">--全部--</option>
+                </select>
+            </div>          
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <label>售出&nbsp;</label>
+                <select id="filter_sale" style="width:100px;" name="sale" >
+                    <option value="">--全部--</option>
+                    <option value="2">未售出</option>
+                    <option value="4">已售出</option>
+                </select>
+            </div>
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <label>&nbsp;&nbsp;&nbsp;&nbsp;接入号&nbsp;</label>
+                <input id="filter_netno" name="netno" style="width:170px;"  type="text" placeholder="接入号" >
+            </div>
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <label>批次编号&nbsp;</label>
+                <input id="filter_initbatchid" name="initbatchid" style="width:220px;"  type="text" placeholder="批次号" >
+            </div>
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <button type="button" id="filter-nwcard-qrybtn" style='padding:2px 10px;'  class="btn btn-primary" >&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;</button>
+            </div>
+        </form>
+    </div>
+    <div class="page-title tool-title" style="margin-top:10px;">        
+        <a id="button-nwcard-batch" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>批量出售</a>
+    </div>
+    <div class="table-responsive">
+        <table id="table-nwcard-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>物联卡号</th>
+                    <th>运营商接入号</th>                   
+                    <th>运营商</th>  
+                    <th>供货商</th>
+                    <th>初始套餐</th>
+                    <th>批次</th>
+                    <th>代理商</th>
+                    <th>出售价</th>
+                    <th>续充值</th>
+                    <th>激活</th>
+                    <th>创建时间</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-nwcard-choose" class="modal fade" tabindex="-1" data-width="450" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">选择待出售条件</h4> 
+    </div>
+    <div class="modal-body">
+        <form id="form-nwcard-next" class="m-t form-horizontal" role="form">        
+            <div class="form-group">
+                <label class="col-lg-3 control-label">供货商</label>
+                <div class="col-lg-8">
+                    <select id="batchnext_nwsupplierid" style="width:200px;" name="nwsupplierid" >
+                        <option value="">--全部--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">运营商</label>
+                <div class="col-lg-8">
+                    <select id="batchnext_mobnet" name="mobnet" style="width:200px;">
+                        <option value="0">--全部--</option>
+                        <option value="2">移动</option>
+                        <option value="4">联通</option>
+                        <option value="8">电信</option>
+                    </select>
+                </div>
+            </div>      
+            <div class="form-group">
+                <label class="col-lg-3 control-label">初始套餐</label>
+                <div class="col-lg-8">
+                    <select id="batchnext_initnwpkgid" style="width:200px;" name="initnwpkgid" >
+                        <option value="0">--全部--</option>
+                    </select>
+                </div>
+            </div>
+            <br>
+            <button id="formbtn-nwcard-next" type="button" class="btn btn-theme btn-lg btn-block ">下一步</button><br> 
+        </form>
+    </div>
+    <div id="tips-nwcard-update" class="module-alert-tips"></div><br>
+</div>
+
+<div id="dialog-nwcard-batchupdate" class="modal fade" tabindex="-1" data-width="600" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">批量出售物联卡</h4> 
+    </div>
+    <div class="modal-body">
+        <form id="form-nwcard-batchupdate" class="m-t form-horizontal" role="form">     
+            <input id="batchupdate_nwsupplierid" name="nwsupplierid" type="hidden"/> 
+            <input id="batchupdate_initnwpkgid" name="initnwpkgid" type="hidden"/>
+            <input id="batchupdate_mobnet" name="mobnet" type="hidden"/> 
+            <input id="batchupdate_maxcards" name="maxcards" type="hidden"/> 
+            <div class="form-group">
+                <label class="col-lg-6 control-label">代理商</label>
+                <div class="col-lg-6">
+                    <select id="batchupdate_buynwagencyid" style="width:150px;" name="buynwagencyid" >
+                        <option value="0">--全部--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label id="batchupdate_cardslabel" class="col-lg-6 control-label">卡片数量(最大值: 0)</label>
+                <div class="col-lg-6"><input id="batchupdate_cards" name="cards" type="number" style="width:150px;"/></div>
+            </div> 
+            <br> 
+            <ul class="list-group">
+                <li id="batchupdate_pkggroup" class="list-group-item"><span class=" panel panel-info">套餐售价</span>                    
+                </li>
+            </ul>
+            <br>
+            <button id="formbtn-submit-batchupdate" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br> 
+        </form>
+    </div>
+    <div id="tips-nwcard-update" class="module-alert-tips"></div><br>
+</div>
+
+<script>
+    $("#filter_starttime,#filter_endtime").datetimepicker({
+        format: "yyyy-mm-dd", //设置时间格式，默认值: 'mm/dd/yyyy'
+        weekStart: 0, //一周从哪一天开始。0（星期日）到6（星期六）,默认值0
+        startDate: "2016-11-14", //可以被选择的最早时间
+        endDate: "2026-02-14", //可以被选择的最晚时间
+        daysOfWeekDisabled: "", //禁止选择一星期中的某些天，例子中这样是禁止选择周六和周日
+        autoclose: true, //当选择一个日期之后是否立即关闭此日期时间选择器
+        startView: 2, //点开插件后显示的界面。0、小时1、天2、月3、年4、十年，默认值2
+        minView: 2, //插件可以精确到那个时间，比如1的话就只能选择到天，不能选择小时了
+        maxView: 4, //同理
+        todayBtn: true, //是否在底部显示“今天”按钮
+        todayHighlight: true, //是否高亮当前时间
+        keyboardNavigation: true, //是否允许键盘选择时间
+        language: 'zh-CN', //选择语言，前提是该语言已导入
+        forceParse: true, //当选择器关闭的时候，是否强制解析输入框中的值。也就是说，当用户在输入框中输入了不正确的日期，选择器将会尽量解析输入的值，并将解析后的正确值按照给定的格式format设置到输入框中
+        minuteStep: 5, //分钟的间隔
+        pickerPosition: "bottom-right", //显示的位置，还支持bottom-left
+        viewSelect: 2, //默认和minView相同
+        showMeridian: true //是否加上网格
+    });
+    var createQueryBean = function () {
+        var starttime = $.strtodate($("#filter_starttime").val());
+        var endtime = $.strtodate($("#filter_endtime").val());
+        if (endtime) endtime += 24 * 60 * 60 * 1000 - 1;
+        if (starttime && !endtime) endtime = new Date(3000, 1, 1).getTime();
+        var json = {
+            "initbatchtime": starttime ? {min: starttime, max: endtime} : null,
+            "nwsupplierid": $("#filter_nwsupplierid").val(),
+            "initnwpkgid": $("#filter_initnwpkgid").val(),
+            "initbatchid": $("#filter_initbatchid").val(),
+            "nwcardid": $('#filter_nwcardid').val().trim().replace(/\s/g, ""),
+            "netno": $('#filter_netno').val().trim().replace(/\s/g, ""),
+            "mobnet": $('#filter_mobnet').val()
+        };
+        if ($('#filter_sale').val() == '2') json.unsale = 1;
+        if ($('#filter_sale').val() == '4') json.saled = 1;
+        if ($('#filter_active').val() == '2') json.unactive = 1;
+        if ($('#filter_active').val() == '4') json.actived = 1;
+        return json;
+    };
+
+    var nwsuppliers = {};
+    global_nwsuppliers = window['global_nwsuppliers'] || [];
+    for (var i = 0; i < global_nwsuppliers.length; i++) {
+        nwsuppliers['' + global_nwsuppliers[i].nwsupplierid] = global_nwsuppliers[i].nwsuppliername;
+        $("<option value=\"" + global_nwsuppliers[i]["nwsupplierid"] + "\">" + global_nwsuppliers[i]["nwsuppliername"] + "</option>").appendTo($("#filter_nwsupplierid"));
+        $("<option value=\"" + global_nwsuppliers[i]["nwsupplierid"] + "\" " + (global_nwsuppliers.length == 1 ? " selected" : "") + " >" + global_nwsuppliers[i]["nwsuppliername"] + "</option>").appendTo($("#batchnext_nwsupplierid"));
+
+    }
+    var nwpackages = {};
+    global_nwpackages = window['global_nwpackages'] || [];
+    for (var i = 0; i < global_nwpackages.length; i++) {
+        nwpackages['' + global_nwpackages[i].nwpackageid] = global_nwpackages[i].nwpackagename;
+        $("<option value=\"" + global_nwpackages[i]["nwpackageid"] + "\">" + global_nwpackages[i]["nwpackagename"] + "</option>").appendTo($("#filter_initnwpkgid"));
+        $("<option value=\"" + global_nwpackages[i]["nwpackageid"] + "\">" + global_nwpackages[i]["nwpackagename"] + "</option>").appendTo($("#batchnext_initnwpkgid"));
+    }
+    var topnwagencys = {};
+    global_topnwagencys = window['global_topnwagencys'] || [];
+    for (var i = 0; i < global_topnwagencys.length; i++) {
+        topnwagencys['' + global_topnwagencys[i].nwagencyid] = global_topnwagencys[i].username;
+        $("<option value=\"" + global_topnwagencys[i]["nwagencyid"] + "\">" + global_topnwagencys[i]["username"] + "</option>").appendTo($("#batchupdate_buynwagencyid"));
+    }
+    { //填充套餐价格列表
+        var pkghtml = [];
+        pkghtml.push('<span class=" panel panel-info">套餐售价</span>');
+        for (var i = 0; i < global_nwpackages.length; i++) {
+            pkghtml.push('<div class="form-group">');
+            pkghtml.push('    <label class="col-lg-6 control-label">' + global_nwpackages[i].nwpackagename + ' 售价（分）</label>');
+            pkghtml.push('    <div class="col-lg-6"><input id="batchupdate_pkgprice_' + global_nwpackages[i].nwpackageid + '" type="number" style="width:150px;"/></div>');
+            pkghtml.push('</div>');
+        }
+        $("#batchupdate_pkggroup").html(pkghtml.join(''));
+    }
+    if (system_memberinfo && system_memberinfo.memberid) {
+        var mtable = $('#table-nwcard-sheet').dataTable({
+            ajax: {
+                url: "/pipes/network/nwcard/query",
+                data: function (f) {
+                    f.bean = JSON.stringify(createQueryBean());
+                    f.sort = 'createtime';
+                    f.order = 'DESC';
+                }
+            },
+            iDisplayLength: 15,
+            aLengthMenu: [15],
+            columnDefs: [{
+                    className: 'select-checkbox',
+                    targets: 0
+                }],
+            columns: [
+                {"data": "", render: $.defrender},
+                {"data": "nwcardid", render: function (value, type, full) {
+                        return value.subjoin(' ');
+                    }},
+                {"data": "netno", render: $.defrender},
+                {"data": "mobnet", render: function (value, type, full) {
+                        if (value == 2) return "移动";
+                        if (value == 4) return "联通";
+                        if (value == 8) return "电信";
+                        return "未知";
+                    }},
+                {"data": "nwsupplierid", render: function (value, type, full) {
+                        return nwsuppliers[value] || "未知";
+                    }},
+                {"data": "initnwpkgid", render: function (value, type, full) {
+                        return nwpackages[value] || "未知";
+                    }},
+                {"data": "initbatchid", render: $.defrender},
+                {"data": "initnwagencyid", render: function (value, type, full) {
+                        return topnwagencys[value] || "<font color=#FF00FF>未分配</font>";
+                    }},
+                {"data": "initbatchprice", render: function (value, type, full) {
+                        return ((value || 0) / 100.0).fmoney(2);
+                    }},
+                {"data": "chargemoney", render: function (value, type, full) {
+                        if (!full['activetime']) return '';
+                        return full['charges'] + " 次共 " + (value || 0).fmoney(2);
+                    }},
+                {"data": "activetime", render: function (value, type, full) {
+                        return value ? "<font color=green>已激活</font>" : "<font color=#FF00FF></font>";
+                    }},
+                {"data": "createtime", render: Date.DateFormatter}
+            ]
+        });
+        $('#filter-nwcard-qrybtn').unbind("click").bind("click", function () {
+            $('#table-nwcard-sheet').dataTable().fnPageChange(0);
+        });
+        //--------------------------- 初始化新增修改代理商 -----------------------------
+
+        $('#button-nwcard-batch').unbind("click").bind("click", function () {
+            $("#form-nwcard-next").form('reset');
+            $("#batchnext_mobnet").val(8);
+            $('#dialog-nwcard-choose').modal('show');
+        });
+
+        $('#formbtn-submit-batchupdate').unbind("click").bind("click", function () {
+            var buynwagencyid = $("#batchupdate_buynwagencyid").val();
+            var cards = $("#batchupdate_cards").val();
+            if (!buynwagencyid || parseInt(buynwagencyid) < 1) {
+                alert("必须选择一个代理商");
+                return;
+            }
+            if (!cards) {
+                alert("必须填写卡片数量");
+                return;
+            }
+            if (parseInt(cards) > parseInt($("#batchupdate_maxcards").val())) {
+                alert("卡片数量超过最大值" + $("#batchupdate_maxcards").val());
+                return;
+            }
+            var pkgprices = [];
+            for (var i = 0; i < global_nwpackages.length; i++) {
+                var nwpackageid = global_nwpackages[i].nwpackageid;
+                var price = $("#batchupdate_pkgprice_" + nwpackageid).val();
+                if (!price || price < 1) {
+                    alert(global_nwpackages[i].nwpackagename + " 没有设置售价");
+                    return;
+                }
+                if (price < 1000 && !window.confirm("确定要售价低于10元吗")) return;
+                pkgprices.push({nwpackageid: nwpackageid, buyprice: price});
+            }
+            if (!window.confirm("确定要出售" + cards + "张物联卡吗")) return;
+            $('#formbtn-submit-batchupdate').hide();
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/network/nwbatch/create',
+                data: {
+                    "bean": JSON.stringify({
+                        nwsupplierid: $("#batchupdate_nwsupplierid").val(),
+                        initnwpkgid: $("#batchupdate_initnwpkgid").val(),
+                        mobnet: $("#batchupdate_mobnet").val(),
+                        buynwagencyid: buynwagencyid,
+                        cards: cards
+                    }),
+                    pkgprices: JSON.stringify(pkgprices)
+                },
+                error: function () {//请求失败处理函数
+                    $('#formbtn-submit-batchupdate').show();
+                    alert('出售物联卡失败');
+                },
+                success: function (data) {
+                    $('#formbtn-submit-batchupdate').show();
+                    if (data && data.success) {
+                        $("#dialog-nwcard-batchupdate").modal('hide');
+                        $('#table-nwcard-sheet').dataTable().fnPageChange(0);
+                    } else {
+                        alert(data.retinfo || '出售物联卡失败');
+                    }
+                }
+            });
+        });
+
+        $('#formbtn-nwcard-next').unbind("click").bind("click", function () {
+            var bean = {
+                nwsupplierid: $("#batchnext_nwsupplierid").val(),
+                initnwpkgid: $("#batchnext_initnwpkgid").val(),
+                mobnet: $("#batchnext_mobnet").val()
+            };
+            if (!bean.nwsupplierid) {
+                alert("必须选择一个供货商");
+                return;
+            }
+            if (!bean.initnwpkgid) {
+                alert("必须选择一个初始套餐");
+                return;
+            }
+            if (!bean.mobnet) {
+                alert("必须选择一个运营商");
+                return;
+            }
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/network/nwbatch/count',
+                data: {
+                    "bean": $.objectToString(bean)
+                },
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data && data.success) {
+                        if (data.result) {
+                            $("#form-nwcard-batchupdate").form('reset');
+                            $("#batchupdate_nwsupplierid").val(bean.nwsupplierid);
+                            $("#batchupdate_initnwpkgid").val(bean.initnwpkgid);
+                            $("#batchupdate_mobnet").val(bean.mobnet);
+                            $("#batchupdate_maxcards").val(data.result);
+                            $("#batchupdate_cardslabel").html("卡片数量(最大值: <font color=red>" + data.result + "</font>)");
+
+                            $("#dialog-nwcard-choose").modal('hide');
+                            $('#formbtn-submit-batchupdate').show();
+                            $('#dialog-nwcard-batchupdate').modal('show');
+                        } else {
+                            alert("没有可出售的卡片了");
+                        }
+                    } else {
+                        alert('请求失败');
+                    }
+                }
+            });
+        });
+    }
+
+</script>

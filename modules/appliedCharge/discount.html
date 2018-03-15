@@ -1,0 +1,652 @@
+<div class="page-title">
+    <a id="button-discount-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增折扣信息</a>
+    <a id="button-discount-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>更改折扣信息</a>
+    <!--<div style="display: inline-block;margin: 0 30px 0 0;">-->
+        <!--<label >折扣类别</label>-->
+        <!--<select name="type" style="width:150px;">-->
+            <!--<option value="10">折扣</option>-->
+            <!--<option value="20">满减</option>-->
+            <!--<option value="30">赠送</option>-->
+            <!--<option value="40">套餐</option>-->
+        <!--</select>-->
+    <!--</div>-->
+    <!--<div style="display: inline-block;margin: 0 30px 0 0;">-->
+        <!--<label >针对对象</label>-->
+        <!--<select name="usetype" style="width:150px;">-->
+            <!--<option value="10">门店</option>-->
+            <!--<option value="20">个人权益</option>-->
+        <!--</select>-->
+    <!--</div>-->
+    <div style="display: inline-block;margin: 0 30px 0 0;">
+        <label >折扣类别</label>
+        <select name="status" id="filter_discount_status" style="width:150px;">
+            <option value="10">正常</option>
+            <option value="20">待审批</option>
+            <option value="80">删除</option>
+            <option value="10,20,80">全部</option>
+        </select>
+    </div>
+</div>
+<div class="panel-box">
+    <div class="table-responsive">
+        <table id="table-discount-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>折扣id</th>
+                <th>状态</th>
+                <th>折扣标题</th>
+                <th>折扣对象</th>
+                <th>折扣类别</th>
+                <th>折扣描述</th>
+                <th>使用折扣条件</th>
+                <th>折扣百分比</th>
+                <th>折扣金额</th>
+                <th>有效时间</th>
+                <th>起始时间</th>
+                <th>截止时间</th>
+                <th>折扣商品</th>
+                <th>折扣门店</th>
+                <th>创建人</th>
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-discount-update" class="modal fade" tabindex="-1" data-width="800" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="recordclose">×</button>
+        <h4 id="dtitle-discount-update" class="modal-title">新增折扣信息</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-discount-update" class="m-t form-horizontal" role="form">
+            <input type="hidden" name="createtime" id="createtime">
+            <input type="hidden" name="discountid" id="discountid">
+            <div class="form-group">
+                <div class="col-lg-6 form-group">
+                    <label class="col-lg-3 control-label" style="text-align: left">折扣标题</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" name="title">
+                    </div>
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label class="col-lg-3 control-label" style="text-align: left">状态</label>
+                    <div class="col-lg-8">
+                        <select id="selectStatus" name="status" class="form-control">
+                            <option value="10">正常</option>
+                            <option value="20">待审批</option>
+                            <option value="80">删除</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6 form-group">
+                    <label class="col-lg-3 control-label" style="text-align: left">折扣类别</label>
+                    <div class="col-lg-8">
+                        <select  name="type" class="form-control">
+                            <option value="10">折扣</option>
+                            <option value="20">满减</option>
+                            <option value="30">赠送</option>
+                            <option value="40">套餐</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label class="col-lg-3 control-label" style="text-align: left">折扣对象</label>
+                    <div class="col-lg-8">
+                        <select name="usetype" class="form-control">
+                            <option value="10">门店</option>
+                            <option value="20">个人权益</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6 form-group">
+                    <label class="col-lg-3 control-label" style="text-align: left">折扣百分比</label>
+                    <div class="col-lg-8">
+                      <input name="discountpercent" placeholder="百分之多少" class="form-control">
+                    </div>
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label class="col-lg-3 control-label" style="text-align: left">折扣金额</label>
+                    <div class="col-lg-8">
+                        <input name="discountmoney" placeholder="折扣金额" class="form-control">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label" style="text-align: left">折扣详情</label>
+                <div class="col-lg-12">
+                        <textarea style="width: 100%;min-height: 118px;border-color: #ddd;" name="description" id="description">
+
+                        </textarea>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6 form-group">
+                    <label class="col-lg-3 control-label" >使用条件</label>
+                    <div class="col-lg-8" ><input name="ifmoneyneed" placeholder="消费满多少元,可填0" class="form-control" ></div>
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label class="col-lg-3 control-label" >有效期限(天数)</label>
+                    <div class="col-lg-8" ><input name="validtime" id="validtime" placeholder="为0表示长期有效" class="form-control" ></div>
+                </div>
+
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6 form-group">
+                    <label class="col-lg-3 control-label" >起始时间</label>
+                    <div class="col-lg-8" ><input  name="starttime" id="starttime" placeholder="通知起始时间" class="form-control"></div>
+                </div>
+                <div class="col-lg-6 form-group">
+                    <label class="col-lg-3 control-label" >截止时间</label>
+                    <div class="col-lg-8" ><input  name="endtime" readonly id="endtime"  placeholder="通知结束时间，长期有效则填0" class="form-control"></div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-12 control-label" style="text-align: left">搜索门店名称关键字</label>
+                        <div class="col-lg-8">
+                            <input class="form-control" placeholder="搜索门店" id="filter_store">
+                        </div>
+                        <div class="col-lg-3"><button type="button" class="form-control button" id="filter_store_button" onsubmit="false">搜索</button></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-12 control-label" style="text-align: left">点击加号选择门店</label>
+                        <div class="col-lg-12 center-block" id="add_div" style="width:80%;border: solid 1px #ddd;padding: 20px;margin: 15px">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-12 control-label" style="text-align: left">已选择的门店(点击门店名称即可删除多余的门店)</label>
+                        <div class="col-lg-12 center-block" id="delete_div" style="width: 80%;border: solid 1px #ddd;padding: 20px;margin: 15px">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group">
+                        <label class="col-lg-12 control-label" style="text-align: left">搜索商品名称关键字</label>
+                        <div class="col-lg-8">
+                            <input class="form-control" placeholder="搜索商品" id="filter_goods">
+                        </div>
+                        <div class="col-lg-3"><button class="form-control button" id="filter_goods_button" type="button" onsubmit="false">搜索</button></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-12 control-label" style="text-align: left">点击加号选择商品</label>
+                        <div class="col-lg-12 center-block" id="add_good" style="width:80%;border: solid 1px #ddd;padding: 20px;margin: 15px">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-12 control-label" style="text-align: left">已选择的商品(点击商品名称即可删除多余的门店)</label>
+                        <div class="col-lg-12 center-block" id="delete_good" style="width: 80%;border: solid 1px #ddd;padding: 20px;margin: 15px">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <button id="formbtn-discount-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form>
+    </div>
+</div>
+<script>
+    {
+
+        if (system_memberinfo && system_memberinfo.memberid) {
+            //------折扣信息方案列表--------------------
+            var mtable = $('#table-discount-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/ossdiscount/query",
+                    dataSrc:"data",
+                    data: function (f) {
+                        f.bean = JSON.stringify({status:$("#filter_discount_status").val().split(',')});
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                        f.length = 10
+                    }
+                },
+                "aLengthMenu": [[10, 25, 50, -1], ["10条", "25条", "50条", "All"]],
+                columnDefs: [
+                    {
+                        className: 'select-checkbox',
+                        targets: 0
+                    }
+                ],
+                columns: [
+                    {"data": " ", render: $.defrender},
+                    {"data": "discountid", render: $.defrender},
+                    {"data":"status",render:defStatusRender},
+                    {"data": "title", render:$.defrender},
+                    {"data": "usetype", render: function (value) {
+                        if(value==10) return "门店";
+                        if(value==20) return "个人权益";
+                    }},
+                    {"data": "type", render:function (value) {
+                        if(value==10) return "折扣";
+                        if(value==20) return "满减";
+                        if(value==30) return "赠送";
+                        if(value==40) return "套餐";
+                    }},
+                    {"data": "description", render: $.defrender},
+                    {"data": "ifmoneyneed", render: function (value) {
+                        if(value==0){
+                            return "无需条件"
+                        }else{
+                            return "满"+(value/100).toFixed(2)+"元可享受折扣"
+                        }
+                    }},
+                    {"data": "discountpercent", render: $.defrender},
+                    {"data": "discountmoney", render: function (value) {
+                        return (value/100).toFixed(2);
+                    }},
+                    {"data": "validtime", render: $.defrender},
+                    {"data": "starttime", render: Date.DateFormatter},
+                    {"data": "endtime", render: Date.DateFormatter},
+                    {"data": "relations", render: function(value){
+                        if(value.length==0){
+                            return "暂无"
+                        }else{
+                            var _html="";
+                            for(var j=0;j<value.length;j++){
+                                if(!value[j].goodsInfos||value[j].goodsInfos.length==0){
+                                    _html+= ""
+                                }else{
+                                    var arr = value[j].goodsInfos;
+                                    for(var i=0;i<arr.length;i++){
+                                        if(arr[i]==null){
+                                            _html+='';
+                                            continue;
+                                        }else{
+                                            _html+='<span style="margin-right: 3px;">['+arr[i].goodsname+']</span>'
+                                        }
+                                    }
+                                }
+                            }
+                            return _html;
+                        }
+                    }},
+                    {"data": "relations", render:function(value){
+                        if(value.length==0){
+                            return "暂无"
+                        }else{
+                            var _html="";
+                            for(var j=0;j<value.length;j++){
+                                if(!value[j].storeInfos||value[j].storeInfos.length==0){
+                                    _html+= ""
+                                }else{
+                                    var arr = value[j].storeInfos;
+                                    for(var i=0;i<arr.length;i++){
+                                        if(arr[i]==null){
+                                            _html+='';
+                                            continue;
+                                        }else{
+                                            _html+='<span style="margin-right: 3px;">['+arr[i].storename+']</span>'
+                                        }
+                                    }
+                                }
+                            }
+                            return _html;
+//                            if(!value[0].storeInfos.length==0){
+//                                return "暂无"
+//                            }else{
+//                                var arr = value[0].storeInfos;
+//                                var _html="";
+//                                for(var i=0;i<arr.length;i++){
+//                                    _html+='<span style="margin-right: 3px;">['+arr[i].storename+']</span>'
+//                                }
+//                                return _html;
+//                            }
+                        }
+                    }},
+                    {"data": "creator", render: $.defrender},
+//                    {"data": "storePointDetails", render: function (value) {
+//                        var _html = "";
+//                        for(var i=0;i<value.length;i++){
+//                            _html+=value[i].storename+";"
+//                        }
+//                        return _html;
+//                    }},
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+            //------搜索门店名称----------------------
+            $("#filter_store_button").click(function(){
+                var data={
+                    storename:$("#filter_store").val().trim()
+                };
+                ajaxFilter(data);
+            });
+            //提货门店筛选
+            function ajaxFilter(data){
+                $.ajax({
+                    url:"/pipes/store/query",
+                    data:{
+                        "bean":$.objectToString(data)
+                    },
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            var arr = res.rows;
+                            var _html = "";
+                            if(arr.length==0){
+                                $("#add_div").html('暂无搜索结果');
+                            }else{
+                                for(var i=0;i<arr.length;i++){
+                                    _html+='<span style="cursor: pointer;" class="add">'+arr[i].storename+'' +
+                                            '<input type="hidden" value="'+arr[i].storeid+'">' +
+                                            '<i class="fa fa-plus" style="font-size: 18px;margin: 0 5px;"></i></span>'
+                                }
+                                $("#add_div").html(_html);
+                            }
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            //------搜索商品名称----------------------
+            $("#filter_goods_button").click(function(){
+                var data={
+                    goodsname:$("#filter_goods").val().trim(),
+                    status:[10]
+                };
+                ajaxGoodsFilter(data);
+            });
+            //商品筛选
+            function ajaxGoodsFilter(data){
+                $.ajax({
+                    url:"/pipes/ossgoods/query",
+                    data:{
+                        "bean":$.objectToString(data)
+                    },
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            var arr = res.rows;
+                            var _html = "";
+                            if(arr.length==0){
+                                $("#add_good").html('暂无搜索结果');
+                            }else{
+                                for(var i=0;i<arr.length;i++){
+                                    _html+='<span style="cursor: pointer;" class="add">'+arr[i].goodsname+'' +
+                                            '<input type="hidden" value="'+arr[i].goodsid+'">' +
+                                            '<i class="fa fa-plus" style="font-size: 18px;margin: 0 5px;"></i></span>'
+                                }
+                                $("#add_good").html(_html);
+                            }
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            //点击新增折扣信息方案
+            $("#button-discount-create").click(function(){
+                $("#dialog-discount-update").modal("show");
+                $(' #dtitle-discount-update').html("新增折扣信息");
+                $("#createtime").val("");
+                $("#discountid").val("");
+                $("#description").val("");
+                $("#add_div").empty();
+                $("#delete_div").empty();
+                $("#add_good").empty();
+                $("#delete_good").empty();
+            });
+            //点击修改折扣信息方案
+            $("#button-discount-update").click(function(){
+                var data = mtable.api(true).row({selected: true}).data();
+                console.log(data);
+                if (!data || !data.discountid) {
+                    alert("请选择一条记录！");
+                    return;
+                }
+                $("#dialog-discount-update").modal("show");
+                $(' #dtitle-discount-update').html("修改折扣信息");
+                $("#form-discount-update").form('reset');
+                data.starttime = time(data.starttime);
+                if(data.endtime==0){
+                    data.endtime = 0
+                }else{
+                    data.endtime = time(data.endtime);
+                }
+                data.discountmoney = (data.discountmoney/100).toFixed(2);
+                data.ifmoneyneed = (data.ifmoneyneed/100).toFixed(2);
+                $(" #form-discount-update").form('load', data);
+                var arr = data.relations;
+                $("#delete_div").empty();
+                $("#add_div").empty();
+                $("#add_good").empty();
+                $("#delete_good").empty();
+                if(arr.length>0){
+                    if(arr[0].goodsInfos){
+                        var goodsarr = arr[0].goodsInfos;
+                        for(var i=0;i<goodsarr.length;i++){
+                            $("#delete_good").append(' <span class="delete" style="cursor: pointer">' +
+                                    ''+goodsarr[i].goodsname+'<input type="hidden" value="'+goodsarr[i].goodsid+'">'+
+                                    '<i class="fa fa-times" style="font-size: 18px;margin: 0 5px;"></i></span>');
+                        }
+                    }
+                    if(arr[0].storeInfos){
+                    if(arr[0].storeInfos.length>0){
+                        var storearr = arr[0].storeInfos;
+                        for(var i=0;i<storearr.length;i++){
+                            $("#delete_div").append(' <span class="delete" style="cursor: pointer">' +
+                                    ''+storearr[i].storename+'<input type="hidden" value="'+storearr[i].storeid+'">'+
+                                    '<i class="fa fa-times" style="font-size: 18px;margin: 0 5px;"></i></span>');
+                        }
+                    }
+                    }
+
+                }
+
+
+            });
+            //-------点击+号添加门店-------------------
+            $("#add_div").on('click','.add',function () {
+                var storeid  = $(this).children('input').val();
+                var storename = $(this).text();
+                $("#delete_div").append(' <span class="delete" style="cursor: pointer">' +
+                        ''+storename+'<input type="hidden" value="'+storeid+'">'+
+                        '<i class="fa fa-times" style="font-size: 18px;margin: 0 5px;"></i></span>');
+                $(this).hide();
+            });
+            //-------点击删除门店-----------------------
+            $("#delete_div,#delete_good").on('click','.delete',function(){
+                $(this).remove();
+                $(this).children('input').attr('disabled','disabled');
+            });
+
+            //-------点击+号添加商品-------------------
+            $("#add_good").on('click','.add',function () {
+                var storeid  = $(this).children('input').val();
+                var storename = $(this).text();
+                $("#delete_good").append(' <span class="delete" style="cursor: pointer">' +
+                        ''+storename+'<input type="hidden" value="'+storeid+'">'+
+                        '<i class="fa fa-times" style="font-size: 18px;margin: 0 5px;"></i></span>');
+                $(this).hide();
+            });
+//            //-------点击删除门店-----------------------
+//            $("#delete_good").on('click','.delete',function(){
+//                $(this).remove();
+//                $(this).children('input').attr('disabled','disabled');
+//            });
+            //-----点击提交折扣信息方案信息-------------------
+            $("#formbtn-discount-update").click(function() {
+                var data = "";
+                $(this).attr("disabled", "disabled");
+                var form =$("#form-discount-update");
+                var json = form.serializeJson();
+                json.starttime = datetime(json.starttime);
+                if (json.endtime == 0) {
+                    json.endtime = 0;
+                } else {
+                    json.endtime = datetime(json.endtime);
+                    json.endtime = json.endtime + 24 * 60 * 60 * 1000 - 1;
+                }
+                json.discountmoney = parseInt(json.discountmoney*100);
+                json.ifmoneyneed = parseInt(json.ifmoneyneed*100);
+                //获取选择的门店ID数组
+                var arr = $('#delete_div').find('input');
+                var storeids = [];
+                $.each(arr, function (index) {
+                    storeids.push(arr[index].value);
+                });
+//                if (storeids.length == 0) {
+//                    alert("请选择活动门店");
+//                    $("#formbtn-discount-update").removeAttr("disabled");
+//                    return;
+//                }
+                var goodsarr = $('#delete_good').find('input');
+                var goodsids = [];
+                $.each(goodsarr, function (index) {
+                    goodsids.push(goodsarr[index].value);
+                });
+//                if (goodsarr.length == 0) {
+//                    alert("请选择商品");
+//                    $("#formbtn-discount-update").removeAttr("disabled");
+//                    return;
+//                }
+                if (json.discountid) {
+                    var cols = [];
+                    for(k in json){
+                        if(k =="discountid"){
+                            continue;
+                        }
+                        cols.push(k);
+                    }
+                    data = {
+                        "bean": $.objectToString(json),
+                        "cols": $.objectToString(cols),
+                        "storeids":$.objectToString(storeids.join(';')),
+                        "goodsids":$.objectToString(goodsids.join(';'))
+                    }
+                } else {
+                    data = {
+                        "bean": $.objectToString(json),
+                        "storeids":$.objectToString(storeids.join(';')),
+                        "goodsids":$.objectToString(goodsids.join(';'))
+                    }
+                }
+                $.ajax({
+                    cache: false,
+                    dataType: "json",
+                    type: "POST",
+                    url: '/pipes/ossdiscount/update',
+                    data: data,
+                    error: function () {//请求失败处理函数
+                        $("#formbtn-discount-update").removeAttr("disabled");
+                        alert('请求失败');
+                        return;
+                    },
+                    success: function (data) {
+                        $("#formbtn-discount-update").removeAttr("disabled");
+                        if (data && data.retcode && data.retcode > 0) {
+                            alert(data.retinfo);
+                        } else {
+                            alert("保存成功");
+                            $("#dialog-discount-update").modal('hide');
+                            mtable.api(true).draw(false);
+                        }
+                    }
+                });
+            });
+            //-----根据状态筛选列表-----------------
+            $("#filter_discount_status").change(function () {
+                mtable.api(true).draw(false);
+                $('#table-picture-sheet').dataTable().fnPageChange(0);
+            });
+
+            //------------------选择时间----------------------------
+            timeChange();
+            function timeChange() {
+                var t = new Date().toJSON();
+                var t1 = new Date();
+                var t2 = new Date(t1);
+                t2.setDate(t1.getFullYear() + 5);
+                t2 = t2.toJSON();
+                $("#starttime").datetimepicker({
+                    format: "yyyy-mm-dd", //设置时间格式，默认值: 'mm/dd/yyyy'
+                    weekStart: 0, //一周从哪一天开始。0（星期日）到6（星期六）,默认值0
+                    startDate: new Date(), //可以被选择的最早时间
+                    endDate: new Date(t2), //可以被选择的最晚时间
+                    daysOfWeekDisabled: "", //禁止选择一星期中的某些天，例子中这样是禁止选择周六和周日
+                    autoclose: true, //当选择一个日期之后是否立即关闭此日期时间选择器
+                    startView: 2, //点开插件后显示的界面。0、小时1、天2、月3、年4、十年，默认值2
+                    minView: 2, //插件可以精确到那个时间，比如1的话就只能选择到天，不能选择小时了
+                    maxView: 4, //同理
+                    todayBtn: true, //是否在底部显示“今天”按钮
+                    todayHighlight: true, //是否高亮当前时间
+                    keyboardNavigation: true, //是否允许键盘选择时间
+                    language: 'zh-CN', //选择语言，前提是该语言已导入
+                    forceParse: true, //当选择器关闭的时候，是否强制解析输入框中的值。也就是说，当用户在输入框中输入了不正确的日期，选择器将会尽量解析输入的值，并将解析后的正确值按照给定的格式format设置到输入框中
+                    minuteStep: 5, //分钟的间隔
+                    pickerPosition: "top-left", //显示的位置，还支持bottom-left
+                    viewSelect: 2, //默认和minView相同
+                    showMeridian: true, //是否加上网格
+                    initialDate: new Date(t),//初始化的时间
+                    zIndex: 1080
+                }).on('changeDate', function () {
+                    endvalue();
+                });
+                $("#validtime").on('change', function () {
+                    endvalue();
+                });
+                function endvalue() {
+                    if ($("#validtime").val() == 0) {
+                        $("#endtime").val("0");
+                    } else {
+                        var v = $("#validtime").val()-1;
+                        var t = $("#starttime").val();
+                        t = datetime(t);
+                        var t2 = new Date(t);
+                        var t2 = t2.setDate(t2.getDate() + Number(v));
+                        var year = new Date(t2).getFullYear();
+                        var month = new Date(t2).getMonth() + 1;
+                        var date = new Date(t2).getDate();
+                        if (month < 10) {
+                            month = "0" + month;
+                        }
+                        if (date < 10) {
+                            date = "0" + date;
+                        }
+                        var result = year + "-" + month + "-" + date;
+                        $("#endtime").val(result);
+                    }
+                }
+            }
+            function time(date) {
+                var year = new Date(date).getFullYear();
+                var month = new Date(date).getMonth() + 1;
+                var date1 = new Date(date).getDate();
+                if (month < 10) {
+                    month = "0" + month;
+                }
+                if (date1 < 10) {
+                    date1 = "0" + date1;
+                }
+                var result = year + "-" + month + "-" + date1;
+                return result;
+            }
+            //将日历中取出的值转换成后台所需的格式
+            function datetime(time) {
+                time1 = time.replace(/-/g, "/");
+                time2 = new Date(time1).getTime();
+                return time2;
+            }
+        }
+    }
+</script>

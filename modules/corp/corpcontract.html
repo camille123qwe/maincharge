@@ -1,0 +1,375 @@
+<div class="page-title">
+    <a id="button-corpcontract-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增合同</a>
+    <a id="button-corpcontract-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改合同</a>
+</div>
+<div class="panel-box">    
+    <div class="page-title">
+        <form class="filter-search" >
+            <div style="display: inline-block;margin: 0 50px 0 0;">
+                <label >选择企业：</label>
+                <select id="filter_contract_corpid" name="corpid" style="width:150px;">
+                    <option value="0">全部企业</option>
+                </select>
+            </div>
+            <div style="display: inline-block;margin: 0 50px 0 0;">   
+                <label >合同编号：</label>
+                <input id="filter_contractno" type="text" placeholder="合同编号" style="width: 200px;">                
+            </div>
+            <i id="filter-corpcontract-qrybtn" class="fa fa-search" style="position: static;"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="table-corpcontract-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                  <!--  <th>合同ID</th>-->
+                    <th>合同编号</th>
+                    <th>企业名称</th>
+                    <th>合同签订日期</th>
+                    <th>合同有效日期</th>
+                    <th>合同快照图片名</th>
+                    <th>合同金额</th>
+                   <!-- <th>操作人名称</th>
+                    <th>操作人ID</th>-->
+                    <th>创建时间</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-corpcontract-update" class="modal fade" tabindex="-1" data-width="650" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="contractClose">×</button>
+        <h4 id="dtitle-corpcontract-update" class="modal-title">修改企业</h4>
+        <!--<ul id="myTab" class="nav nav-tabs">
+            <li class=""><a href="#home" data-toggle="tab" aria-expanded="false">新增合同</a></li>
+            <li class="active"><a href="#detail" data-toggle="tab" aria-expanded="true">合同快照</a></li>
+        </ul>-->
+    </div>
+    <div class="modal-body"> 
+        <form id="form-corpcontract-update" class="m-t form-horizontal" role="form"> 
+            <input  name="contractid" type="hidden">
+            <div class="form-group">
+                <div class="col-lg-8">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label"><span style="color: red;">*&nbsp;</span>选择企业</label>
+                        <div class="col-lg-8"><select id="selectCorpId" name="corpid" class="form-control" required></select><div class="help-block with-errors"></div></div>
+                    </div>
+
+
+                    <div id="form-gfield-password" class="form-group">
+                        <label class="col-lg-4 control-label"><span style="color: red;">*&nbsp;</span>合同编号</label>
+                        <div class="col-lg-8"><input name="contractno" placeholder="合同编号" class="form-control" required=""></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label"><span style="color: red;">*&nbsp;</span>签订日期</label>
+                        <div class="col-lg-8"><input name="contractstartday" id="startday" type="date" placeholder="格式例:20170101" class="form-control  datetimepicker" required data-error="请输入合同签订日期"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label"><span style="color: red;">*&nbsp;</span>有效日期</label>
+                        <div class="col-lg-8"><input name="contractendday" id="endday" type="date" placeholder="格式例:20170101" class="form-control" required data-error="请输入合同有效日期"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <input name="contractimg" placeholder="合同快照图片名" id="imgname" type="hidden" class="form-control">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label"><span style="color: red;">*&nbsp;</span>合同金额(元)</label>
+                        <div class="col-lg-8"><input name="contractmoney" id="contractmoney" placeholder="合同金额" class="form-control" required  data-error="请输入正确的合同金额"><div class="help-block with-errors"></div></div>
+                    </div>
+                    </div>
+                    <div class="col-lg-4">
+                       <!-- <div class="form-group col-lg-12"><label class="col-lg-12 control-label">上传合同快照图片</label></div>-->
+                        <div class="form-group col-lg-12" style="height: 200px;width: 180px ;"><img id="contractimg" src="" style="width: 150px;height: 200px; display: block"></div>
+                        <div class="btn btn-success fileinput-button" style="margin-left: 20px;">
+                            <i class="fa fa-fw fa-upload"></i>
+                            <span>上传合同快照</span>
+                            <input id="fileupload-goods-btn"  type="file" name="file">
+                        </div>
+                    </div>
+                        <br>
+                        <div class="col-lg-12">
+                        <button id="formbtn-corpcontract-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+                </div>
+            </div>
+        </form> 
+    </div> 
+    <div id="tips-corpcontract-update" class="module-alert-tips"></div><br>  
+</div>
+
+<script>
+    {
+        if (system_memberinfo && system_memberinfo.memberid) {
+
+            defContractTypeRender = function (contractmony, type, full) {
+               return contractmony/1000000+"万";
+            };
+            contractimglink = function (contractimg, type, full) {
+                if(contractimg==undefined){
+                    return "";
+                }else{
+                    return "<a href='/dir/contracts/"+ contractimg + "' target='_blank'>"+contractimg+"</a>";
+                }
+
+            }
+            //----------------------------------------------------
+            var mtable = $('#table-corpcontract-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/corpcontract/query",
+                    dataSrc:"data",
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            contractno: $('#filter_contractno').val().trim(),
+                            corpid: $('#filter_contract_corpid').val().trim()
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    },
+                },
+                columnDefs: [{
+                        className: 'select-checkbox',
+                        targets: 0
+                    }],
+                columns: [
+                    {"data": " ", render: $.defrender},
+                 /*   {"data": "contractid", render: $.defrender},*/
+                    {"data": "contractno", render: $.defrender},
+                    {"data":"corpinfo.corpname",render:$.defrender},
+                    {"data": "contractstartday", render: $.defrender},
+                    {"data": "contractendday", render:$.defrender},
+                    {"data": "contractimg", render: contractimglink},
+                    {"data": "contractmoney", render: defContractTypeRender},
+                /*    {"data": "membername", render: $.defrender},
+                    {"data": "memberid", render: $.defrender},*/
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+            $('#filter-corpcontract-qrybtn').bind("click", function () {
+                mtable.api(true).draw(false);
+                $('#table-corpcontract-sheet').dataTable().fnPageChange(0);
+
+            });
+        }
+        //-------------------------10.09-0930新增合同模态框-----------------------------
+        $('#button-corpcontract-create').bind("click", function () {
+            $('#dtitle-corpcontract-update').html("新增合同");
+            $("#tips-corpcontract-update").html('');
+            $("#form-corpcontract-update").form('reset');
+            document.getElementById('contractimg').src = " ";
+            $('#dialog-corpcontract-update').modal('show');
+            $('#form-gfield-password').show();
+            $("#companyId").removeAttr("readonly","readonly");
+            contractvalidator();
+        });
+
+
+        //-------------------------修改合同-----------------------------------------------------
+        $('#button-corpcontract-update').bind("click", function () {
+            var data = mtable.api(true).row({selected: true}).data();
+            if (!data || !data.contractid) {
+                alert("请选择一条记录！");
+                return;
+            }
+            $('#form-gfield-password').hide();
+            $('#dtitle-corpcontract-update').html("修改合同");
+            $("#tips-corpcontract-update").html('');
+            $("#form-corpcontract-update").form('reset');
+            $("#form-corpcontract-update").form('load', data);
+            $("#contractmoney").val(data.contractmoney/100);
+            function strchange(str){
+                str=str+"";
+                var year=str.substr(0,4);
+                var month=str.substr(4,2);
+                var day=str.substr(6,2);
+                str=year+"-"+month+"-"+day;
+                return str;
+            }
+            data.contractstartday=strchange(data.contractstartday);
+            console.log(data.contractstartday);
+            console.log(data.contractendday);
+            data.contractendday=strchange(data.contractendday)
+            $("#startday").val(data.contractstartday);
+            $("#endday").val(data.contractendday)
+            $('#dialog-corpcontract-update').modal('show');
+            $("#formbtn-corpcontract-update").addClass("changeContract");
+            $("#companyId").attr("readonly","readonly");
+            contractvalidator();
+            document.getElementById('contractimg').src = '/dir/contracts/' + $("#imgname").val();
+
+        });
+        //-------------------------点击提交按钮新增合同--------------------------------------------
+
+        $("#formbtn-corpcontract-update").on("click",function(e){
+            var form=$("#form-corpcontract-update");
+            var json = form.serializeJson();
+            console.log(json.contractstartday);
+            function time(time){
+                var arr=time.split("-");
+                var num="";
+                for(var i=0;i<arr.length;i++){
+                    num+=arr[i];
+                }
+                Number(num);
+                time=num;
+                return time;
+            }
+            console.log(json.contractmoney);
+            json.contractmoney=(json.contractmoney*100);
+            json.contractstartday=time(json.contractstartday);
+            json.contractendday=time(json.contractendday);
+            $("#companyId").removeAttr("readonly","readonly");
+            $('#form-corpcontract-update').bootstrapValidator('validate');
+            if($("#dtitle-corpcontract-update").text()=="新增合同"){
+                if($('#form-corpcontract-update').data('bootstrapValidator').isValid()){
+                    $.ajax({
+                        cache: false,
+                        dataType: "json",
+                        type: "POST",
+                        url: '/pipes/corpcontract/create',
+                        data: {
+                            "bean": $.objectToString(json),
+                        },
+                        error: function () {//请求失败处理函数
+                            alert('请求失败');
+                        },
+                        success: function (data) {
+                            if (data && data.retcode && data.retcode > 0)
+                            {
+                                alert(data.retinfo);
+                            } else
+                            {
+                                $("#dialog-corpcontract-update").modal('hide');
+                                $("#form-corpcontract-update").data('bootstrapValidator').destroy();
+                                $('#form-corpcontract-update').data('bootstrapValidator', null);
+                                mtable.api(true).draw(false);
+                            }
+                        }
+                    });
+                }else{alert("验证失败，请按要求重新输入")}
+            }else{
+                if($('#form-corpcontract-update').data('bootstrapValidator').isValid()) {
+                    $.ajax({
+                        cache: false,
+                        dataType: "json",
+                        type: "POST",
+                        url: '/pipes/corpcontract/update',
+                        data: {
+                            "bean": $.objectToString(json),
+                        },
+                        error: function () {//请求失败处理函数
+                            alert('请求失败');
+                        },
+                        success: function (data) {
+                            if (data && data.retcode && data.retcode > 0) {
+                                alert(data.retinfo);
+                            } else {
+                                $("#dialog-corpcontract-update").modal('hide');
+                                $("#form-corpcontract-update").data('bootstrapValidator').destroy();
+                                $('#form-corpcontract-update').data('bootstrapValidator', null);
+                                mtable.api(true).draw(false);
+                            }
+                        }
+                    });
+                }else{
+                    alert("验证失败，请按要求重新输入")
+                }
+            }
+        });
+        //-------------------合同表单信息校验---------------------------------------------
+        function contractvalidator() {
+            $('#form-corpcontract-update').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {/*验证*/
+                    corpid:{
+                        message: 'The corpid is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '企业ID不能为空'
+                            },
+                            regexp: { /* 只需加此键值对 */
+                                regexp: /^\d+$/,
+                                message: '企业ID只能由数字构成'
+                            }
+                        }
+                    },
+                    contractno: {/*键名和input name值对应*/
+                        message: 'The contractno is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '合同编号不能为空'
+                            },
+                            regexp: { /* 只需加此键值对 */
+                                regexp: /^[a-z-A-Z-0-9-]+$/,
+                                message: '合同编号只能由字母数字和短横线组成'
+                            }
+                        }
+                    },
+                    contractmoney:{
+                        message: 'The contractmoney is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '合同金额不能为空'
+                            },
+                            regexp: { /* 只需加此键值对 */
+                                regexp: /^\d+$/,
+                                message: '合同金额只能用数字表示'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        $("#contractClose").on("click",function(){
+            $("#form-corpcontract-update").data('bootstrapValidator').destroy();
+            $('#form-corpcontract-update').data('bootstrapValidator', null);
+        });
+        //-----------------------------------------------------------------------------
+        $(function () {
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/corp/list',
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (corps) {
+                    $('#selectCorpId').find('option').remove();
+                    /*$("#filter_contract_corpid").find('option').remove();*/
+                    var content = '';
+                    var headcontent='';
+                    for (var i = 0; i < corps.rows.length; i++) {
+                        if( corps.rows[i].corpid==15000001){
+                            headcontent='<option selected value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>';
+                            continue;
+                        }
+                        content = content + '<option value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>'; //corps[i].c
+                    }
+                    $("#selectCorpId").append(headcontent);
+                    $("#selectCorpId").append(content);
+                    $("#filter_contract_corpid").append(headcontent);
+                    $("#filter_contract_corpid").append(content);
+                }
+            });
+        });
+    }
+</script>
+<script>
+    //---------------上传图片到服务器-----------------------
+    $('#fileupload-goods-btn').fileupload({
+        type: 'POST',
+        url: '/pipes/ueditor?action=uploadimage_contracts',
+        done: function (e, data) {//设置文件上传完毕事件的回调函数
+            var json = JSON.parse(data.result);
+            console.log(json.fileid);
+            $("#imgname").val(json.fileid);
+            $("contractimg").show();
+            document.getElementById('contractimg').src = '/dir/contracts/' + json.fileid;
+
+        }
+    });
+</script>

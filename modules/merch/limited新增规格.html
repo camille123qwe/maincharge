@@ -1,0 +1,969 @@
+<div class="page-title">
+    <a id="button-limited-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新建限时优惠</a>
+    <a id="button-limited-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>编辑</a>
+    <a id="button-limited-detail" href="javascript:void(0);"><i class="fa fa-eye"></i>查看详情</a>
+    <a id="button-limited-underush" href="javascript:void(0);"><i class="fa fa-eye"></i>批量下架</a>
+    <select id="select_status">
+        <option value="20">抢购进行中</option>
+        <option value="10">抢购未开始</option>
+        <option value="0">全部</option>
+        <option value="30">抢购时间已过</option>
+        <option value="50">抢购信息已删除</option>
+        <option value="40">抢购信息已失效</option>
+    </select>
+</div>
+<div class="panel-box">
+    <div class="table-responsive">
+        <table id="table-limited-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>商品名</th>
+                <th>状态</th>
+                <th>活动时间</th>
+                <th>优惠券派发数</th>
+                <th>领取数</th>
+                <th>核销数</th>
+                <th>提货门店</th>
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-limited-update" class="modal fade" tabindex="-1" data-width="800" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="recordclose">×</button>
+        <h4 id="dtitle-limited-update" class="modal-title">新增限时优惠</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-limited-update" class="m-t form-horizontal" role="form">
+            <div class="col-lg-6">
+                <input type="hidden" name="rushid" id="rushid">
+                <input type="hidden" name="createtime" id="createtime">
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">商品名称</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" name="goodsname">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">供货商</label>
+                    <div class="col-lg-8">
+                        <input name="hoststoreid" type="hidden" id="hoststoreid">
+                        <input class="form-control" id="filter_merchid" style="position: relative" name="hoststorename">
+                        <div class="table-responsive" id="filter_merchid_table" style="width: 90%;left: 10%;">
+                            <table class="table table-hover">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">商品单位</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" name="unit">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">市场价格</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" type="number" step="0.01" name="marketprice" id="marketprice">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">分成金额(每件)</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" type="number" step="0.01" name="deductmoney" id="deductmoney">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">抢购价格</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" type="number" step="0.01" name="sellprice" id="sellprice">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">商品详情</label>
+                    <div class="col-lg-8">
+                        <textarea style="width: 100%;min-height: 118px;border-color: #ddd;" name="goodsdesc" id="inforemark">
+
+                        </textarea>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <p>商品图片 请使用横向拍摄的照片</p>
+                <div class="form-group">
+                    <div class="col-lg-4 col-md-2 col-sm-12" id="upload_div">
+                        <div class="btn btn-success fileinput-button" style="margin-top: 5px;float: left;">
+                            <span>上传图片</span>
+                            <input id="fileupload-goods-btn" type="file" name="file" multiple>
+                        </div>
+                        <p style="color: red;clear: both;margin-top: 5px;display: none;cursor: pointer" id="deletespan">删除选中图片</p>
+                    </div>
+                    <div class="col-lg-4 col-md-2 col-sm-12">
+                        <div style="position: relative">
+                            <img src="" style="width: 90px;height: 60px" class="goodsimg">
+                            <div class="fa  fa-check-circle-o checkcircle" style="position: absolute;top: 0;right: 0;color: orange;font-size:24px;display: none"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-2 col-sm-12">
+                        <div style="position: relative">
+                            <img src="http://" style="width: 90px;height: 60px" class="goodsimg">
+                            <div class="fa  fa-check-circle-o checkcircle" style="position: absolute;top: 0;right: 0;color: orange;font-size:24px;display: none"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-4 col-md-2 col-sm-12">
+                        <div style="position: relative">
+                            <img src="" style="width: 90px;height: 60px" class="goodsimg">
+                            <div class="fa  fa-check-circle-o checkcircle" style="position: absolute;top: 0;right: 0;color: orange;font-size:24px;display: none"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-2 col-sm-12">
+                        <div style="position: relative">
+                            <img src="" style="width: 90px;height: 60px" class="goodsimg">
+                            <div class="fa  fa-check-circle-o checkcircle" style="position: absolute;top: 0;right: 0;color: orange;font-size:24px;display: none"></div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-2 col-sm-12">
+                        <div style="position: relative">
+                            <img src="" style="width: 90px;height: 60px" class="goodsimg">
+                            <div class="fa  fa-check-circle-o checkcircle" style="position: absolute;top: 0;right: 0;color: orange;font-size:24px;display: none"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <p class="col-lg-12">抢券时间</p>
+                    <div class="col-lg-12">
+                        <select id="starttime_coupon" class="form-control col-lg-12">
+
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <p class="col-lg-12">优惠券有效期（设置可到店提货或体验服务的时间）</p>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <input type="text" placeholder="起始时间" class="form-control" id="starttime_valid" name="validstarttime" readonly>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <input type="text" placeholder="结束时间" class="form-control" id="endtime_valid" name="validendtime" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">发行数量(张)</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" placeholder="请输入数字" type="number" step="1" id="release" name="releasequality">
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-12" style="width: 100%;min-height:120px;border: solid 1px #ddd;padding: 0;margin: 20px 0;">
+                <P style="width: 100%;height: 40px;line-height:40px;border-bottom: solid 1px #ddd;padding: 0 10px">可选规格
+                <span style="color: red;margin-left: 10px;">不填写则不需要选择规格</span>
+                <a id="add-prop" style="float: right;padding-right: 20px" href="javascript:void(0)"><i class="fa fa-plus " style="font-size: 20px"></i></a>
+                </P>
+                <div class="col-lg-4 col-md-4 col-sm-4">分类名</div>
+                <div class="col-lg-8 col-md-8 col-sm-8">选项名</div>
+                <div id="props">
+                    <div class="prop col-lg-12 col-md-12 col-sm-12">
+                        <div class="col-lg-3 col-md-3 col-sm-3">
+                            <input class="form-control" placeholder="示例：颜色" name="spec">
+                        </div>
+                        <div class="col-lg-7 col-md-7 col-sm-7">
+                            <input class="form-control" placeholder="示例：黑色，红色，绿色(不同属性以逗号分隔)" name="specname">
+                        </div>
+                        <div class="col-lg-2 col-md-2 col-sm-2 delete-prop"  class="form-control" style="text-decoration: underline;cursor:pointer;color: red;">
+                            删除
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">添加提货门店</label>
+                    <div class="col-lg-8">
+                        <input class="form-control" placeholder="搜索门店" id="filter_store">
+                    </div>
+                </div>
+                <div class="col-lg-12" id="add_div" style="width: 100%;border: solid 1px #ddd;padding: 20px;margin-bottom: 20px">
+                    <!--<span style="cursor: pointer;" class="add">军昆数码商店<i class="fa fa-plus" style="font-size: 18px;margin: 0 5px;"></i></span>-->
+                    <!--<span style="cursor: pointer;" class="add">军昆数码<i class="fa fa-plus" style="font-size: 18px;margin: 0 5px;"></i></span>-->
+                    <!--<span style="cursor: pointer;" class="add">数码商店<i class="fa fa-plus" style="font-size: 18px;margin: 0 5px;"></i></span>-->
+                    <!--<span style="cursor: pointer;" class="add">数码123<i class="fa fa-plus" style="font-size: 18px;margin: 0 5px;"></i></span>-->
+                </div>
+            </div>
+            <div class="col-lg-6">
+                <div class="col-lg-12" id="delete_div" style="width: 100%;border: solid 1px #ddd;padding: 20px;margin-bottom: 20px">
+                    <!-- <span class="delete" style="cursor: pointer">军昆数码商店<i class="fa fa-times" style="font-size: 18px;margin: 0 5px;"></i></span>
+                     <span class="delete" style="cursor: pointer">军昆数码<i class="fa fa-times" style="font-size: 18px;margin: 0 5px;"></i></span>
+                     <span class="delete" style="cursor: pointer">数码商店<i class="fa fa-times" style="font-size: 18px;margin: 0 5px;"></i></span>
+                     <span class="delete" style="cursor: pointer">数码123<i class="fa fa-times" style="font-size: 18px;margin: 0 5px;"></i></span>-->
+                </div>
+            </div>
+            <button id="formbtn-limited-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form>
+    </div>
+</div>
+<div id="dialog-detail-update" class="modal fade" tabindex="-1" data-width="800" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">查看详情</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-detail-update" class="m-t form-horizontal" role="form">
+            <div class="panel-heading" style="font-size: 22px">
+                <span id="detailname"></span>
+                <span id="detailprice"></span>
+                <p id="propvalues"></p>
+                <p id="hoststorename" style="margin-top: 10px"></p>
+            </div>
+            <div class="panel-body">
+            <div class="table-responsive">
+                <table id="table-detail-sheet" class="table table-hover" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+
+                    </tr>
+                    </thead>
+                    <tbody>
+                        <tr id="receive"></tr>
+                        <tr id="checkcount"></tr>
+                    </tbody>
+                </table>
+            </div>
+            </div>
+            <button id="formbtn-detail-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form>
+    </div>
+</div>
+
+<script>
+    {
+
+        if (system_memberinfo && system_memberinfo.memberid) {
+            //-----添加规格型号--------------
+            $("#add-prop").click(function(){
+                var prophtml= '<div class="prop col-lg-12 col-md-12 col-sm-12" style="margin: 5px 0;">'+
+                        '<div class="col-lg-3 col-md-3 col-sm-3">'+
+                        '<input class="form-control" name="spec"></div>'+
+                        '<div class="col-lg-7 col-md-7 col-sm-7">'+
+                        '<input class="form-control" name="specname"></div>'+
+                        '<div class="col-lg-2 col-md-2 col-sm-2 delete-prop" style="text-decoration: underline;cursor:pointer;color: red;">'+
+                        '删除</div>';
+               $("#props").append(prophtml);
+            });
+            $("#props").on('click','.delete-prop',function(){
+               $(this).parent().remove();
+            });
+            //------搜索门店名称----------------------
+            $("#filter_store").keyup(function(){
+                var data={
+                    storename:$("#filter_store").val().trim()
+                };
+                ajaxFilter(data);
+            });
+            Date.prototype.toLocaleString = function() {
+                return this.getFullYear() + "-" + (this.getMonth() + 1) + "-" + this.getDate();
+            };
+            //---------------选择供货商---------
+            $("#filter_merchid").focus(function(){
+                var data={
+                    storename:$("#filter_merchid").val().trim()
+                };
+                ajaxFilterMerch(data);
+            });
+            $("#filter_merchid").blur(function(){
+                $("#filter_merchid_table").hide();
+            });
+            $("#filter_merchid").keyup(function(){
+                var data={
+                    storename:$("#filter_merchid").val().trim()
+                };
+                ajaxFilterMerch(data);
+            });
+            //过滤供应商门店名称时所用的ajax
+            function ajaxFilterMerch(data){
+                $.ajax({
+                    url:"/pipes/store/query",
+                    data:{"bean":$.objectToString(data)},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            $("#merchtable").find("table").html("");
+                            var arr= res.rows||[];
+                            var _html="";
+                            var filterhtml="";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<tr><td><input type="hidden" value="'+arr[i].storeid+'">'+arr[i].storename+'</td></tr>'
+                            }
+                            var filtertable = $("#filter_merchid_table");
+                            filtertable.find("table").html(_html);
+                            filtertable.find('td').css("width","150px");
+                            filtertable.find('td').css("cursor","pointer");
+                            filtertable.show();
+                            filtertable.find('td').css("padding","10px");
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            //过滤商户名称时点击商户名称的table和在输入框直接敲击回车时
+            $("#filter_merchid_table").on('mousedown','td',function(){
+                $("#filter_merchid").val($(this).text());
+                $("#hoststoreid").val($(this).find('input').val());
+                $("#filter_merchid_table").hide();
+            });
+            $('#filter_merchid').bind('keypress', function (event) {
+                if (event.keyCode == 13) {
+                    $('#filter_merchid_table').find('table').children(':first').find('td').trigger('click');
+                }
+            });
+            //提货门店筛选
+            function ajaxFilter(data){
+                $.ajax({
+                    url:"/pipes/store/query",
+                    data:{
+                        "bean":$.objectToString(data)
+                    },
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            var arr = res.rows;
+                            var _html = "";
+                            if(arr.length==0){
+                                $("#add_div").html('暂无搜索结果');
+                            }else{
+                                for(var i=0;i<arr.length;i++){
+                                    _html+='<span style="cursor: pointer;" class="add">'+arr[i].storename+'' +
+                                            '<input type="hidden" value="'+arr[i].storeid+'">' +
+                                            '<i class="fa fa-plus" style="font-size: 18px;margin: 0 5px;"></i></span>'
+                                }
+                                $("#add_div").html(_html);
+                            }
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            //-------点击+号添加门店-------------------
+            $("#add_div").on('click','.add',function () {
+                var storeid  = $(this).children('input').val();
+                var storename = $(this).text();
+                $("#delete_div").append(' <span class="delete" style="cursor: pointer">' +
+                        ''+storename+'<input type="hidden" value="'+storeid+'">'+
+                        '<i class="fa fa-times" style="font-size: 18px;margin: 0 5px;"></i></span>');
+                $(this).hide();
+            });
+            //-------点击删除门店-----------------------
+            $("#delete_div").on('click','.delete',function(){
+               $(this).remove();
+                $(this).children('input').attr('disabled','disabled');
+            });
+            //---------抢购商品列表-----------------------------------------
+            var mtable = $('#table-limited-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/ossrush/querygoodsrush",
+                    dataSrc:"data",
+                    data: function (f) {
+                        f.bean = "{status: "+$("#select_status").val()+"}";
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                        f.length = 10
+                    }
+                },
+                "aLengthMenu": [[10, 25, 50, -1], ["10条", "25条", "50条", "All"]],
+                columnDefs: [
+                    {
+                        className: 'select-checkbox',
+                        targets: 0
+                    }
+                ],
+                columns: [
+                    {"data": " ", render: $.defrender},
+                    {"data": "goodsname", render: $.defrender},
+                    {"data": "status", render: function(value,type,full){
+                        if(value==10){return "抢购未开始"}
+                        if(value==20){return "抢购进行中"}
+                        if(value==30){return "已过抢购时间"}
+                        if(value==40){return "抢购信息失效"}
+                        if(value==50){return "抢购信息已删除"}
+                    }},
+                    {"data":"rushstarttime",render:function(value,type,full){
+                        return new Date(value).toLocaleString()+"至"+ new Date(full.rushendtime).toLocaleString();
+                    }},
+                    {"data": "releasequality", render: $.defrender},
+                    {"data": "retquality", render: function (value,type,full) {
+                        return Number(full.releasequality) - Number(value);
+                    }},
+                    {"data": "checkcount", render: $.defrender},
+                     {"data": "storenames", render: $.defrender},
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+            //--------更改状态----------------------------
+            $("#select_status").change(function () {
+                mtable.api(true).draw(false);
+                $('#table-limited-sheet').dataTable().fnPageChange(0);
+            });
+            //-------------------------点击新增限时优惠-----------------------------
+            $('#button-limited-create').bind("click", function () {
+                $("#form-limited-update").form('reset');
+                timeChange();
+                //--清空图片地址
+                var arr = $(".goodsimg");
+                $.each(arr,function(index){
+                    arr[index].setAttribute('src','');
+                });
+                $("#form-limited-update input,textarea").prop("readonly", false);
+                $("#starttime_valid,#endtime_valid").prop("readonly", true);
+                $("#upload_div").show();
+                $("#hoststoreid").val('');
+                $(' #dialog-limited-update').modal('show');
+                $(' #dtitle-limited-update').html("新增限时优惠");
+                $("#createtime").val("");
+                $("#rushid").val("");
+                $("#delete_div").html("");
+                $("#add_div").html("");
+                limitedValidator();
+            });
+            //-------------------------点击修改限时优惠-----------------------------------------------------
+            $('#button-limited-update').bind("click", function () {
+                var data = mtable.api(true).row({selected: true}).data();
+                if (!data || !data.rushid) {
+                    alert("请选择一条记录！");
+                    return;
+                }
+                $("#form-limited-update input,textarea").prop("readonly", true);
+                $("#upload_div").hide();
+                $("#filter_store,#filter_merchid,#deductmoney").prop("readonly",false);
+                $("#props input").prop("readonly",false);
+                $("#release").prop("readonly",false);
+                //--清空图片地址
+                var arr = $(".goodsimg");
+                $.each(arr,function(index){
+                   arr[index].setAttribute('src','');
+                });
+                //--转换时间戳
+                timeChange();
+                var rushstarttimetext = new Date(data.rushstarttime).toLocaleString();
+                var rushendtimetext = new Date(data.rushendtime).toLocaleString();
+                $("#starttime_coupon").append('<option selected value="'+data.rushstarttime+'-'+data.rushendtime+'">'+rushstarttimetext+"至"+rushendtimetext+'</option>');
+                data.validstarttime = new Date(data.validstarttime).toLocaleString();
+                data.validendtime = new Date(data.validendtime).toLocaleString();
+                $(' #dtitle-limited-update').html("修改限时优惠");
+                $("#form-limited-update").form('reset');
+                $(" #form-limited-update").form('load', data);
+                if(data.hostStoreInfo){
+                    $("#filter_merchid").val(data.hostStoreInfo.storename);
+                }
+                $("#marketprice").val(data.marketprice/100);
+                $("#sellprice").val(data.sellprice/100);
+                $("#deductmoney").val(data.deductmoney/100);
+                var markcontent=$("#inforemark").val();
+                markcontent=markcontent.replace(/<br>/g,"\n");
+                $("#inforemark").val(markcontent);
+                $(' #dialog-limited-update').modal('show');
+                //--展示商品图片
+                var goodsimg  = data.goodsimgs.split(";");
+                for(var i=0;i<goodsimg.length;i++){
+                    if(arr[i].src=="http://localhost:9101/"||"http://localhost:9101/index.html"||arr[i].src=="http://192.168.1.128:9101/"||arr[i].src=="http://oss.diancall.com/"||arr[i].src==""||arr[i].src=="http://192.168.1.124:9101/"||arr[i].src=="http://oss.diancall.com/index.html"){
+                        arr[i].src =  '/pipes/img/goods_300/'+goodsimg[i];
+                        continue;
+                    }else if(arr[i].src!=""){
+                        continue
+                    }
+                }
+                //--添加之前已选的门店
+                var storenamearr = data.storenames.split(";");
+                var storeidarr = data.storeids.split(";");
+                var _html = "";
+                for(var i=0;i<storeidarr.length;i++){
+                    _html+=' <span class="delete" style="cursor: pointer">' +
+                            ''+storenamearr[i]+'<input type="hidden" value="'+storeidarr[i]+'">'+
+                            '<i class="fa fa-times" style="font-size: 18px;margin: 0 5px;"></i></span>'
+                }
+                $("#delete_div").html(_html);
+                limitedValidator();
+            });
+            //-------------------------点击提交按钮提交限时优惠信息--------------------------------------------
+            $("#formbtn-limited-update").on("click",function(){
+                $(this).attr("disabled",true);
+                var form =$("#form-limited-update");
+                var json = form.serializeJson();
+                //获取选择的门店ID数组
+                var arr = $('#delete_div').find('input');
+                var storeids = [];
+                $.each(arr,function(index){
+                    storeids.push(arr[index].value);
+                });
+                if(storeids.length==0){
+                    alert("请选择活动门店");
+                    $("#formbtn-limited-update").removeAttr("disabled");
+                    return;
+                }else{
+                    json.storeids = storeids.join(";");
+                }
+                var imgarr = $('.goodsimg');
+                var goodsimgs = [];
+                $.each(imgarr,function (index) {
+                    if(imgarr[index].src!="http://localhost:9101/"&&imgarr[index].src!="http://localhost:9101/index.html"&&imgarr[index].src!="http://192.168.1.128:9101/"&&imgarr[index].src!="http://oss.diancall.com/"&&imgarr[index].src!=""&&imgarr[index].src!="http://192.168.1.124:9101"&&imgarr[index].src!="http://oss.diancall.com/index.html"){
+                        var imgarr2 = imgarr[index].src.split("/");
+                            var imgsrc =imgarr2[imgarr2.length-1];
+                        if(imgsrc!=""){
+                            goodsimgs.push(imgsrc);
+                        }
+                    }
+                });
+                if(goodsimgs.length==0){
+                    alert("请至少上传一张图片当做商品首图");
+                    $("#formbtn-limited-update").removeAttr("disabled");
+                    return;
+                }
+                var rushtime = $("#starttime_coupon").val().split('-');
+                 json.rushstarttime = rushtime[0];
+                 json.rushendtime = rushtime[1];
+                json.goodsface = goodsimgs[0];
+                goodsimgs = goodsimgs.join(";");
+                json.goodsimgs = goodsimgs;
+                json.validstarttime = timeChangeMiao(json.validstarttime);
+                json.validendtime = timeChangeMiao(json.validendtime);
+                json.marketprice = parseInt((json.marketprice*100).toFixed(2));
+                json.deductmoney = parseInt((json.deductmoney*100).toFixed(2));
+                json.sellprice = parseInt((json.sellprice*100).toFixed(2));
+                $('#form-limited-update').bootstrapValidator('validate');
+                if($("#filter_merchid").val()==""){
+                    delete json.hoststoreid;
+                }
+                //-----------处理规格属性格式-----------------------
+                var proparr = [];
+                if(typeof(json.spec)=='string'){
+                    json.specname = json.specname.split("，").join(';');
+                    //json.props = '["+'+json.spec+'":"'+json.specname+'"]';
+                    proparr.push(json.spec+":"+json.specname);
+                    delete json.spec;
+                    delete json.specname;
+                }else{
+                    var _html="";
+                    var _specname = "";
+                    for(var i=0;i<json.spec.length;i++){
+                        _specname = json.specname[i].split("，").join(';');
+                       if(i == json.spec.length-1){
+                          // _html+='"'+json.spec[i]+':'+_specname+'"';
+                           proparr.push(json.spec[i]+":"+_specname);
+                       }else{
+                         //  _html+='"'+json.spec[i]+':'+_specname+'",';
+                           proparr.push(json.spec[i]+":"+_specname);
+                       }
+                    }
+                   // json.props = '['+_html+']';
+                  /*  json.props = '['+proparr+']';*/
+                    delete json.spec;
+                    delete json.specname;
+                }
+                $("#formbtn-limited-update").removeAttr("disabled");
+               //-----去json数据中的空格-----------------
+                var json1= {};
+                var content=json.goodsdesc;
+                content=content.replace(/<br>/g,' ');
+                content=content.replace(/\n/g,'<br>');
+                json.goodsdesc=content;
+                $.each(json,function(key,value){
+                    if(key=="goodsname"){
+                        json1[key] = value;
+                        return true
+                    }
+                    value = (value + "").replace(/\s/g,'');
+                    json1[key] = value;
+                });
+                json = json1;
+                var data = "";
+                if(json.rushid){
+                    var cols=['storeids','rushstarttime','rushendtime','validstarttime','validendtime','releasequality','hoststoreid','deductmoney','props'];
+                    data={
+                        "bean": $.objectToString(json),
+                        "cols": $.objectToString(cols),
+                        "props":$.objectToString(proparr)
+                    }
+                }else{
+                    data={
+                        "bean": $.objectToString(json),
+                        "props":$.objectToString(proparr)
+                    }
+                }
+                if( $('#form-limited-update').data('bootstrapValidator').isValid()){
+                    $.ajax({
+                        cache: false,
+                        dataType: "json",
+                        type: "POST",
+                        url: '/pipes/ossrush/updategoodsrush',
+                        data: data,
+                        error: function () {//请求失败处理函数
+                            $("#formbtn-limited-update").removeAttr("disabled");
+                            alert('请求失败');
+                            return;
+                        },
+                        success: function (data) {
+                            $("#formbtn-limited-update").removeAttr("disabled");
+                            if (data && data.retcode && data.retcode > 0)
+                            {
+                                alert(data.retinfo);
+                            } else {
+                                alert("保存成功");
+                                $('#form-limited-update').data('bootstrapValidator').destroy();
+                                $('#form-limited-update').data('bootstrapValidator', null);
+                                $("#dialog-limited-update").modal('hide');
+                                mtable.api(true).draw(false);
+                            }
+                        }
+                    });
+                } else{
+                    $("#formbtn-limited-update").removeAttr("disabled");
+                    alert("验证失败，请按要求填写信息");
+                  /*  $('#form-limited-update').data('bootstrapValidator').destroy();
+                    $('#form-limited-update').data('bootstrapValidator', null);*/
+                }
+            });
+            $("#starttime_valid,#endtime_valid,#filter_merchid").change(function () {
+                $('#form-limited-update').data('bootstrapValidator').destroy();
+                $('#form-limited-update').data('bootstrapValidator', null);
+                limitedValidator();
+            });
+            $("#recordclose").on("click",function () {
+                $('#form-limited-update').data('bootstrapValidator').destroy();
+                $('#form-limited-update').data('bootstrapValidator', null);
+            });
+            //---------------表单验证----------------------------------------------
+            function limitedValidator(){
+                $("#form-limited-update").bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields:{
+                        goodsname:{
+                            message: 'The billno is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '商品名称不能为空'
+                                }
+                            }
+                        },
+                        unit:{
+                            message: 'The billno is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '商品单位不能为空'
+                                }
+                            }
+                        },
+                        rushstarttime:{
+                            message: 'The billno is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '抢券起始时间不能为空'
+                                }
+                            }
+                        },
+                        rushendtime:{
+                            message: 'The billno is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '抢券结束时间不能为空'
+                                }
+                            }
+                        },
+                        validstarttime:{
+                            message: 'The billno is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '领取起始时间不能为空'
+                                }
+                            }
+                        },
+                        validendtime:{
+                            message: 'The billno is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '领取结束时间不能为空'
+                                }
+                            }
+                        },
+                        releasequality:{
+                            message: 'The billno is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '发行数量不能为空'
+                                }
+                            }
+                        },
+                        sellprice: {
+                            message: '',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '抢购价格不能为空'
+                                },
+                                 regexp: {
+                                 regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                                 message: "抢购价格最多两位小数,不能是负数"
+                                }
+                            }
+                        },
+                        marketprice: {
+                            message: '',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '市场价格不能为空'
+                                },
+                                regexp: {
+                                    regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                                    message: "商品价格最多两位小数，不能是负数"
+                                }
+                            }
+                        },
+                        deductmoney: {
+                            message: '',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '分成金额不能为空'
+                                },
+                                regexp: {
+                                    regexp: /^[0-9]+(\.[0-9]{1,2})?$/,
+                                    message: "分成金额最多两位小数，不能是负数"
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+            //优惠券中有效日期选择
+            function timeChangeMiao(starttime) {
+                starttime = starttime.replace(new RegExp("-","gm"),"/");
+                var HaoMiao = (new Date(starttime)).getTime(); //得到毫秒数
+                return HaoMiao
+            }
+            //获取当前时间的毫秒数，计算出下四周的时间。
+            function timeChange() {
+                var nowtime = new Date().toLocaleString();
+                nowtime = new Date(timeChangeMiao(nowtime));
+                var now = nowtime.getDay();
+                var next = 0;
+                var nextend= 0;
+                var _html = "";
+                switch(now){
+                    case 1:
+                    for(var i=6,j=0;j<4;i=i+7,j++){
+                        _html += option(i);
+                    }
+                    break;
+                    case 2:
+                    for(var i=5,j=0;j<4;i=i+7,j++){
+                        _html += option(i);
+                    }
+                    break;
+                    case 3:
+                    for(var i=4,j=0;j<4;i=i+7,j++){
+                        _html += option(i);
+                    }
+                    break;
+                    case 4:
+                    for(var i=3,j=0;j<4;i=i+7,j++){
+                        _html += option(i);
+                    }
+                    break;
+                    case 5:
+                    for(var i=2,j=0;j<4;i=i+7,j++){
+                        _html += option(i);
+                    }
+                    break;
+                    case 6:
+                    for(var i=1,j=0;j<4;i=i+7,j++){
+                        _html += option(i);
+                    }
+                    break;
+                    case 0:
+                    for(var i=0,j=0;j<4;i=i+7,j++){
+                        _html += option(i);
+                    }
+                    break;
+                }
+                $("#starttime_coupon").html(_html);
+
+                //时间option
+                function option(i){
+                    next = nowtime.getTime()+i*24*60*60*1000;
+                    nextend = next+7*24*60*60*1000-1;
+                    return '<option value="'+next+'-'+nextend+'">'+new Date(next).toLocaleString()+"至"+ new Date(nextend).toLocaleString()+'</option>';
+                }
+            }
+            //领取时间选择
+            validtime();
+            function validtime() {
+                var t = new Date().toJSON();
+                var t1 = new Date();
+                var t2 = new Date(t1);
+                t2.setDate(t1.getFullYear() + 5);
+                t2 = t2.toJSON();
+                var options = {
+                    format: "yyyy-mm-dd", //设置时间格式，默认值: 'mm/dd/yyyy'
+                    weekStart: 0, //一周从哪一天开始。0（星期日）到6（星期六）,默认值0
+                    startDate: new Date(), //可以被选择的最早时间
+                    endDate: new Date(t2), //可以被选择的最晚时间
+                    daysOfWeekDisabled: "", //禁止选择一星期中的某些天，例子中这样是禁止选择周六和周日
+                    autoclose: true, //当选择一个日期之后是否立即关闭此日期时间选择器
+                    startView: 2, //点开插件后显示的界面。0、小时1、天2、月3、年4、十年，默认值2
+                    minView: 2, //插件可以精确到那个时间，比如1的话就只能选择到天，不能选择小时了
+                    maxView: 4, //同理
+                    todayBtn: true, //是否在底部显示“今天”按钮
+                    todayHighlight: true, //是否高亮当前时间
+                    keyboardNavigation: true, //是否允许键盘选择时间
+                    language: 'zh-CN', //选择语言，前提是该语言已导入
+                    forceParse: true,
+                    //当选择器关闭的时候，是否强制解析输入框中的值。也就是说，当用户在输入框中输入了不正确的日期，选择器将会尽量解析输入的值，并将解析后的正确值按照给定的格式format设置到输入框中
+                    minuteStep: 5, //分钟的间隔
+                    pickerPosition: "top-left", //显示的位置，还支持bottom-left
+                    viewSelect: 2, //默认和minView相同
+                    showMeridian: true, //是否加上网格
+                    initialDate: new Date(t),
+                    //初始化的时间
+                    zIndex: 1080
+                };
+                $("#starttime_valid").datetimepicker(options);
+                $("#endtime_valid").datetimepicker(options);
+            }
+            //-----------上传商品详情图片----------------------
+            $('#fileupload-goods-btn').fileupload({
+                type: 'POST',
+                formData:{},
+                url: '/pipes/upload/goods43',
+                done: function (e, data) {//设置文件上传完毕事件的回调函数
+                    var json = JSON.parse(data.result);
+                    var arr = $(".goodsimg");
+                    for(var i=0;i<arr.length;i++){
+                        console.log(arr[i].src);
+                        if(arr[i].src=="http://localhost:9101/"||arr[i].src=="http://localhost:9101/index.html"||arr[i].src=="http://192.168.1.128:9101/"||arr[i].src=="http://oss.diancall.com/"||arr[i].src==""||arr[i].src=="http://192.168.1.124:9101/"||arr[i].src=="http://oss.diancall.com/index.html"){
+                            arr[i].src = '/pipes/img/goods_300/'+json.fileid;
+                            break;
+                        }else if(arr[i].src!=""){
+                            continue
+                        }
+                    }
+                }
+            });
+            //-------------删除商品详情图片----------------
+            $(".goodsimg").click(function(){
+                $("#deletespan").show();
+                $(this).parent().find(".checkcircle").toggle();
+            });
+            $("#deletespan").unbind("click").click(function(){
+                var arr=$(".checkcircle");
+                for(var i=0;i<arr.length;i++){
+                    if(!(arr.eq(i).css("display")=="none")){
+                        arr.eq(i).parent().children('img').attr("src","");
+                        arr.eq(i).css("display","none");
+                    }
+                }
+            });
+            //-------点击查看抢购商品详情---
+            $("#button-limited-detail").click(function(){
+                var data = mtable.api(true).row({selected: true}).data();
+                if (!data || !data.rushid) {
+                    alert("请选择一条记录！");
+                    return;
+                }
+                $("#dialog-detail-update").modal('show');
+                $.ajax({
+                    url:"/pipes/ossrush/findgoodsrush/"+data.rushid,
+                    type:"GET",
+                    dataType:"JSON",
+                    error:function (res) {
+                        console.log(res);
+                    },
+                    success:function(res){
+                        console.log(res);
+                        var propshtml = "";
+                        if(res.propValues){
+                            for(var key in res.propValues){
+                                propshtml += '<span style="margin-right: 20px">'+key+":"+ res.propValues[key]+'</span>';
+                            }
+                        }
+                        $("#propvalues").html(propshtml);
+                        $("#detailname").text(res.goodsname);
+                        $("#detailprice").text('￥'+res.sellprice/100);
+                        if(res.hostStoreInfo){
+                            $("#hoststorename").text("供应商："+res.hostStoreInfo.storename);
+                        }else{
+                            $("#hoststorename").text("");
+                        }
+                        $.ajax({
+                            url:"/pipes/ossrush/querygoodsrushrecord/"+data.rushid,
+                            type:"GET",
+                            dataType:"JSON",
+                            error:function (err) {
+                                console.log(err);
+                            },
+                            success:function(res){
+                                console.log(res);
+                                var arr = res.result;
+                                arr = JSON.parse(arr);
+                                var thtml = "<td></td>";
+                                var recehtml = "<td>领取数</td>";
+                                var checkhtml = "<td>核销数</td>";
+                                for(var i=0;i<arr.length;i++){
+                                    thtml +='<td>'+arr[i].storename+'</td>';
+                                    recehtml +='<td>'+arr[i].receivecount+'</td>';
+                                    checkhtml +='<td>'+arr[i].checkcount+'</td>'
+                                }
+                                $('#table-detail-sheet thead>tr').html(thtml);
+                                $("#receive").html(recehtml);
+                                $("#checkcount").html(checkhtml);
+                            }
+                        });
+                    }
+                });
+            });
+            //-----点击批量下架------------------------
+            $("#button-limited-underush").click(function(){
+               var dataarr = mtable.api(true).rows({selected: true}).data();
+                if(dataarr.length==0){
+                    alert("请选择您要下架的商品");
+                    return;
+                }
+                var rushids = [];
+               $.each(dataarr,function(index){
+                  rushids.push(dataarr[index].rushid);
+               });
+                console.log(dataarr);
+                console.log(rushids);
+                var data ={rushids:'['+rushids+']'};
+                $.ajax({
+                    url:"/pipes/ossrush/bathunderrush",
+                    data:data,
+                    datype:"JSON",
+                    type:"POST",
+                    error:function (err) {
+                        console.log(err);
+                    },
+                    success:function(res){
+                        console.log(res);
+                    }
+                })
+            });
+        }
+    }
+</script>

@@ -1,0 +1,342 @@
+<div class="page-title">
+    <a id="button-phonePackage-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增电话套餐</a>
+    <a id="button-phonePackage-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改电话套餐</a>
+    <div style="display: inline-block;margin: 0 30px 0 0;">
+        <label >状态</label>
+        <select name="status" id="filter_phonePackage_status" style="width:150px;">
+            <option value="10,20">正常,待审批</option>
+            <option value="10">正常</option>
+            <option value="20">待审批</option>
+            <option value="80">删除</option>
+            <option value="10,20,80">全部</option>
+        </select>
+    </div>
+</div>
+<div class="panel-box">
+    <div class="table-responsive">
+        <table id="table-phonePackage-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>电话套餐ID</th>
+                <th>套餐类型</th>
+                <th>单价--人数</th>
+                <th>状态</th>
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-phonePackage-update" class="modal fade" tabindex="-1" data-width="800" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="recordclose">×</button>
+        <h4 id="dtitle-phonePackage-update" class="modal-title">新增电话套餐</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-phonePackage-update" class="m-t form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>套餐类型</label>
+                <div class="col-lg-8">
+                    <select name="unit" class="form-control" id="unit">
+                        <option value="1">日</option>
+                        <option value="2">周</option>
+                        <option value="3">月</option>
+                        <option value="4">季度</option>
+                        <option value="5">年</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>状态</label>
+                <div class="col-lg-8">
+                    <select id="selectStatus" name="status" class="form-control">
+                        <option value="10">正常</option>
+                        <option value="20">待审批</option>
+                        <option value="80">删除</option>
+                    </select>
+                </div>
+            </div>
+            <div style="border: solid 1px #8c8c8c;padding: 20px;width: 80%;margin:20px 0 20px 75px;float: left" id="group_box">
+                <p style="float: left;">套餐分段信息(点击新增一行)</p>
+                <div style="width:60px;float: left;background: #d0d0d0;cursor:pointer;text-align: center;margin-left: 10px" id="add_group">新增一行</div>
+                <div class="form-group" style="clear: both">
+                    <div class="col-lg-4 col-md-4">
+                        <label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>单价</label>
+                        <div class="col-lg-7">
+                            <input class="form-control" name="price" type="number" step="0.01" data-bv-notempty="单价不能为空">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>最小人数</label>
+                        <div class="col-lg-7">
+                            <input class="form-control" name="minpcu" type="number" step="1" data-bv-notempty="最小人数不能为空">
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-4">
+                        <label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>最大人数</label>
+                        <div class="col-lg-7">
+                            <input class="form-control" name="maxpcu" type="number" step="1" data-bv-notempty="最大人数不能为空">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+            <input type="hidden" name="createtime" id="createtime">
+            <input type="hidden" name="mobilebuzpkgid" id="mobilebuzpkgid"><!--电话套餐人员优惠ID-->
+            <input type="hidden" name="mobilebuzid" id="mobilebuzid"><!--电话套餐ID-->
+            <button id="formbtn-phonePackage-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form>
+    </div>
+</div>
+<script>
+    (function(){
+        if (system_memberinfo && system_memberinfo.memberid) {
+            //-------新增电话套餐------------------
+            $("#button-phonePackage-create").click(function () {
+                $("#formbtn-phonePackage-update").removeAttr("disabled");
+                $("#form-phonePackage-update").form('reset');
+                $("#createtime").val("");
+                $("#mobilebuzpkgid").val("");
+                $("#mobilebuzid").val("");
+                $("#dtitle-phonePackage-update").text("新增电话套餐");
+                reset();
+                $("#unit").removeAttr("disabled");
+                $("#dialog-phonePackage-update").modal("show");
+            });
+            //------修改电话套餐-----------------
+            $("#button-phonePackage-update").click(function(){
+                var data = mtable.api(true).row({selected: true}).data();
+                console.log(data);
+                if (!data || !data.mobilebuzid){
+                    alert("请选择一条记录！");
+                    return;
+                }
+                $("#unit").attr('disabled',true);
+             //   data.pkgs[0].price = parseInt(data.pkgs[0].price/100);
+                $("#dtitle-phonePackage-update").text("修改电话套餐");
+                $("#form-phonePackage-update").form('load', data);
+                price(data.pkgs);
+                $("#dialog-phonePackage-update").modal('show');
+            });
+            //----------------提交按钮--------------
+            $("#formbtn-phonePackage-update").click(function () {
+                $("#unit").removeAttr("disabled");
+                $(this).attr("disabled","disabled");
+                var form = $("#form-phonePackage-update");
+                var json = form.serializeJson();
+                console.log(json);
+                //json.price = parseInt(json.price*100);
+                var buz = {};
+                buz.mobilebuzid = json.mobilebuzid;
+                buz.unit = json.unit;
+                buz.status = json.status;
+                buz.createtime = json.createtime;
+                var pkgs = [];
+                if((json.minpcu).constructor==Array){
+                    for(var i in json.minpcu){
+                        if(json.minpcu[i]==""){
+                            continue;
+                        }
+                        var obj = {};
+                        obj.mobilebuzpkgid = json.mobilebuzpkgid;
+                        obj.mobilebuzid = json.mobilebuzid;
+                        obj.minpcu = json.minpcu[i];
+                        obj.maxpcu = json.maxpcu[i];
+                        obj.price = parseInt(json.price[i]*100);
+                        obj.status = json.status;
+                        pkgs.push(obj);
+                    }
+
+                }else{
+                    var obj = {};
+                    obj.mobilebuzpkgid = json.mobilebuzpkgid;
+                    obj.mobilebuzid = json.mobilebuzid;
+                    obj.minpcu = json.minpcu;
+                    obj.maxpcu = json.maxpcu;
+                    obj.price = parseInt(json.price*100);
+                    obj.status = json.status;
+                    pkgs.push(obj);
+                }
+                console.log(pkgs);
+            /*    pkgs.mobilebuzpkgid = json.mobilebuzpkgid;
+                pkgs.mobilebuzid = json.mobilebuzid;
+                pkgs.minpcu = json.minpcu;
+                pkgs.maxpcu = json.maxpcu;
+                pkgs.price = json.price;
+                pkgs.status = json.status;*/
+                var data = "";
+                var cols = [];
+                if(json.mobilebuzid){
+                    for(var i in json){
+                        cols.push(i);
+                    }
+                    data =  {
+                        "buz": $.objectToString(buz),
+                        "pkgs": $.objectToString(pkgs),
+                        "cols":  $.objectToString(cols)
+                    };
+                }else{
+                    data =  {
+                        "buz": $.objectToString(buz),
+                        "pkgs": $.objectToString(pkgs)
+                    };
+                }
+                $.ajax({
+                    url: "/pipes/mobilebuzoss/update",
+                    data: data,
+                    type: "POST",
+                    error: function (err) {
+                        console.log(err);
+                        $("#formbtn-phonePackage-update").removeAttr("disabled");
+                    },
+                    success: function (res) {
+                        $("#formbtn-phonePackage-update").removeAttr("disabled");
+                        res = JSON.parse(res);
+                        if (res.retcode == 0) {
+                            alert("保存成功");
+                            $("#dialog-phonePackage-update").modal("hide");
+                            mtable.api(true).draw(false);
+                        }
+                    }
+                })
+
+            });
+            reset = function () {
+               var  _html= '<p style="float: left;">套餐分段信息(点击新增一行)</p>'+
+                       '<div style="width:60px;float: left;background: #d0d0d0;cursor:pointer;text-align: center;margin-left: 10px" id="add_group">新增一行</div>'+
+                        '<div class="form-group new_group" style="clear: both;"><div class="col-lg-4 col-md-4">'+
+                        '<label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>单价</label>'+
+                        '<div class="col-lg-7"><input class="form-control" name="price" type="number" step="0.01" value="" data-bv-notempty="单价不能为空">'+
+                        '</div></div>'+
+                        '<div class="col-lg-4 col-md-4">'+
+                        '<label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>最小人数</label>'+
+                        '<div class="col-lg-7"><input class="form-control" name="minpcu" type="number" step="1" value="" data-bv-notempty="最小人数不能为空">'+
+                        '</div></div>'+
+                        '<div class="col-lg-4 col-md-4">'+
+                        '<label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>最大人数</label>'+
+                        '<div class="col-lg-7"><input class="form-control" name="maxpcu" type="number" step="1" value="" data-bv-notempty="最大人数不能为空">'+
+                        '</div></div></div>';
+                $("#group_box").html(_html);
+            };
+
+            price = function(arr){
+                var _html = "";
+                for(var i=0;i<arr.length;i++){
+                    _html+= '<div class="form-group new_group" style="clear: both;"><div class="col-lg-4 col-md-4">'+
+                            '<label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>单价</label>'+
+                            '<div class="col-lg-7"><input class="form-control" name="price" type="number" step="0.01" value="'+parseInt(arr[i].price/100)+'">'+
+                            '</div></div>'+
+                            '<div class="col-lg-4 col-md-4">'+
+                            '<label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>最小人数</label>'+
+                            '<div class="col-lg-7"><input class="form-control" name="minpcu" type="number" step="1" value="'+arr[i].minpcu+'">'+
+                            '</div></div>'+
+                            '<div class="col-lg-4 col-md-4">'+
+                            '<label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>最大人数</label>'+
+                            '<div class="col-lg-7"><input class="form-control" name="maxpcu" type="number" step="1" value="'+arr[i].maxpcu+'">'+
+                            '</div><span class="delete_group" style="display: inline-block;color: white;float: left;position: absolute;top: 0px;cursor: pointer;background: red;">删除</span>' +
+                            '</div></div>';
+                }
+                $("#group_box").html(_html);
+                $("#group_box").prepend('<p style="float: left;">套餐分段信息(点击新增一行)</p>'+
+                        '<div style="width:60px;float: left;background: #d0d0d0;cursor:pointer;text-align: center;margin-left: 10px" id="add_group">新增一行</div>')
+            };
+            var mtable = $('#table-phonePackage-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/mobilebuzoss/query",//请求后台数据接口
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            status: $('#filter_phonePackage_status').val().trim().split(",")
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    }
+                },
+                "aLengthMenu": [[10, 25, 50, -1], ["10条", "25条", "50条", "All"]],
+                columnDefs: [{
+                    className: 'select-checkbox',
+                    targets: 0
+                }],
+                columns: [
+                    {"data": "", render: $.defrender},//data对应的是key
+                    {"data": "mobilebuzid", render:$.defrender},
+                    {"data": "unit", render:function(value){
+                        if(value=="1"){
+                            return "日";
+                        }else if(value==2){
+                            return "周";
+                        }else if(value==3){
+                            return "月";
+                        }else if(value==4){
+                            return "季";
+                        }else if(value==5){
+                            return "年";
+                        }else{
+                            return "未知";
+                        }
+                    }},
+                    {"data": "price", render:function(value,type,full){
+                        if(full.pkgs.length==1){
+                            return parseInt(full.pkgs[0].price/100)+'元'+
+                                    '--'+full.pkgs[0].minpcu+'至'+full.pkgs[0].maxpcu+'人';
+                        }else if(full.pkgs.length>1){
+                            var arr = full.pkgs;
+                            var _html = "";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<div>'+parseInt(arr[i].price/100)+'元'+
+                                        '--'+arr[i].minpcu+'至'+arr[i].maxpcu+'人</div>'
+                            }
+                            return _html;
+                        }else{
+                            return 0;
+                        }
+                    }},
+                    {"data": "status", render: defStatusRender},
+                /*    {"data": "minpcu", render: function (value,type,full) {
+                        if(full.pkgs.length==1){
+                            return full.pkgs[0].minpcu+'--'+full.pkgs[0].maxpcu+"人";
+                        }else if(full.pkgs.length>1){
+                            return full.pkgs[0].minpcu+'--'+full.pkgs[0].maxpcu+"人--更多信息查看详情";
+                        }else{
+                            return 0
+                        }
+                    }},*/
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+            //--------更改状态----------------------------
+            $("#filter_phonePackage_status").change(function () {
+                mtable.api(true).draw(false);
+                $('#table-phonePackage-sheet').dataTable().fnPageChange(0);
+            });
+
+            //新增一行
+            $("#group_box").on('click','#add_group',function () {
+                $("#group_box").append('' +
+                        '<div class="form-group new_group" style="clear: both;"><div class="col-lg-4 col-md-4">'+
+                        '<label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>单价</label>'+
+                        '<div class="col-lg-7"><input class="form-control" name="price" data-bv-notempty type="number" step="0.01"' +
+                        '>'+
+                        '</div></div>'+
+                        '<div class="col-lg-4 col-md-4">'+
+                        '<label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>最小人数</label>'+
+                        '<div class="col-lg-7"><input class="form-control" name="minpcu" type="number" step="1">'+
+                        '</div></div>'+
+                        '<div class="col-lg-4 col-md-4">'+
+                        '<label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>最大人数</label>'+
+                        '<div class="col-lg-7"><input class="form-control" name="maxpcu" type="number" step="1">'+
+                        '</div><span class="delete_group" style="display: inline-block;color: white;float: left;position: absolute;top: 0px;cursor: pointer;background: red;">删除</span>' +
+                        '</div></div>');
+            });
+            $("#group_box").on('click','.delete_group',function(){
+                $(this).parent('.col-lg-4').parent('.new_group').find('input').val("");
+                $(this).parent('.col-lg-4').parent('.new_group').hide();
+            });
+        }
+    })();
+
+</script>
+
+

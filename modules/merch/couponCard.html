@@ -1,0 +1,717 @@
+<div class="page-title">
+    <h4>
+        <span>实物优惠卡管理</span>
+    </h4>
+    <form id="excel_post" method="post" action="pipes/excel/import" enctype="multipart/form-data">
+    <a href="http://oss.diancall.com/modules/excelTemplate/promotioncardTemplate.xls" class="couponfile">Excel模板下载</a>
+    <a href="javascript:void(0)" class="couponfile">点击上传Excel文件
+        <input type="file" id="filepath" name="file" accept="application/vnd.ms-excel,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet">
+    </a>
+    <a href="javascript:void(0)" id="excelSubmit" class="couponfile showFileName" style="display: none">提交Excel表格</a>
+    <a href="javascript:void(0)" class="modalcard couponfile">一键开卡</a>
+    <a href="javascript:void(0)" class="activeCard couponfile">激活卡片</a>
+    <a href="javascript:void(0)" class="exportcard couponfile">导出卡密</a>
+    </form>
+</div>
+<div class="panel-box">
+    <div class="page-title">
+          <form class="filter-search" onsubmit="return false">
+              <div style="display: inline-block;">
+                  <label >商户名称：</label>
+                  <input id="hidden_filter_merchid" type="hidden">
+                  <input id="filter_merchid" style="width:150px;position: relative">
+                  <div class="table-responsive" id="filter_merchid_table">
+                      <table class="table table-hover">
+                      </table>
+                  </div>
+              </div>
+              <button style="width: 100px;margin-right: 20px" id="showall">全部商户</button>
+              <div style="display: inline-block;position: relative">
+                  <label >门店名称：</label>
+                  <input id="hidden_filter_storeid" type="hidden">
+                  <input id="filter_storeid" style="width:150px;position: relative">
+                  <div class="table-responsive" id="filter_storeid_table" style="display: none">
+                      <table class="table table-hover">
+                      </table>
+                  </div>
+              </div>
+              <button style="width: 100px;" id="showallstore">全部门店</button>
+              <div style="display: inline-block;margin: 0 50px 0 0;position: relative">
+                  <label >选择导购：</label>
+                  <select id="filter_status" style="width:200px;">
+                      <option value="0">全部状态</option>
+                      <option value="10">未制卡</option>
+                      <option value="20">已制卡未使用</option>
+                      <option value="30">用户已绑定</option>
+                      <option value="40">已使用</option>
+                      <option value="50">过期作废</option>
+                  </select>
+              </div>
+              <i id="filter-merchCard-qrybtn" class="fa fa-search" style="position: static;"></i>
+          </form>
+    </div>
+    <div class="table-responsive">
+        <table id="table-merchquan-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th>优惠卡ID</th>
+               <!-- <th>优惠卡密码</th>-->
+                <th>有效期限天数</th>
+                <th>状态</th>
+                <th>经手导购ID</th>
+                <th>优惠卡标题</th>
+                <th>优惠卡内容</th>
+                <th>派发时间</th>
+                <th>商户名称</th>
+                <th>门店名称</th>
+                <th>充值用户ID</th>
+                <th>激活时间</th>
+           <!--     <th>分发管理员ID</th>-->
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="modal_card" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">一键开卡</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-card-update" class="m-t form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>制卡数量</label>
+                <div class="col-lg-9">
+                    <input type="number" class="form-control" min="1" id="card_number">
+                </div>
+            </div>
+            <button type="button" class="btn btn-theme btn-lg btn-block " id="makecard_submit">提交</button>
+        </form>
+    </div>
+</div>
+<div id="active_card" class="modal fade" tabindex="-1" data-width="800" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="closeactive">×</button>
+        <h4 class="modal-title">激活卡片</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-activeCard-update" class="m-t form-horizontal" role="form">
+            <div class="form-group">
+                <div class="col-lg-6">
+                    <label class="col-lg-4 control-label"><span style="color: red;">*&nbsp;</span>起始卡号</label>
+                    <div class="col-lg-8">
+                        <input type="number" class="form-control" min="1" name="min">
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label class="col-lg-4 control-label"><span style="color: red;">*&nbsp;</span>截止卡号</label>
+                    <div class="col-lg-8">
+                        <input type="number" class="form-control" min="1" name="max">
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6">
+                    <label class="col-lg-4 control-label"><span style="color: red;">*&nbsp;</span>商户</label>
+                    <div class="col-lg-8">
+                        <input id="hidden_merchid" type="hidden" name="merchid">
+                        <input id="merchid" style="position: relative;" class="form-control" name="merchname">
+                        <div class="table-responsive" id="merchid_table">
+                            <table class="table table-hover">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label class="col-lg-4 control-label"><span style="color: red;">*&nbsp;</span>门店</label>
+                    <div class="col-lg-8">
+                        <input id="hidden_storeid" type="hidden" name="storeid">
+                        <input id="storeid" style="position: relative" class="form-control" name="storename">
+                        <div class="table-responsive" id="storeid_table" style="display: none">
+                            <table class="table table-hover">
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6">
+                    <label class="col-lg-4 control-label"><span style="color: red;"></span>赠送流量</label>
+                    <div class="col-lg-8">
+                        <select name="fluxpkgid1" id="fluxpkgid" class="form-control">
+                        </select>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label class="col-lg-4 control-label"><span style="color: red;"></span>赠送语音</label>
+                    <div class="col-lg-8">
+                        <select name="voicetimes1" class="form-control">
+                            <option value="0">不赠送</option>
+                            <option value="3600">60分钟 -价值4.8元</option>
+                            <option value="6000">100分钟 -价值8元</option>
+                            <option value="12000">200分钟 -价值16元</option>
+                            <option value="30000">500分钟 -价值40元</option>
+                            <option value="60000">1000分钟 -价值80元</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-6">
+                    <label class="col-lg-4 control-label"><span style="color: red;"></span>赠送代金</label>
+                    <div class="col-lg-8">
+                        <input name="cashvalue1" placeholder="输入赠送的代金券金额" class="form-control" >
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <label class="col-lg-4 control-label"><span style="color: red;"></span>赠送礼品</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" name="giftname">
+                    </div>
+                </div>
+            </div>
+            <button type="button" class="btn btn-theme btn-lg btn-block " id="active-submit-btn">提交</button>
+        </form>
+    </div>
+</div>
+<div id="export_card" class="modal fade" tabindex="-1" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">导出卡密</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-card-export" class="m-t form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>起始卡号</label>
+                <div class="col-lg-9">
+                    <input type="number" class="form-control" min="1" id="min">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>截止卡号</label>
+                <div class="col-lg-9">
+                    <input type="number" class="form-control" min="1" id="max">
+                </div>
+            </div>
+            <button type="button" class="btn btn-theme btn-lg btn-block " id="export_submit">提交</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    {
+        //获取流量套餐
+        $.ajax({
+            url: "/pipes/merchcard/queryfluxpackage",
+            data: {},
+            dataType: "JSON",
+            type: "POST",
+            success: function (res) {
+                if (res && res.retcode > 0) {
+                    alert(res.retinfo)
+                } else {
+                    var _html = "";
+                    $("#fluxpkgid").empty();
+                    for (var i = 0; i < res.length; i++) {
+                        _html += '<option value=' + res[i].fluxpkgid + '>' + res[i].pkgtitle + '</option>';
+                    }
+                    $("#fluxpkgid").html('<option value="0">不赠送流量</option>');
+                    $("#fluxpkgid").append(_html);
+                }
+            },
+            error: function (err) {
+                console.log(err);
+            }
+        });
+        $("#filepath").on("change",function(){
+            var filePath=$(this).val();
+            var arr=filePath.split('\\');
+            var fileName=arr[arr.length-1];
+            if(fileName.indexOf("promotioncardTemplate.")>=0){
+                $(".showFileName").html("提交"+fileName);
+                $(".showFileName").show();
+            }else{
+                $(".showFileName").hide();
+                alert("请按提示上传文件");
+                console.log(fileName);
+            }
+        });
+        $("#excelSubmit").click(function(){
+     var fileupload = document.getElementById("filepath");
+     if(fileupload.files.length === 0) {
+         alert("未选中上传文件");
+         return false;
+     }
+     var excel = fileupload.files[0];
+            var fm = new FormData();
+            fm.append('file', excel);
+            $.ajax({
+                url:"pipes/excel/import",
+                data: fm,
+                contentType: false, //禁止设置请求类型
+                processData: false,
+                type:"POST",
+                success:function(res){
+                    var res = JSON.parse(res);
+                    if(res.retcode===0){
+                        alert("提交成功!卡号" + res.result +"未成功写入数据库！请审阅！");
+                        $("#filepath").val("");
+                        $(".showFileName").hide();
+                        mtable.api(true).draw(false);
+                        $('#table-merchquan-sheet').dataTable().fnPageChange(0);
+                    }else{
+                        alert(res.retinfo);
+                    }
+                },
+                error:function(err){
+                    console.log(err);
+                }
+            });
+        });
+        //点击一键开卡
+        $(".modalcard").click(function(){
+            $("#modal_card").modal('show');
+        });
+        //点击一键开卡的提交按钮
+        $("#makecard_submit").click(function(){
+            var card_number = $("#card_number").val().trim();
+            $.get('http://oss.diancall.com/pipes/merchcard/makecard/'+card_number,function (res) {
+                var res = JSON.parse(res);
+                if(res.retcode===0){
+                    $("#modal_card").modal('hide');
+                    mtable.api(true).draw(false);
+                    alert("制卡任务已提交后台，待生成完毕可导出卡密！");
+                }
+            })
+        });
+        //-----点击激活卡片---------------------
+        $(".activeCard").click(function(){
+            $('#form-activeCard-update').data('bootstrapValidator', null);
+            cardacticevalidator();
+            $('#form-activeCard-update').form('reset');
+           $("#active_card").modal('show');
+        });
+        //点击导出卡密
+        $(".exportcard").click(function(){
+            $("#export_card").modal('show');
+        });
+        //点击导出卡密提交按钮
+        $("#export_submit").click(function(){
+            var min = $("#min").val();
+            var max = $("#max").val();
+            $("#export_card").modal('hide');
+            window.open('http://oss.diancall.com/pipes/merchcard/exportexcel?bean={"cardid":{"min":'+min +',"max":'+max+'}}');
+        });
+        if (system_memberinfo && system_memberinfo.memberid) {
+            //过滤商户名称输入框获得焦点时&&过滤商户名称输入框按键操作时
+            $("#filter_merchid").focus(function(){
+                var data2={
+                    merchname:$("#filter_merchid").val().trim()
+                };
+                ajaxFilterMerch(data2);
+            });
+            $("#filter_merchid").blur(function(){
+                $("#filter_merchid_table").hide();
+            });
+            $("#filter_merchid").keyup(function(){
+                var data2={
+                    merchname:$("#filter_merchid").val().trim()
+                };
+                ajaxFilterMerch(data2);
+            });
+            $("#merchid").focus(function(){
+                var data={
+                    merchname:$("#merchid").val().trim()
+                };
+                ajaxMerch(data);
+            });
+            $("#merchid").blur(function(){
+                $("#merchid_table").hide();
+            });
+            $("#merchid").keyup(function(){
+                var data={
+                    merchname:$("#merchid").val().trim()
+                };
+                ajaxMerch(data);
+            });
+            function ajaxMerch(data){
+                $.ajax({
+                    url:"/pipes/merch/query",
+                    data:{"bean":$.objectToString(data)},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            $("#merchid_table").find("table").html("");
+                            var arr= res.rows||[];
+                            var _html="";
+                            var filterhtml="";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<tr><td><input type="hidden" value="'+arr[i].merchid+'">'+arr[i].merchname+'</td></tr>'
+                            }
+                            var filtertable = $("#merchid_table");
+                            filtertable.find("table").html(_html);
+                            filtertable.find('td').css("width","150px");
+                            filtertable.find('td').css("cursor","pointer");
+                            filtertable.show();
+                            filtertable.find('td').css("padding","10px");
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            function ajaxFilterMerch(data){
+                $.ajax({
+                    url:"/pipes/merch/query",
+                    data:{"bean":$.objectToString(data)},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            $("#filter_merchid_table").find("table").html("");
+                            var arr= res.rows||[];
+                            var _html="";
+                            var filterhtml="";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<tr><td><input type="hidden" value="'+arr[i].merchid+'">'+arr[i].merchname+'</td></tr>'
+                            }
+                            var filtertable = $("#filter_merchid_table");
+                            filtertable.find("table").html(_html);
+                            filtertable.find('td').css("width","150px");
+                            filtertable.find('td').css("cursor","pointer");
+                            filtertable.show();
+                            filtertable.find('td').css("padding","10px");
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            //过滤商户名称时点击商户名称的table和在输入框直接敲击回车时
+            $("#filter_merchid_table").on('mousedown','td',function(){
+                $("#filter_merchid").val($(this).text());
+                $("#hidden_filter_merchid").val($(this).find('input').val());
+                $("#filter_merchid_table").hide();
+            });
+            $("#merchid_table").on('mousedown','td',function(){
+                $("#merchid").val($(this).text());
+                $("#hidden_merchid").val($(this).find('input').val());
+                $("#merchid_table").hide();
+            });
+            $('#filter_merchid').bind('keypress', function (event) {
+                if (event.keyCode == 13) {
+                    $('#filter_merchid_table').find('table').children(':first').find('td').trigger('click');
+                }
+            });
+            $("#showall").click(function(){
+                $("#filter_merchid").val("");
+                $("#hidden_filter_merchid").val("");
+                $("#filter_merchid_table").hide();
+                mtable.api(true).draw(false);
+                $('#table-merchquan-sheet').dataTable().fnPageChange(0);
+            });
+
+            //------过滤门店----------------------------------------------------
+            //过滤门店名称输入框获得焦点时&&过滤商户名称输入框按键操作时
+            $("#filter_storeid").focus(function(){
+                var data2={
+                    storename:$("#filter_storeid").val().trim()
+                };
+                ajaxFilterStore(data2);
+            });
+            $("#filter_storeid").blur(function(){
+                $("#filter_storeid_table").hide();
+            });
+            $("#filter_storeid").keyup(function(){
+                var data2={
+                    storename:$("#filter_storeid").val().trim()
+                };
+                ajaxFilterStore(data2);
+            });
+            $("#storeid").focus(function(){
+                var data2={
+                    storename:$("#storeid").val().trim()
+                };
+                ajaxStore(data2);
+            });
+            $("#storeid").blur(function(){
+                $("#storeid_table").hide();
+            });
+            $("#storeid").keyup(function(){
+                var data2={
+                    storename:$("#storeid").val().trim()
+                };
+                ajaxStore(data2);
+            });
+            function ajaxStore(data){
+                $.ajax({
+                    url:"/pipes/store/query",
+                    data:{"bean":$.objectToString(data)},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            $("#storeid_table").find("table").html("");
+                            var arr= res.rows||[];
+                            var _html="";
+                            var filterhtml="";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<tr><td><input type="hidden" value="'+arr[i].storeid+'">'+arr[i].storename+'</td></tr>'
+                            }
+                            var filtertable = $("#storeid_table");
+                            filtertable.find("table").html(_html);
+                            filtertable.find('td').css("width","150px");
+                            filtertable.find('td').css("cursor","pointer");
+                            filtertable.show();
+                            filtertable.find('td').css("padding","10px");
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            function ajaxFilterStore(data){
+                $.ajax({
+                    url:"/pipes/store/query",
+                    data:{"bean":$.objectToString(data)},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            $("#merchtable").find("table").html("");
+                            var arr= res.rows||[];
+                            var _html="";
+                            var filterhtml="";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<tr><td><input type="hidden" value="'+arr[i].storeid+'">'+arr[i].storename+'</td></tr>'
+                            }
+                            var filtertable = $("#filter_storeid_table");
+                            filtertable.find("table").html(_html);
+                            filtertable.find('td').css("width","150px");
+                            filtertable.find('td').css("cursor","pointer");
+                            filtertable.show();
+                            filtertable.find('td').css("padding","10px");
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            //过滤门店名称时点击门店名称的table和在输入框直接敲击回车时
+            $("#filter_storeid_table").on('mousedown','td',function(){
+                $("#filter_storeid").val($(this).text());
+                $("#hidden_filter_storeid").val($(this).find('input').val());
+                $("#filter_storeid_table").hide();
+            });
+            $('#filter_storeid').bind('keypress', function (event) {
+                if (event.keyCode == 13) {
+                    $('#filter_storeid_table').find('table').children(':first').find('td').trigger('click');
+                }
+            });
+            $("#storeid_table").on('mousedown','td',function(){
+                $("#storeid").val($(this).text());
+                $("#hidden_storeid").val($(this).find('input').val());
+                $("#storeid_table").hide();
+            });
+            $('#storeid').bind('keypress', function (event) {
+                if (event.keyCode == 13) {
+                    $('#storeid_table').find('table').children(':first').find('td').trigger('click');
+                }
+            });
+            $("#showallstore").click(function(){
+                $("#filter_storeid").val("");
+                $("#hidden_filter_storeid").val("");
+                $("#filter_storeid_table").hide();
+                mtable.api(true).draw(false);
+                $('#table-merchquan-sheet').dataTable().fnPageChange(0);
+            });
+            $("#closeactive").click(function () {
+                $("#hidden_storeid").val("");
+                $("#hidden_merchid").val("");
+            });
+            //----------------点击提交激活卡片--------
+            $("#active-submit-btn").click(function(){
+               var form = $("#form-activeCard-update");
+               var json = form.serializeJson();
+                var cardid={};
+                cardid.min = json.min;
+                cardid.max = json.max;
+                json.cardid = cardid;
+                delete json.min;
+                delete json.max;
+                delete json.merchname;
+                delete json.storename;
+                $('#form-activeCard-update').bootstrapValidator('validate');
+                if( $('#form-activeCard-update').data('bootstrapValidator').isValid()) {
+                    $.ajax({
+                        url: "/pipes/merchcard/updatepromotioncardbatch",
+                        data: {"bean": $.objectToString(json)},
+                        dataType: "JSON",
+                        type: "POST",
+                        error: function (err) {
+                            console.log(err);
+                        },
+                        success: function (res) {
+                            //to军昆
+                            if (res.retcode === 0) {
+                                alert('激活成功');
+                                $("#active_card").modal('hide');
+                                mtable.api(true).draw(false);
+                                $('#table-merchquan-sheet').dataTable().fnPageChange(0);
+                            } else {
+                                alert(res.retinfo);
+                            }
+                        }
+                    })
+                }
+            });
+            //--------------获取消费过的优惠券-------------------------------------
+            var mtable = $('#table-merchquan-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/merchcard/query",
+                    dataSrc:"data",
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            merchid:$("#hidden_filter_merchid").val(),
+                            storeid:$("#hidden_filter_storeid").val(),
+                           status:$("#filter_status").val().trim()
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    }
+                },
+                "aLengthMenu": [[10, 25, 50, -1], [10, 25, 50, "All"]],
+                columns: [
+                    {"data":"cardid",render:$.defrender},
+                   /* {"data":"cardpwd",render:$.defrender},*/
+                    {"data":"validday",render:$.defrender},
+                    {"data":"status",render:function(value,type,full){
+                        if(value==10){
+                            return "未制卡";
+                        }else if(value==20){
+                            return "已制卡未使用";
+                        }else if(value==30){
+                            return "用户已绑定";
+                        }else if(value==40){
+                            return "已使用";
+                        }else if(value==50){
+                            return "过期作废";
+                        }else{
+                            return "未知";
+                        }
+                    }},
+                    {"data":"saleuserid",render:$.defrender},
+                    {"data":"content",render:$.defrender},
+                    {"data":"fluxPackage1",render:function(value,type,full){
+                            var voicetime="";
+                            var cashvalue="";
+                            var giftname="";
+                            if(full.voicetimes1/60){
+                                voicetime = full.voicetimes1/60+'分钟';
+                            }
+                            if(full.cashvalue1){
+                                cashvalue = full.cashvalue1l
+                            }
+                            if(full.giftname){
+                                giftname = full.giftname;
+                            }
+                            if(!value){
+                                return voicetime+cashvalue+giftname;
+                            }else{
+                                return value.pkgtitle+voicetime+cashvalue+giftname;
+                            }
+
+                    }},
+                    {"data":"distributetime",render:Date.DateFormatter},
+                     {"data":"merchInfo",render:function(value,type,full){
+                        if(value){
+                            return value.merchname;
+                        }else{
+                            return "未知"
+                        }
+
+                     }},
+                     {"data":"storeInfo",render:function(value,type,full){
+                         if(value){
+                             return value.storename;
+                         }else{
+                             return "未知"
+                         }
+                     }},
+                    {"data":"custuserid",render:function(value){
+                         return value.toString(36);
+                    }},
+                    {"data":"usetime",render:Date.DateFormatter},
+                  /*  {"data":"managerid",render:$.defrender},*/
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+            //根据导购搜索实物优惠卡使用信息
+           $("#filter-merchCard-qrybtn").click(function(){
+             $('#table-merchquan-sheet').dataTable().fnPageChange(0);
+             mtable.api(true).draw(false);
+             });
+            //--------------激活卡片的表单验证----------
+            function cardacticevalidator(){
+            $('#form-activeCard-update').bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    min: {
+                        validators: {
+                            notEmpty: {
+                                message: '起始卡号不能为空'
+                            }
+                        }
+                    },
+                    max: {
+                        validators: {
+                            notEmpty: {
+                                message: '截止卡号不能为空'
+                            }
+                        }
+                    },
+                    merchname: {
+                        validators: {
+                            notEmpty: {
+                                message: '门店名称不能为空'
+                            }
+                        }
+                    },
+                    storename: {
+                        validators: {
+                            notEmpty: {
+                                message: '商户名称不能为空'
+                            }
+                        }
+                    }
+                }
+            });
+            }
+        }
+    }
+
+</script>

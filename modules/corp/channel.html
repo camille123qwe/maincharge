@@ -1,0 +1,168 @@
+<div class="page-title">
+    <a id="button-channel-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增渠道</a>
+    <a id="button-channel-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改渠道</a>
+</div>
+<div class="panel-box">    
+    <div class="page-title">
+        <form class="filter-search" style="width: 400px;">
+            <input id="filter_channelname" type="text" placeholder="渠道名称" style="width: 350px;">
+            <i id="filter-channel-qrybtn" class="fa fa-search"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="table-channel-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>渠道ID</th>
+                    <th>渠道名称</th>
+                    <th>状 态</th>
+                    <th>联系人</th>
+                    <th>联系电话</th>
+                    <th>备注</th>
+                    <th>创建时间</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-channel-update" class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none;"> 
+    <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button> 
+        <h4 id="dtitle-channel-update" class="modal-title">修改渠道</h4> 
+    </div>
+    <div class="modal-body"> 
+        <form id="form-channel-update" class="m-t form-horizontal" role="form"> 
+            <input  name="channelid" type="hidden">
+             <div class="form-group">
+                <label class="col-lg-2 control-label" class="form-control" required="">选择企业</label>
+                <div class="col-lg-10">
+                	<select id="selectChannelId" name="corpid"></select>
+                	
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">渠道名称</label>
+                <div class="col-lg-10"><input  name="channelname" placeholder="渠道名称" class="form-control" required=""></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">联系人</label>
+                <div class="col-lg-10"><input name="linkman" placeholder="联系人" class="form-control" required=""></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">联系电话</label>
+                <div class="col-lg-10"><input name="linktel" type="tel" placeholder="联系电话" class="form-control"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-2 control-label">备注说明</label>
+                <div class="col-lg-10"><textarea name="remark" placeholder="备注说明" style="height: 8rem;" class="form-control"></textarea></div>
+            </div>
+            <br>
+            <button id="formbtn-channel-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br> 
+        </form> 
+    </div> 
+    <div id="tips-channel-update" class="module-alert-tips"></div><br>  
+</div>
+
+<script>
+
+    {
+        if (system_memberinfo && system_memberinfo.memberid) {
+
+            //----------------------------------------------------
+            var mtable = $('#table-channel-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/channel/query",
+                    data: function (f) {
+                    	debugger;
+                        f.bean = JSON.stringify({
+                        	channelname: $('#filter_channelname').val().trim()
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    },
+                },
+                columnDefs: [{
+                        className: 'select-checkbox',
+                        targets: 0
+                    }],
+                columns: [
+                    {"data": "", render: $.defrender},
+                 	{"data": "channel36id", render: $.defrender},
+                    {"data": "channelname", render: $.defrender} ,
+                    {"data": "status", render: defStatusRender} ,
+                    {"data": "linkman", render: $.defrender},
+                    {"data": "linktel", render: $.defrender},
+                    {"data": "remark", render: $.defrender},
+                    {"data": "createtime", render: Date.DateFormatter} 
+                ]
+            });
+            $('#filter-channel-qrybtn').bind("click", function () {
+                mtable.api(true).draw(false);
+            });
+            //--------------------------- 初始化修改企业 -----------------------------
+            $('#button-channel-create').bind("click", function () {
+                $('#form-gfield-password').show();
+                $('#dtitle-channel-update').html("新增渠道");
+                $("#tips-channel-update").html('');
+                $("#form-channel-update").form('reset');
+                $('#dialog-channel-update').modal('show');
+            });
+            $('#button-channel-update').bind("click", function () {
+                var data = mtable.api(true).row({selected: true}).data();
+                if (!data || !data.channelid) {
+                    alert("请选择一条记录！");
+                    return;
+                }
+                $('#form-gfield-password').hide();
+                $('#dtitle-channel-update').html("修改渠道");
+                $("#tips-channel-update").html('');
+                $("#form-channel-update").form('reset');
+                $("#form-channel-update").form('load', data);
+                $('#dialog-channel-update').modal('show');
+            });
+            //------------------------ 新增&修改渠道 -----------------------------                
+            $('#formbtn-channel-update').bind("click", function (e) {
+                var form = $("#form-channel-update");
+                if (!form.form('validate')) return;
+                var json = form.serializeJson();
+                $.ajax({
+                    cache: false,
+                    dataType: "json",
+                    type: "POST",
+                    url: '/pipes/channel/update',
+                    data: {
+                        "bean": $.objectToString(json),
+                    },
+                    error: function () {//请求失败处理函数
+                        alert('请求失败');
+                    },
+                    success: function (data) {
+                        $("#dialog-channel-update").modal('hide');
+                        mtable.api(true).draw(false);
+                    }
+                });
+            });
+        }
+    }
+	$(function (){
+        $.ajax({
+            cache: false,
+            dataType: "json",
+            type: "POST",
+            url: '/pipes/corp/list',
+            error: function () {//请求失败处理函数
+                alert('请求失败');
+            },
+            success: function (corps) {
+            	$('#selectChannelId').find('option').remove();
+             	var content = "";
+            	for(var i = 0;i<corps.length;i++){
+					content = content+ '<option value="'+corps[i].corpid+'">'+corps[i].corpname+'</option>'; //corps[i].c            		
+            	}
+            	$("#selectChannelId").append(content); 
+            }
+        });
+	});
+</script>

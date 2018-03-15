@@ -1,0 +1,667 @@
+<div class="page-title">
+    <a id="button-charge-create" href="javascript:void(0);"><i class="fa fa-plus"></i>创建套餐信息</a>
+   <!-- <a id="button-charge-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>更新企业信息</a>-->
+</div>
+<div class="panel-box">
+    <div class="page-title">
+        <form class="filter-search" >
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <label >选择企业：</label>
+                <select id="filter_corpid" name="corpid" style="width:150px;">
+                    <option value="0">全部企业</option>
+                </select>
+            </div>
+            <div style="display: inline-block;margin: 0 50px 0 0;">
+                <label >选择品牌：</label>
+                <select id="filter_brandid" name="brandid" style="width:150px;">
+                    <option value="0">全部品牌</option>
+                </select>
+            </div>
+          <!--  <div style="display: inline-block;margin: 0 50px 0 0;">
+                <label >品牌名称：</label>
+                <input id="filter_chargename" type="text" placeholder="品牌名称" style="width: 200px;">
+            </div>-->
+            <i id="filter-charge-qrybtn" class="fa fa-search" style="position: static;"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="table-charge-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+               <!-- <th>充值套餐编号</th>-->
+              <!--  <th>企业ID</th>-->
+                <th>企业品牌名称</th>
+                <th>充值套餐标题</th>
+                <th>套餐面值(元)</th>
+                <th>状态</th>
+             <!--   <th>包月时长</th>-->
+                <th>套餐有效时间</th>
+                <th>创建时间</th>
+                <th>套餐详情</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-charge-update" class="modal fade" tabindex="-1" data-width="950" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="chargeClose">×</button>
+        <h4 id="dtitle-charge-update" class="modal-title">创建套餐信息</h4>
+    </div>
+    <div class="modal-body" style="background: #fdf8e4">
+        <form id="form-charge-update" class="m-t form-horizontal" role="form">
+            <input type="hidden" name="chargepkgid" placeholder="充值套餐编号">
+            <ul class="list-group">
+                <li class="list-group-item"><span class=" panel panel-primary">企业信息</span>
+                    <div class="form-group">
+                        <div class="col-lg-6">
+                            <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>选择企业</label>
+                            <div class="col-lg-8">
+                                <select id="selectCorpId" name="corpid" class="form-control" required></select>
+                            </div>
+                        </div>
+                        <div class="col-lg-6">
+                            <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>选择品牌</label>
+                            <div class="col-lg-8">
+                                <select id="selectBrandId" name="brandid" class="form-control" required>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+            <ul class="list-group">
+                <li class="list-group-item"><span class=" panel panel-primary">套餐信息</span>
+                    <div>
+                        <div style="display: inline-block;width: 50%;float: left">
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>标题</label>
+                                <div class="col-lg-8"><input  name="pkgtitle" placeholder="充值套餐标题" class="form-control" maxlength="32" data-error="品牌名称不能为空"><div class="help-block with-errors"></div></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>子标题</label>
+                                <div class="col-lg-8"><input id="chargeno"  name="pkgsubtitle" placeholder="充值套餐子标题" class="form-control"><div class="help-block with-errors"></div></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>套餐面值</label>
+                                <div class="col-lg-8"><input name="pkgmoney" placeholder="套餐面值(元)" class="form-control"><div class="help-block with-errors"></div></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>状态</label>
+                                <div class="col-lg-8">
+                                    <select id="selectchargeStatus" name="status" class="form-control" required>
+                                        <option value="10">正常</option>
+                                        <option value="20">待审批</option>
+                                        <option value="40">冻结</option>
+                                        <option value="50">隐藏</option>
+                                        <option value="60">关闭</option>
+                                        <option value="70">过期</option>
+                                        <option value="80">删除</option>
+                                    </select>
+                                </div>
+                            </div>
+                          <!--  <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>包月时长</label>
+                                <div class="col-lg-4"><input name="monthly" disabled placeholder="包月时长" class="form-control"></div>
+                                <div class="col-lg-5"><span> 0表示不包月; 非0表示月数，12的倍数表示年数</span></div>
+                            </div>-->
+                        </div>
+                        <div  style="display: inline-block;width: 50%;">
+                            <ul class="list-group" style="display: inline-block">
+                                <li class="list-group-item"><span class=" panel panel-primary">套餐详情</span>
+                                    <label class="control-label"><span style="color: red">*&nbsp;</span>永久有效请输入0，套餐确认提交后不可更改</label>
+                                    <div class="form-group">
+                                    <div class="col-lg-6">
+                                        <label class="control-label" for="zc"><input type="checkbox" class="select-checkbox" required id="zc" class="pkgvaluecheck" name="pkgitemtype" value="10">
+                                        直充话费</label>
+                                        <input type="text" placeholder="直充话费金额"  name="pkgitemvalue" id="pkgitemvalue" >
+                                       <!-- <input type="text" disabled placeholder="有效时间" name="pkgitemvalidtime" style="width: 100px">
+                                            <select disabled name="pkgitemvalidtype" required style="width:58px">
+                                                <option value="0"></option>
+                                                <option value="10">年</option>
+                                                <option value="20">月</option>
+                                                <option value="30">周</option>
+                                                <option value="40">日</option>
+                                            </select>-->
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <label class="control-label" for="jf"><input type="checkbox" id="jf"  class="pkgvaluecheck" name="pkgitemtype" value="40">积分</label>
+                                        <input type="text" placeholder="积分" name="pkgitemvalue">
+                                      <!--  <input disabled type="text" placeholder="有效时间" name="pkgitemvalidtime" style="width: 100px">
+                                        <select disabled name="pkgitemvalidtype" required style="width:58px">
+                                            <option value="0"></option>
+                                            <option value="10">年</option>
+                                            <option value="20">月</option>
+                                            <option value="30">周</option>
+                                            <option value="40">日</option>
+                                        </select>-->
+                                    </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-lg-6">
+                                        <label class="control-label" for="show"><input type="checkbox" id="show"  class="pkgvaluecheck" name="pkgitemtype" value="52">来电显示</label>
+                                        <input type="text" placeholder="来电显示" name="pkgitemvalue" >
+                                        <input type="text" placeholder="有效时间" name="pkgitemvalidtime" style="width: 100px">
+                                        <select  name="pkgitemvalidtype" required style="width:58px">
+                                            <option value="10">年</option>
+                                            <option value="20">月</option>
+                                            <option value="30">周</option>
+                                            <option value="40">日</option>
+                                        </select>
+                                        </div>
+                                    </div>
+
+                               <!--     <div class="col-lg-6 checkbox">
+                                        <label class="control-label" for="zs"><input disabled type="checkbox" id="zs" name="pkgitemtype" value="12">赠送话费</label>
+                                        <input disabled type="text" placeholder="赠送话费金额" name="pkgitemvalue">
+                                        <input disabled type="text" placeholder="有效时间" name="pkgitemvalidtime" style="width: 100px">
+                                        <select disabled name="pkgitemvalidtype" required style="width:58px">
+                                            <option value="10">年</option>
+                                            <option value="20">月</option>
+                                            <option value="30">周</option>
+                                            <option value="40">日</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6 checkbox">
+                                        <label class="control-label" for="float"><input disabled type="checkbox" id="float" name="pkgitemtype" value="20">数据流量</label>
+                                        <input disabled type="text" placeholder="数据流量金额" name="pkgitemvalue">
+                                        <input disabled type="text" placeholder="有效时间" name="pkgitemvalidtime" style="width: 100px">
+                                        <select  disabled name="pkgitemvalidtype" required style="width:58px">
+                                            <option value="10">年</option>
+                                            <option value="20">月</option>
+                                            <option value="30">周</option>
+                                            <option value="40">日</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6 checkbox">
+                                        <label class="control-label" for="zsfloat"><input disabled type="checkbox" id="zsfloat" name="pkgitemtype" value="22">赠送流量</label>
+                                        <input type="text" disabled placeholder="赠送流量" name="pkgitemvalue">
+                                        <input type="text" disabled placeholder="有效时间" name="pkgitemvalidtime" style="width: 100px">
+                                        <select disabled name="pkgitemvalidtype" required style="width:58px">
+                                            <option value="10">年</option>
+                                            <option value="20">月</option>
+                                            <option value="30">周</option>
+                                            <option value="40">日</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6 checkbox">
+                                        <label class="control-label" for="sw"><input disabled type="checkbox" id="sw" name="pkgitemtype" value="30">实物类</label>
+                                        <input disabled type="text" placeholder="实物名称" name="pkgitemvalue">
+                                        <input disabled type="text" placeholder="有效时间" name="pkgitemvalidtime" style="width: 100px">
+                                        <select  disabled name="pkgitemvalidtype" required style="width:58px">
+                                            <option value="10">年</option>
+                                            <option value="20">月</option>
+                                            <option value="30">周</option>
+                                            <option value="40">日</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-lg-6 checkbox">
+                                        <label class="control-label" for="vip"><input disabled type="checkbox" id="vip" name="pkgitemtype" value="50">VIP</label>
+                                        <input disabled type="text" placeholder="vip" name="pkgitemvalue">
+                                        <input disabled type="text" placeholder="有效时间" name="pkgitemvalidtime" style="width: 100px">
+                                        <select  disabled name="pkgitemvalidtype" required style="width:58px">
+                                            <option value="10">年</option>
+                                            <option value="20">月</option>
+                                            <option value="30">周</option>
+                                            <option value="40">日</option>
+                                        </select>
+                                    </div>-->
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-9">
+                            <label class="col-lg-2 control-label"><span style="color: red;">*&nbsp;</span>套餐时效</label>
+                            <div class="col-lg-4"><input name="starttime" type="date" placeholder="套餐创建时间" class="form-control"></div>
+                            <label class="control-label col-lg-1">——</label>
+                            <div class="col-lg-4"><input name="endtime" type="date" placeholder="套餐有效时间" class="form-control"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-8 control-label"><span style="color: red;">*&nbsp;</span>套餐信息确认提交后不可更改，请谨慎填写</label>
+                    </div>
+                    <!-- <div class="form-group">
+                         <input type="hidden" name="createtime">
+                         <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>截止时间</label>
+                         <div class="col-lg-8"><input name="endtime" type="date" placeholder="套餐有效时间" class="form-control"><div class="help-block with-errors"></div></div>
+                     </div>-->
+                </li>
+            </ul>
+            <br>
+            <button id="formbtn-charge-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form>
+    </div>
+    <div id="tips-charge-update" class="module-alert-tips"></div><br>
+</div>
+<script>
+    {
+        if (system_memberinfo && system_memberinfo.memberid) {
+            //----------------------------------------------------
+          itemsarr = function(value,type,full){
+              var _html="";
+              var itemtype="";
+              var validtype="";
+              for(var i=0;i<value.length;i++){
+                  if(value[i].pkgitemtype==10) itemtype="直充话费";
+                  if(value[i].pkgitemtype==12) itemtype="赠送话费";
+                  if(value[i].pkgitemtype==20) itemtype="数据流量";
+                  if(value[i].pkgitemtype==22) itemtype="赠送流量";
+                  if(value[i].pkgitemtype==30) itemtype="实物类";
+                  if(value[i].pkgitemtype==40) itemtype="积分";
+                  if(value[i].pkgitemtype==50) itemtype="VIP";
+                  if(value[i].pkgitemtype==52) itemtype="来电显示";
+                  if(value[i].pkgitemvalidtype==10) validtype="年";
+                  if(value[i].pkgitemvalidtype==20) validtype="月";
+                  if(value[i].pkgitemvalidtype==30) validtype="周";
+                  if(value[i].pkgitemvalidtype==40) validtype="日";
+                  if(value[i].pkgitemvalidtime==0){ value[i].pkgitemvalidtime="永久";validtype=""}
+                  _html+="<tr>"+"<td>"+itemtype+value[i].pkgitemvalue/100+"元"+"</td>"+"<td id='zcyj'>"+"有效期"+value[i].pkgitemvalidtime+validtype+"</td>"+"</tr>";
+              }
+              var _table="<table class='table-condensed'>"+"<tbody>"+_html+"</tbody>"+"</table>"
+              return _table;
+          };
+          pkgmoney = function(value ){
+              return "￥"+value/100;
+          };
+          time= function (value, type, full) {
+              if (!full['starttime']) return "";
+              var s = "" + full['starttime'];
+              var s = s.substring(0, 4) + "-" + s.substring(4, 6) + "-" + s.substring(6);
+              var e = "" + full['endtime'];
+              var e = e.substring(0, 4) + "-" + e.substring(4, 6) + "-" + e.substring(6);
+              return s + " 至 " + e;
+          };
+          title= function(value, type, full){
+              if (!full['pkgtitle']) return "";
+              var main="主标题:"+full['pkgtitle'];
+              if(!full['pkgsubtitle']){
+                  var sub=""
+              }else{
+                  var sub="子标题:"+full['pkgsubtitle'];
+              }
+
+              return main+"<br>"+sub;
+          };
+          monthly=function(value, type, full){
+              if(value==0){
+                  return ""
+              }
+              if(value>0&&value<12){
+                  return value+"个月"
+              }
+              if(value%12==0){
+                  return value/12+"年"
+              }
+              if(value>12&&value%12!=0){
+                  return value+"个月"
+              }
+          }
+
+              var mtable = $('#table-charge-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/charge/query",
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            brandid: $('#filter_brandid').val().trim()
+
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                        /*   $("#table-charge-sheet").children("tr").css("background","red");*/
+                    }
+                },
+                columnDefs: [{
+                    className: 'select-checkbox',
+                    targets: 0
+                }],
+                columns: [
+                    {"data": "", render: $.defrender},
+                   /* {"data": "chargepkgid", render: $.defrender},*/
+                /*    {"data": "corpid", render: $.defrender},*/
+                    {"data": "brandname", render: $.defrender},
+                    {"data": "pkgtitle", render: title},
+                    {"data": "pkgmoney", render: pkgmoney},
+                    {"data": "status", render: defStatusRender},
+                  /*  {"data": "monthly", render:monthly},*/
+                    {"data": "starttime", render: time},
+                    {"data": "createtime", render: Date.DateFormatter},
+                    {"data": "items", render:itemsarr},
+                ],
+                "createdRow": function( row, data, dataIndex ) {
+                    $(row).children('td').eq(3).attr('style', 'text-align: center;')
+                }
+            });
+
+            $('#filter-charge-qrybtn').bind("click", function () {
+                mtable.api(true).draw(false);
+                $('#table-charge-sheet').dataTable().fnPageChange(0);
+
+            });
+            //---------------------------点击关闭按钮摧毁验证-----------------------------
+            $("#chargeClose").on("click",function(){
+                $("#form-charge-update").data('bootstrapValidator').destroy();
+                $('#form-charge-update').data('bootstrapValidator', null);
+            });
+
+            //--------------------------- 初始化新增&修改品牌 -----------------------------
+            $('#button-charge-create').bind("click", function () {
+                $("#selectCorpId").attr("disabled", false);
+                $('#form-gfield-password').show();
+                $('#dtitle-charge-update').html("创建套餐信息");
+                $("#tips-charge-update").html('');
+                $("#form-charge-update").form('reset');
+                $("#chargeno").removeAttr("readonly");
+                chargevalidator();
+                $('#dialog-charge-update').modal('show');
+                $("#selectCorpId").change(function(e){
+                    $.ajax({
+                        url: "/pipes/brand/query",
+                        data: {bean: JSON.stringify({
+                            corpid: $('#selectCorpId').val().trim()
+                        })},
+                        dataType:"json",
+                        type:"post",
+                        success:function(data){
+                            console.log(data);
+                            $('#selectBrandId').find('option').remove();
+                            var content = '';
+                            for (var i = 0; i < data.rows.length; i++) {
+                                content = content + '<option value="' + data.rows[i].brandid + '">' + data.rows[i].brandname + '</option>';
+                            }
+                            $("#selectBrandId").append(content);
+                        }
+                    })
+                });
+            });
+            //---------------提交企业信息-----------------------------------
+            function datetime(time){
+                var arr=time.split("-");
+                var num="";
+                for(var i=0;i<arr.length;i++){
+                    num+=arr[i];
+                }
+                Number(num);
+                time=num;
+                return time;
+            }
+            $('#formbtn-charge-update').bind("click", function (e) {
+                var form = $("#form-charge-update");
+                var json = form.serializeJson();
+                console.log(json);
+                var arr={};
+                json.pkgitemvalue=changearr(json.pkgitemvalue);
+                arr.pkgitemvalue=json.pkgitemvalue;
+                arr.pkgitemvalue=changemoney(arr.pkgitemvalue);
+                console.log(arr);
+                console.log(arr.pkgitemvalue);
+                arr.pkgitemtype=json.pkgitemtype;
+                /*json.pkgitemvalidtime=changearr(json.pkgitemvalidtime);*/
+                arr.pkgitemvalidtime=json.pkgitemvalidtime;
+                console.log(json.pkgitemvalidtime)
+               /* json.pkgitemvalidtype=changearr(json.pkgitemvalidtype);*/
+                arr.pkgitemvalidtype=json.pkgitemvalidtype;
+                delete json.pkgitemvalue;
+                delete json.pkgitemtype;
+                delete json.pkgitemvalidtime;
+                delete json.pkgitemvalidtype;
+                arr=jsonchange(arr);
+                json.items=arr;
+                json.pkgmoney=json.pkgmoney*100;
+                json.starttime=datetime(json.starttime);
+                json.endtime=datetime(json.endtime);
+                function changemoney(arr) {
+                    for(var i=0;i<arr.length;i++){
+                        arr[i]=arr[i]*100;
+                    }
+                    return arr;
+                }
+                function changearr(arr){
+                    for(var i=0;i<arr.length;i++){
+                        if(arr[i] == "" || typeof(arr[i]) == "undefined") {
+                            arr.splice(i,1);
+                            i= i-1;
+                        }
+                    }
+                    return arr;
+                }
+                function jsonchange(arrList){
+                    var jsonO =arrList;
+                    // 获取可变数组长度
+                   /* if(typeof (jsonO[0].billgroupid)=="string"){
+                        json.money=json.money*100;
+                        return [json];
+                    }*/
+                    var pkgitemvaluelength = jsonO.pkgitemvalue.length;
+                    //构造一个数组存取解析的json数据
+                    var arrZ = [];
+                    for(var v=0;v<pkgitemvaluelength;v++){
+                        var obj1 = new Object();
+
+                        if(jsonO.pkgitemtype[v]==52){
+                        obj1.pkgitemvalidtype = jsonO.pkgitemvalidtype;
+                        obj1.pkgitemvalidtime = jsonO.pkgitemvalidtime;
+                        }else{
+                           /* obj1.pkgitemvalidtype=0;*/
+                        }
+
+                        obj1.pkgitemvalue = jsonO.pkgitemvalue[v];
+                        obj1.pkgitemtype = jsonO.pkgitemtype[v];
+
+                        arrZ[v] = obj1;
+                    }
+                    arrList=arrZ;
+                    return arrList;
+                }
+                $('#form-charge-update').bootstrapValidator('validate');
+                if( $('#form-charge-update').data('bootstrapValidator').isValid()){
+                    $.ajax({
+                        cache: false,
+                        dataType: "json",
+                        type: "POST",
+                        url: '/pipes/charge/create',
+                        data: {
+                            "bean": $.objectToString(json),
+                        },
+                        error: function () {//请求失败处理函数
+                            alert('请求失败');
+                        },
+                        success: function (data) {
+                            if (data && data.retcode && data.retcode > 0)
+                            {
+                                alert(data.retinfo);
+                            } else
+                            {
+                                $("#dialog-charge-update").modal('hide');
+                                $("#form-charge-update").data('bootstrapValidator').destroy();
+                                $('#form-charge-update').data('bootstrapValidator', null);
+                                mtable.api(true).draw(false);
+                            }
+                        }
+                    });
+                }else{
+                    alert("验证失败,请按要求填写");
+                    return;
+                }
+            });
+            //----------------直充话费是否为空信息校验-------------------------------
+            $("#pkgitemvalue").blur(function(){
+
+                if(!$("#pkgitemvalue").val()){
+                    if(!$("#pkgitemvalue").next("#help").length>0){
+                        $("#pkgitemvalue").after('<small class="help-block" id="help" data-bv-for="pkgitemvalue" data-bv-result="INVALID">直充话费不能为空</small>')
+                    }
+                }else {
+                    $("#help").replaceWith("")
+                }
+            });
+            function chargevalidator() {
+                $('#form-charge-update').bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {/*验证*/
+                        pkgtitle: {/*键名和input name值对应*/
+                            message: 'The corpname is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '套餐标题不能为空'
+                                }
+                            }
+                        },
+                        pkgmoney: {
+                            message:'',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '套餐面值不能为空'
+                                },
+                                regexp: {
+                                    regexp: /^\d*$/,
+                                    message: '套餐面值只能由数字构成'
+                                }
+                            }
+                        },
+                       /* starttime: {
+                            message:"",
+                            validators: {
+                                notEmpty: {/!*非空提示*!/
+                                    message: '套餐创建时间不能为空'
+                                }
+                            }
+                        },
+                        endtime: {
+                            message:"",
+                            validators: {
+                                notEmpty: {/!*非空提示*!/
+                                    message: '套餐有效期时间不能为空'
+                                }
+                            }
+                        },*/
+                        pkgitemvalue: {
+                            message:"",
+                            validators: {
+                                regexp: {
+                                    regexp: /^\d+$/,
+                                    message: '细则金额只能输入数字'
+                                }
+                            }
+                        },
+                        pkgitemvalidtime:{
+                            message:"",
+                            validators: {
+                                regexp: {
+                                    regexp: /^\d+$/,
+                                    message: '有效时间只能输入数字'
+                                }
+                            }
+                        }
+                /*        monthly: {
+                            message:"",
+                            validators: {
+                                notEmpty: {/!*非空提示*!/
+                                    message: '包月时长不能为空'
+                                },
+                                regexp: {
+                                    regexp: /^\d*$/,
+                                    message: '包月时长只能是整数'
+                                }
+                            }
+                        },*/
+                    }
+                });
+            }
+        }
+        $(function () {//给企业增加选项
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/corp/list',
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (corps) {
+                /*    $('#filter_corpid').find('option').remove();
+                    $("#selectCorpId").find('option').remove();*/
+                    var content = '';
+                    var headcontent='';
+                    for (var i = 0; i < corps.rows.length; i++) {
+                        if( corps.rows[i].corpid==15000001){
+                            headcontent='<option selected value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>';
+                            $.ajax({
+                                url: "/pipes/brand/query",
+                                data: {bean: JSON.stringify({
+                                    corpid: corps.rows[i].corpid
+                                })},
+                                dataType:"json",
+                                type:"post",
+                                success:function(data){
+                                    $('#filter_brandid').find('option').remove();
+                                    var content = '';
+                                    for (var i = 0; i < data.rows.length; i++) {
+                                        content = content + '<option value="' + data.rows[i].brandid + '">' + data.rows[i].brandname + '</option>';
+                                    }
+                                    $("#filter_brandid").append(content);
+                                    $("#selectBrandId").append(content);
+                                }
+                            });
+                            continue;
+                        }
+                        content = content + '<option value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>'; //corps[i].c
+                    }
+                    $("#filter_corpid").append(headcontent);
+                    $("#filter_corpid").append(content);
+                    $("#selectCorpId").append(headcontent);
+                    $("#selectCorpId").append(content);
+                }
+            });
+        });
+      /*  $(function () {//给品牌增加选项
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/brand/query',
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (corps) {
+                    $('#selectBrandId').find('option').remove();
+                    var content = '';
+                    for (var i = 0; i < corps.rows.length; i++) {
+                        content = content + '<option value="' + corps.rows[i].brandid + '">' + corps.rows[i].brandname + '</option>';
+                    }
+                    $("#selectBrandId").append(content);
+                    $("#filter_brandid").append(content);
+                }
+            });
+
+        });*/
+        $("#filter_corpid").change(function(e){
+            $.ajax({
+                url: "/pipes/brand/query",
+                data: {bean: JSON.stringify({
+                    corpid: $('#filter_corpid').val().trim()
+                })},
+                dataType:"json",
+                type:"post",
+                success:function(data){
+                    debugger;
+                    $('#filter_brandid').find('option').remove();
+                    var content = '';
+                    for (var i = 0; i < data.rows.length; i++) {
+                        content = content + '<option value="' + data.rows[i].brandid + '">' + data.rows[i].brandname + '</option>';
+                    }
+                    $("#filter_brandid").append(content);
+                }
+            })
+        });
+    }
+
+</script>

@@ -1,0 +1,355 @@
+<div class="page-title">
+    <a id="button-cdaward-create" href="javascript:void(0);"><i class="fa fa-plus"></i>设置奖励信息</a>
+    <a id="button-cdaward-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改奖励信息</a>
+    <div style="display: inline-block;margin: 0 30px 0 0;">
+        <label >状态</label>
+        <select name="status" id="filter_cdaward_status" style="width:150px;">
+            <option value="10,20">正常,待审批</option>
+            <option value="10">正常</option>
+            <option value="20">待审批</option>
+            <option value="80">删除</option>
+            <option value="10,20,80">全部</option>
+        </select>
+    </div>
+</div>
+<div class="panel-box">
+    <div class="table-responsive">
+        <table id="table-cdaward-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>抽奖奖励ID</th>
+                <th>奖品标题</th>
+                <th>奖品图片</th>
+                <th>状态</th>
+                <th>赠送流量包</th>
+                <th>赠送语音时长</th>
+                <th>折扣信息</th>
+                <th>概率</th>
+                <th>实物礼品</th>
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-cdaward-update" class="modal fade" tabindex="-1" data-width="800" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="recordclose">×</button>
+        <h4 id="dtitle-cdaward-update" class="modal-title">设置抽奖信息</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-cdaward-update" class="m-t form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>奖品级别</label>
+                <div class="col-lg-8">
+                    <select name="awardtitle" class="form-control">
+                        <option value="再接再厉哦">再接再厉哦</option>
+                        <option value="参与鼓励奖">参与鼓励奖</option>
+                        <option value="五等奖">五等奖</option>
+                        <option value="四等奖">四等奖</option>
+                        <option value="三等奖">三等奖</option>
+                        <option value="二等奖">二等奖</option>
+                        <option value="一等奖">一等奖</option>
+                        <option value="特等奖">特等奖</option>
+                    </select>
+                </div>
+            </div>
+            <input type="hidden" name="imgsrc" id="imgsrc">
+            <div class="form-group" id="faceimg" >
+                <img id="indeximg" class="center-block" src="" style="width:160px;height:80px;border: 1px solid #ddd"/>
+            </div>
+            <div class="form-group">
+                <div class="btn btn-success fileinput-button center-block"
+                     id="bannerpic_btn" style="width: 150px;">
+                    <i class="fa fa-fw fa-upload"></i>
+                    <span>上传图片<br/>(比例:80*40)</span>
+                    <input type="file" name="file" class="green_upload_btn">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>状态</label>
+                <div class="col-lg-8">
+                    <select name="status" class="form-control">
+                        <option value="20">待审批</option>
+                        <option value="10">正常</option>
+                        <option value="80">删除</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label" >赠送流量(M)</label>
+                <div class="col-lg-8" >
+                    <select name="fluxpkgid" id="fluxpkgid" class="form-control">
+
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label" >通话时长(分)</label>
+                <div class="col-lg-8" >
+                    <select name="voicetimes" class="form-control">
+                        <option value="0">不赠送</option>
+                        <option value="3600">60分钟 -价值4.8元</option>
+                        <option value="6000">100分钟 -价值8元</option>
+                        <option value="12000">200分钟 -价值16元</option>
+                        <option value="30000">500分钟 -价值40元</option>
+                        <option value="60000">1000分钟 -价值80元</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label" >折扣信息</label>
+                <div class="col-lg-8" >
+                    <input name="discountid" type="hidden" id="discountid">
+                    <input class="form-control" id="filter_discountid" style="position: relative" placeholder="无折扣信息可不选">
+                    <div class="table-responsive" id="filter_discountid_table" style="width: 90%;left: 10%;">
+                        <table class="table table-hover">
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label" >抽奖概率</label>
+                <div class="col-lg-8" ><input  name="probability" placeholder="万分之几" class="form-control"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label" >实物礼品</label>
+                <div class="col-lg-8" ><input  name="giftname" placeholder="礼品名称" class="form-control"></div>
+            </div>
+            <input type="hidden" name="createtime" id="createtime">
+            <input type="hidden" name="cdrawardid" id="cdrawardid">
+
+            <button id="formbtn-cdaward-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form>
+    </div>
+</div>
+<script>
+    (function(){
+        if (system_memberinfo && system_memberinfo.memberid) {
+            $("#filter_discountid").focus(function(){
+                var data = {
+                    title:$("#filter_discountid").val().trim()
+                };
+                ajaxFilterRush(data);
+            });
+            $("#filter_discountid").blur(function(){
+                $("#filter_discountid_table").hide();
+            });
+            $("#filter_discountid").keyup(function(){
+                var data = {
+                    title:$("#filter_discountid").val().trim()
+                };
+                ajaxFilterRush(data);
+            });
+            //过滤供应商门店名称时所用的ajax
+            function ajaxFilterRush(data){
+                $.ajax({
+                    url:"/pipes/ossdiscount/query",
+                    data:{"bean":$.objectToString(data)},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            var arr= res.rows||[];
+                            var _html="";
+                            var filterhtml="";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<tr><td><input type="hidden" value="'+arr[i].discountid+'">'+arr[i].title+'</td></tr>'
+                            }
+                            var filtertable = $("#filter_discountid_table");
+                            filtertable.find("table").html(_html);
+                            filtertable.find('td').css("width","150px");
+                            filtertable.find('td').css("cursor","pointer");
+                            filtertable.show();
+                            filtertable.find('td').css("padding","10px");
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            //过滤商户名称时点击商户名称的table和在输入框直接敲击回车时
+            $("#filter_discountid_table").on('mousedown','td',function(){
+                $("#filter_discountid").val($(this).text());
+                $("#discountid").val($(this).find('input').val());
+                $("#filter_discountid_table").hide();
+            });
+            $('#filter_discountid').bind('keypress', function (event) {
+                if (event.keyCode == 13) {
+                    $('#filter_discountid_table').find('table').children(':first').find('td').trigger('click');
+                }
+            });
+            $('#bannerpic_btn').fileupload({
+                type: 'POST',
+                url: '/pipes/upload/cdraward',
+                formData: {},
+                done: function (e, data) {//设置文件上传完毕事件的回调函数
+                    var json = JSON.parse(data.result);
+                    var imghtml = '<img id="indeximg" class="center-block" src="/dir/cdraward/' + json.fileid + '" style="width:160px;height:80px;border: 1px solid #ddd"/>'
+                    $("#faceimg").html(imghtml);
+                    $("#imgsrc").val(json.fileid);
+                }
+            });
+            //获取流量套餐
+            $.ajax({
+                url: "/pipes/cdaward/fluxpkgs",
+                data: {},
+                dataType: "JSON",
+                type: "POST",
+                success: function (res) {
+                    if (res && res.retcode > 0) {
+                        alert(res.retinfo)
+                    } else {
+                        var _html = "";
+                        $("#fluxpkgid").empty();
+                        for (var i = 0; i < res.length; i++) {
+                            _html += '<option value=' + res[i].fluxpkgid + '>' + res[i].pkgtitle + '</option>';
+                        }
+                        $("#fluxpkgid").html('<option value="0">不赠送流量</option>');
+                        $("#fluxpkgid").append(_html);
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+            //-------新增奖励信息------------------
+            $("#button-cdaward-create").click(function () {
+                $("#formbtn-cdaward-update").removeAttr("disabled");
+                $("#form-cdaward-update").form('reset');
+                $("#createtime").val("");
+                $("#cdrawardid").val("");
+                $("#imgsrc").val("");
+                $("#indeximg").attr("src","");
+                $("#dtitle-cdaward-update").text("设置抽奖信息");
+                $("#dialog-cdaward-update").modal("show");
+            });
+            //------修改奖励信息------------------
+            $("#button-cdaward-update").click(function(){
+                var data = mtable.api(true).row({selected: true}).data();
+                if (!data || !data.cdrawardid){
+                    alert("请选择一条记录！");
+                    return;
+                }
+                $("#dtitle-cdaward-update").text("修改抽奖信息");
+                $("#form-cdaward-update").form('reset');
+                $("#form-cdaward-update").form('load', data);
+                if(data.discountid){
+                    $("#filter_discountid").val(data.discounttitle);
+                }
+                $("#indeximg").attr("src","/dir/cdraward/"+data.imgsrc);
+                $("#dialog-cdaward-update").modal('show');
+
+            });
+            //----------------提交按钮--------------
+            $("#formbtn-cdaward-update").click(function () {
+                $(this).attr("disabled","disabled");
+                var form = $("#form-cdaward-update");
+                var json = form.serializeJson();
+                if (json.imgsrc == "") {
+                    alert("请上传图片");
+                    $("#formbtn-cdaward-update").removeAttr("disabled");
+                    return;
+                }
+                console.log(json);
+                var data = "";
+                if(json.cdrawardid){
+                    var cols=[];
+                    for(var key in json){
+                        if(key=="cdrawardid"){
+                            continue
+                        }
+                        cols.push(key);
+                    }
+                    data =  {
+                        "bean": $.objectToString(json),
+                        "cols":  $.objectToString(cols)
+                    };
+                }else{
+                    data =  {
+                        "bean": $.objectToString(json)
+                    };
+                }
+                $.ajax({
+                    url: "/pipes/cdaward/update/",
+                    data: data,
+                    type: "POST",
+                    error: function (err) {
+                        console.log(err);
+                        $("#formbtn-cdaward-update").removeAttr("disabled");
+                    },
+                    success: function (res) {
+                        $("#formbtn-cdaward-update").removeAttr("disabled");
+                        res = JSON.parse(res);
+                        if (res.retcode == 0) {
+                            alert("保存成功");
+                            $("#dialog-cdaward-update").modal("hide");
+                            mtable.api(true).draw(false);
+                        }else{
+                            alert(res.retinfo);
+                        }
+                    }
+                })
+
+            });
+            var mtable = $('#table-cdaward-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/cdaward/query",//请求后台数据接口
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            status: $('#filter_cdaward_status').val().trim().split(",")
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    }
+                },
+                "aLengthMenu": [[10, 25, 50, -1], ["10条", "25条", "50条", "All"]],
+                columnDefs: [{
+                    className: 'select-checkbox',
+                    targets: 0
+                }],
+                columns: [
+                    {"data": "", render: $.defrender},//data对应的是key
+                    {"data": "cdrawardid",render:$.defrender},
+                    {"data": "awardtitle",render:$.defrender()},
+                    {"data": "imgsrc",render:function(value){
+                        return '<img src="/dir/cdraward/'+value+'">';
+                    }},
+                    {"data": "status", render:defStatusRender},
+                    {"data": "fluxpkgid", render:function (value,type,full) {
+                        return full.pkgtitle;
+                    }},
+                    {"data": "voicetimes", render: function(value){
+                        return value/60+"分钟通话"
+                    }},
+                    {"data": "discounttitle", render: function(value){
+                        if(value){
+                            return value;
+                        }else{
+                            return "";
+                        }
+                    }},
+                    {"data": "probability", render:function(value){
+                        return "万分之"+value;
+                    }},
+                    {"data": "giftname", render: $.defrender},
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+            //--------更改状态----------------------------
+            $("#filter_cdaward_status").change(function () {
+                mtable.api(true).draw(false);
+                $('#table-cdaward-sheet').dataTable().fnPageChange(0);
+            });
+        }
+    })();
+
+</script>
+
+

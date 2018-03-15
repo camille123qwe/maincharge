@@ -1,0 +1,242 @@
+<div class="page-title">
+    <!--<a id="button-corpfinance-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增财务信息</a>
+    <a id="button-corpfinance-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改财务信息</a>-->
+    <h4 style="padding-left: 10px">企业财务查询 </h4>
+</div>
+<div class="panel-box">
+    <div class="page-title">
+        <form class="filter-search" >
+            <div style="display: inline-block;margin: 0 50px 0 0;">
+                <label >选择企业：</label>
+                <select id="filter_finance_corpid" name="corpid" style="width:150px;">
+                    <option value="0">全部企业</option>
+                </select>
+            </div>
+           <!-- <div style="display: inline-block;margin: 0 50px 0 0;">
+                <label >企业ID：</label>
+                <input id="filter_financeno" type="text" placeholder="企业ID" style="width: 200px;">
+            </div>-->
+            <i id="filter-corpfinance-qrybtn" class="fa fa-search" style="position: static;"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="table-corpfinance-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+               <!-- <th>企业36ID</th>-->
+                <th>企业名称</th>
+                <th>账户金额</th>
+                <th>赠送金额</th>
+                <th>更新时间</th>
+                <th>创建时间</th>
+                <th>状态</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-corpfinance-update" class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="dtitle-corpfinance-update" class="modal-title">修改企业</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-corpfinance-update" class="m-t form-horizontal" role="form">
+            <input  name="corpfinanceid" type="hidden">
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">企业ID</label>
+                        <div class="col-lg-9"><input  name="corp36id" id="financeId" placeholder="企业ID" class="form-control" maxlength="128"  required  data-error="工商注册号不能为空"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">操作人ID</label>
+                        <div class="col-lg-9"><input  name="corpid" id="companyId" placeholder="操作人ID" class="form-control" maxlength="32"  required  data-error="企业名称不能为空"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <div id="form-gfield-password" class="form-group">
+                        <label class="col-lg-3 control-label">金额</label>
+                        <div class="col-lg-9"><input name="money" placeholder="金额" class="form-control" required=""></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">状态</label>
+                        <div class="col-lg-9">
+                            <select id="selectCorpStatus" name="status" class="form-control">
+                                <option value="10">正常</option>
+                                <option value="0">待审批</option>
+                                <option value="40">冻结</option>
+                                <option value="50">隐藏</option>
+                                <option value="60">关闭</option>
+                                <option value="70">过期</option>
+                                <option value="80">删除</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">账户余额</label>
+                        <div class="col-lg-9"><input name="money" placeholder="账户余额" class="form-control  datetimepicker" required data-error="请输入合同签订日期"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">更新时间</label>
+                        <div class="col-lg-9"><input name="createtime" placeholder="更新时间" class="form-control" required data-error="请输入合同有效日期"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">企业编号</label>
+                        <div class="col-lg-9"><input name="updatetime" placeholder="企业编号" class="form-control" required data-error="上传合同快照图片"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <!--   <div class="form-group">
+                          <label class="col-lg-3 control-label">联系人</label>
+                          <div class="col-lg-9"><input name="linkman" placeholder="联系人" class="form-control"></div>
+                      </div>-->
+                 <!--   <div class="form-group">
+                        <label class="col-lg-3 control-label">合同金额</label>
+                        <div class="col-lg-9"><input name="financemoney" type="tel" placeholder="合同金额" class="form-control" required  data-error="请输入正确的合同金额"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">创建时间</label>
+                        <div class="col-lg-9"><input name="createtime" type="tel" placeholder="创建时间" class="form-control" required pattern="^\d{8,13}$" data-error="请输入正确的联系电话"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">操作人ID</label>
+                        <div class="col-lg-9"><input name="memberid" placeholder="操作人ID" class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">操作人名称</label>
+                        <div class="col-lg-9"><input name="membername" placeholder="操作人名称" class="form-control"></div>
+                    </div>-->
+                <br>
+                    <button id="formbtn-corpfinance-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+
+        </form>
+    </div>
+    <div id="tips-corpfinance-update" class="module-alert-tips"></div><br>
+</div>
+
+<script>
+    {
+        if (/*system_memberinfo && system_memberinfo.memberid*/1) {
+            //----------------------------------------------------
+            financemoney=function(value,type, full){
+                return value/100;
+            }
+            var mtable = $('#table-corpfinance-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/corpfinance/query",
+                    dataSrc:"data",
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            corpid: $('#filter_finance_corpid').val().trim(),
+                          /*  corpid: $('#filter_finance_corpid').val().trim()*/
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    },
+                },
+                columnDefs: [{
+                    className: 'select-checkbox',
+                    targets: 0
+                }],
+                columns: [
+                    {"data": " ", render: $.defrender},
+                    {"data":"corpinfo.corpname",render:$.defrender},
+                    {"data": "money", render: financemoney},
+                    {"data": "submoney", render: $.defrender},
+                    {"data": "updatetime", render: Date.DateFormatter},
+                    {"data": "createtime", render:Date.DateFormatter},
+                    {"data": "status", render: defStatusRender}
+
+                ]
+            });
+            $('#filter-corpfinance-qrybtn').bind("click", function () {
+                try {
+
+                    mtable.api(true).draw(false);
+
+                }catch(e){
+                    console.log(e);
+                    alert(666);
+                }
+            });
+        }
+        //-------------------------新增&修改财务信息-----------------------------
+        $('#button-corpfinance-create').bind("click", function () {
+            //$('#form-gfield-password').show();
+            $('#dtitle-corpfinance-update').html("新增财务信息");
+            $("#tips-corpfinance-update").html('');
+            $("#form-corpfinance-update").form('reset');
+            $('#dialog-corpfinance-update').modal('show');
+        });
+        //-------------------------10.9-1413修改合同-----------------------------------------------------
+        $('#button-corpfinance-update').bind("click", function () {
+            var data = mtable.api(true).row({selected: true}).data();
+            if (!data || !data.corp36id) {
+                alert("请选择一条记录！");
+                return;
+            }
+            $('#form-gfield-password').hide();
+            $('#dtitle-corpfinance-update').html("修改合同");
+            $("#tips-corpfinance-update").html('');
+            $("#form-corpfinance-update").form('reset');
+            $("#form-corpfinance-update").form('load', data);
+            console.log(data);
+            $('#dialog-corpfinance-update').modal('show');
+            /*   $("#financeId").attr("disabled", "disabled");
+             $("#companyId").attr("disabled", "disabled");*/
+        });
+        //-------------------------10.9-1150点击提交按钮新增合同--------------------------------------------
+        $("#formbtn-corpfinance-update").on("click",function(){
+            var form=$("#form-corpfinance-update");
+            var json = form.serializeJson();
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/corpfinance/query',
+                data: {
+                    "bean": $.objectToString(json),
+                },
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data && data.retcode && data.retcode > 0)
+                    {
+                        alert(data.retinfo);
+                    } else
+                    {
+                        $("#dialog-corpfinance-update").modal('hide');
+                        mtable.api(true).draw(false);
+                        console.log(00);
+                        console.log(data)
+                    }
+                }
+            });
+        });
+
+        //-----------------------------------------------------------------------------
+        $(function () {
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/corp/list',
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (corps) {
+                    var content = '';
+                    var headcontent='';
+                    for (var i = 0; i < corps.rows.length; i++) {
+                        if( corps.rows[i].corpid==15000001){
+                            headcontent='<option selected value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>';
+                            continue;
+                        }
+                        content = content + '<option value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>'; //corps[i].c
+                    }
+                    $("#filter_finance_corpid").append(headcontent);
+                    $("#filter_finance_corpid").append(content);
+
+                }
+            });
+        });
+    }
+</script>

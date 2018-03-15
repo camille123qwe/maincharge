@@ -1,0 +1,529 @@
+<div class="page-title">
+    <a id="button-merchrecord-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增商户充值记录</a>
+    <a id="button-merchrecord-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>商户充值记录查询</a>
+</div>
+<div class="panel-box">
+    <div class="page-title">
+        <form class="filter-search" onsubmit="return false">
+            <div style="display: inline-block;margin: 0 10px 0 0;">
+                <label >商户名称：</label>
+             <!--   <select id="filter_merch" name="merchname" style="width:200px;">
+                    <option value="0">全部商户</option>
+                </select>-->
+                <input id="hidden_filter_merchid" type="hidden">
+                <input id="filter_merchid" style="width:150px;position: relative">
+                <div class="table-responsive" id="filter_merchid_table">
+                    <table class="table table-hover">
+                    </table>
+                </div>
+            </div>
+            <button style="width: 150px;" id="showall">显示全部</button>
+            <div style="display: inline-block;margin: 0 10px 0 0;">
+                <label >入账类型：</label>
+                <select id="acctype" style="width:150px;position: relative">
+                    <option value="10">对公入账</option>
+                    <option value="20">对私入账</option>
+                </select>
+            </div>
+            <div style="display: inline-block;margin: 0 10px 0 0;">
+                <label >企业打款账号：</label>
+                <input id="merchbankno" style="width:150px;position: relative">
+            </div>
+            <i id="filter-merchrecord-qrybtn" class="fa fa-search" style="position: static;margin-right: 30px"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="table-merchrecord-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>商户名称</th>
+                <th>打款金额</th>
+                <th>商户打款账号</th>
+                <th>公司接收账号</th>
+                <th>入账类型</th>
+                <th>交易流水号</th>
+                <th>流水快照图片名</th>
+                <th>打款交易时间</th>
+                <th>备注说明</th>
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-merchrecord-update" class="modal fade" tabindex="-1" data-width="800" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="recordclose">×</button>
+        <h4 id="dtitle-merchrecord-update" class="modal-title">修改企业</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-merchrecord-update" class="m-t form-horizontal" role="form">
+            <input  name="merchchargeid" type="hidden">
+            <!--<input name="merchid" type="hidden">-->
+            <input name="chargeimg" id="chargeimg" type="hidden">
+            <div class="table-responsive">
+                <table  cellspacing="0" width="100%">
+                    <tr>
+                    <td width="60%">
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">选择商户</label>
+                            <div class="col-lg-9">
+                                    <input type="hidden" name="merchid" id="hiddenmerchid">
+                                    <input id="merchid" name="merchname" class="form-control" style="position: relative">
+                                    <div id="merchtable" class="table-responsive"
+                                         style="position: absolute;background:#fff;z-index: 888;
+                                                 border: solid 1px #eee;max-height:300px;overflow-y: auto;
+                                                    display: none">
+                                        <table class="table table-hover" cellspacing="0" width="100%"></table>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">交易流水号</label>
+                            <div class="col-lg-9"><input name="chargeno" class="form-control"><div class="help-block with-errors"></div></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">商户打款账号</label>
+                            <div class="col-lg-9"><input name="merchbankno" class="form-control"></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">红柚子账号</label>
+                            <div class="col-lg-9">
+                                <input name="receivbankno" type="tel" class="form-control" value="755932342610701">
+                                <div class="help-block with-errors"></div></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">打款金额(元)</label>
+                            <div class="col-lg-9"><input name="money" type="tel" class="form-control"><div class="help-block with-errors"></div></div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-3 control-label">打款交易时间</label>
+                            <div class="col-lg-9"><input name="merchbanktime"  placeholder="需与快照中的时间一致,格式例：20170101" class="form-control"></div>
+                        </div>
+                    </td>
+                    <td width="40%" style="overflow: hidden">
+                        <div class="form-group">
+                            <label class="col-lg-4 control-label">入账类型</label>
+                            <div class="col-lg-8">
+                                <select id="selecttypeStatus" name="acctype" class="form-control">
+                                    <option value="10">对公入账</option>
+                                    <option value="20">对私入账</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group col-lg-12" style="margin-left: 50px">
+                            <img id="quickimg" src="" style="width: 180px;height: 200px; display: block">
+                        </div>
+                        <div class="btn btn-success fileinput-button" style="margin-left: 90px;">
+                            <i class="fa fa-fw fa-upload"></i>
+                            <span>上传流水快照</span>
+                            <input id="fileupload-goods-btn"  type="file" name="file">
+                        </div>
+                    </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <div class="form-group" style="margin-right: 0">
+                                <label class="col-lg-3 control-label">备注说明</label>
+                                <div class="col-lg-8"><textarea name="remark" id="remark" class="form-control" style="width:342.5px;"></textarea></div>
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br>
+                <button id="formbtn-merchrecord-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    {
+        if (system_memberinfo && system_memberinfo.memberid) {
+            //门店商户名称输入框获得焦点时&&新增门店信息商户名称输入框按键操作时
+            $("#merchid").focus(function(){
+                var data = {
+                    merchname:$("#merchid").val().trim()
+                };
+                ajaxMerch(data);
+            });
+            $("#merchid").blur(function(){
+                $("#merchtable").hide();
+            });
+            $("#merchid").keyup(function(){
+                var data = {
+                    merchname:$("#merchid").val().trim()
+                };
+                ajaxMerch(data);
+            });
+            //过滤商户名称输入框获得焦点时&&过滤商户名称输入框按键操作时
+            $("#filter_merchid").focus(function(){
+                var data2={
+                    merchname:$("#filter_merchid").val().trim()
+                };
+                ajaxFilterMerch(data2);
+            });
+            $("#filter_merchid").blur(function(){
+                $("#filter_merchid_table").hide();
+            });
+            $("#filter_merchid").keyup(function(){
+                var data2={
+                    merchname:$("#filter_merchid").val().trim()
+                };
+                ajaxFilterMerch(data2);
+            });
+            //新增门店信息时获取商户名称所用的ajax
+            function ajaxMerch(data){
+                $.ajax({
+                    url:"/pipes/merch/query",
+                    data:{"bean":$.objectToString(data)},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            $("#merchtable").find("table").html("");
+                            var arr= res.rows||[];
+                            var _html="";
+                            var filterhtml="";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<tr><td><input type="hidden" value="'+arr[i].merchid+'">'+arr[i].merchname+'</td></tr>'
+                            }
+                            $("#merchtable").find("table").html(_html);
+                            $("#merchtable").find('td').css("width",$('#merchid').width()+24+"px");
+                            $("#merchtable").find('td').css("cursor","pointer");
+                            $("#merchtable").show();
+                            $("#merchtable").find('td').css("padding","10px");
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            //过滤商户名称时所用的ajax
+            function ajaxFilterMerch(data){
+                $.ajax({
+                    url:"/pipes/merch/query",
+                    data:{"bean":$.objectToString(data)},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            $("#merchtable").find("table").html("");
+                            var arr= res.rows||[];
+                            var _html="";
+                            var filterhtml="";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<tr><td><input type="hidden" value="'+arr[i].merchid+'">'+arr[i].merchname+'</td></tr>'
+                            }
+                            var filtertable = $("#filter_merchid_table");
+                            filtertable.find("table").html(_html);
+                            filtertable.find('td').css("width","150px");
+                            filtertable.find('td').css("cursor","pointer");
+                            filtertable.show();
+                            filtertable.find('td').css("padding","10px");
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            //新增门店信息时点击商户名称的table和在输入框直接敲击回车时
+            $("#merchtable").on('mousedown','td',function(){
+                $("#merchid").val($(this).text());
+                $("#hiddenmerchid").val($(this).find('input').val());
+                $("#merchtable").hide();
+            });
+            $("#merchid").keydown(function(e){
+                if(e.keyCode==13){
+                    $('#merchtable').find('table').children(':first').find('td').trigger('click');
+                }
+            });
+            //过滤商户名称时点击商户名称的table和在输入框直接敲击回车时
+            $("#filter_merchid_table").on('mousedown','td',function(){
+                $("#filter_merchid").val($(this).text());
+                $("#hidden_filter_merchid").val($(this).find('input').val());
+                $("#filter_merchid_table").hide();
+            });
+            $('#filter_merchid').bind('keypress', function (event) {
+                if (event.keyCode == 13) {
+                    var _=$('#filter_merchid_table').find('table').children(':first').find('td');
+                    $('#filter_merchid_table').find('table').children(':first').find('td').trigger('click');
+                }
+            });
+            $("#showall").click(function(){
+                $("#filter_merchid").val("");
+                $("#hidden_filter_merchid").val("");
+                $("#filter_merchid_table").hide();
+                mtable.api(true).draw(false);
+                $('#table-storeinfo-sheet').dataTable().fnPageChange(0);
+            });
+            billrecordtimglink = function (billrecordimg, type, full) {
+                if(billrecordimg==undefined){
+                    return "";
+                }else{
+                    return "<a href='/dir/billimg/"+ billrecordimg + "' target='_blank'>"+billrecordimg+"</a>";
+                }
+
+            };
+            defcorpaccTyperecord = function (value, type, full) {
+                if(value=="10"){return '<font>对公入账</font>'}
+                if(value=="20"){return '<font>对私入账</font>'}
+            };
+            money=function(value, type, full){
+                var  money = "";
+                if(value%1000000==0){
+                    money = value/1000000+"万元";
+                }else if(value/1000000<0||value<1000000){
+                    money = value/100+"元";
+                }else{
+                    var wan = parseInt(value/1000000);
+                    var yuan = (value -wan*1000000)/100;
+                    money = wan+"万"+yuan+"元";
+                }
+                //return value/100;
+                return money;
+                //return value/1000000+"万";
+            };
+            //----------------------------------------------------
+            var mtable = $('#table-merchrecord-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/merch/chargequery",
+                    dataSrc:"data",
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            merchid: $('#hidden_filter_merchid').val().trim(),
+                            merchbankno:$("#merchbankno").val(),
+                            acctype:$("#acctype").val().trim()
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    }
+                },
+                "aLengthMenu": [[15, 25, 50, -1], ["15条", "25条", "50条", "All"]],
+                columnDefs: [{
+                    className: 'select-checkbox',
+                    targets: 0
+                }],
+                columns: [
+                    {"data": " ", render: $.defrender},
+                    {"data":"membername",render:$.defrender},
+                    {"data": "money", render: money},
+                    {"data": "merchbankno", render: $.defrender},
+                    {"data": "receivbankno", render:$.defrender},
+                    {"data": "acctype", render:   defcorpaccTyperecord},
+                    {"data": "chargeno", render: $.defrender},
+                    {"data": "chargeimg", render: billrecordtimglink},
+                    {"data": "merchbanktime", render:$.defrender},
+                    {"data": "remark", render:$.defrender},
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+            $('#filter-merchrecord-qrybtn').bind("click", function () {
+                $('#table-merchrecord-sheet').dataTable().fnPageChange(0);
+                mtable.api(true).draw(false);
+            });
+        }
+        //---------------上传图片到服务器-----------------------
+        $('#fileupload-goods-btn').fileupload({
+            type: 'POST',
+            url: '/pipes/ueditor?action=uploadimage_billimg',
+            done: function (e, data) {//设置文件上传完毕事件的回调函数
+                var json = JSON.parse(data.result);
+                $("#chargeimg").val(json.fileid);
+                document.getElementById('quickimg').src = '/dir/billimg/' + json.fileid;
+            }
+        });
+        //-------------------------新增商户打款记录-----------------------------
+        $('#button-merchrecord-create').bind("click", function () {
+            $('#dtitle-merchrecord-update').html("新增商户打款记录");
+            $("#form-merchrecord-update").form('reset');
+            document.getElementById('quickimg').src =" ";
+            var markcontent=$("#remark").val();
+            markcontent=markcontent.replace(/<br>/g,"\n");
+            $("#remark").val(markcontent);
+            $('#dialog-merchrecord-update').modal('show');
+            $("#form-merchrecord-update").find('input,select,textarea').attr("disabled",false);
+            $("#formbtn-merchrecord-update").show();
+            billrecordvali();
+        });
+        //-------------------------查询企业打款记录-----------------------------------------------------
+        $('#button-merchrecord-update').bind("click", function () {
+            var data = mtable.api(true).row({selected: true}).data();
+            if (!data || !data.merchid) {
+                alert("请选择一条记录！");
+                return;
+            }
+            data.money=data.money/100;
+            $('#dtitle-merchrecord-update').html("查询企业打款记录");
+            $("#form-merchrecord-update").form('reset');
+            $("#form-merchrecord-update").form('load', data);
+            var markcontent=$("#remark").val();
+            markcontent=markcontent.replace(/<br>/g,"");
+            $("#remark").val(markcontent);
+            document.getElementById('quickimg').src = '/dir/billimg/' + $("#billimg").val();
+            $("#form-merchrecord-update").find('input,select,textarea').attr("disabled",true);
+            $("#formbtn-merchrecord-update").hide();
+            $('#dialog-merchrecord-update').modal('show');
+            billrecordvali();
+
+        });
+        //-------------------------点击提交按钮新增商户打款记录--------------------------------------------
+
+        $("#formbtn-merchrecord-update").on("click",function(){
+            $(this).attr("disabled",true);
+            var form=$("#form-merchrecord-update");
+            var json = form.serializeJson();
+            json.money=Number(json.money).toFixed(2)*100;
+            $('#form-merchrecord-update').bootstrapValidator('validate');
+            var content=json.remark;
+            content=content.replace(/<br>/g,' ');
+            content=content.replace(/\n/g,'<br>');
+            json.remark=content;
+            if($('#form-merchrecord-update').data('bootstrapValidator').isValid()){
+                $.ajax({
+                    cache: false,
+                    dataType: "json",
+                    type: "POST",
+                    url: '/pipes/merch/chargecreate',
+                    data: {
+                        "bean": $.objectToString(json)
+                    },
+                    error: function () {//请求失败处理函数
+                        $("#formbtn-merchrecord-update").removeAttr("disabled");
+                        alert('请求失败');
+                    },
+                    success: function (data) {
+                        $("#formbtn-merchrecord-update").removeAttr("disabled");
+                        if (data && data.retcode && data.retcode > 0)
+                        {
+                            alert(data.retinfo);
+                        } else {
+                            alert("保存成功");
+                            $('#form-merchrecord-update').data('bootstrapValidator').destroy();
+                            $('#form-merchrecord-update').data('bootstrapValidator', null);
+                            $("#dialog-merchrecord-update").modal('hide');
+                            mtable.api(true).draw(false);
+                        }
+                    }
+                });
+            }else{
+                alert("验证失败，请按要求填写信息");
+                $("#formbtn-merchrecord-update").removeAttr("disabled");
+            }
+        });
+        $("#recordclose").on("click",function () {
+            $('#form-merchrecord-update').data('bootstrapValidator').destroy();
+            $('#form-merchrecord-update').data('bootstrapValidator', null);
+        });
+        //---------------验证新增打款记录----------------------------------------------
+        function billrecordvali(){
+            $("#form-merchrecord-update").bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields:{
+                    chargeno:{
+                        message: 'The billno is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '交易流水号不能为空'
+                            },
+                            regexp: { /* 只需加此键值对 */
+                                regexp: /^[A-Za-z0-9]+$/,
+                                message: '交易流水号只能由字母数字组成'
+                            }
+                        }
+                    },
+                    merchbankno:{
+                        message: 'The corpbankno is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: '企业打款账号不能为空'
+                            },
+                            regexp: {
+                                regexp:/^\d{11,19}$/,
+                                message: '企业打款账号只能由数字组成，长度为11-19位'
+                            }
+                        }
+                    },
+                    receivbankno:{
+                        message: 'The recvbankno is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: '企业打款账号不能为空'
+                            },
+                            regexp: {
+                                regexp:/^\d{11,19}$/,
+                                message: '公司接收账号只能由数字组成，长度为11-19位'
+                            }
+                        }
+                    },
+                    money:{
+                        message: 'The money is not valid',
+                        validators:{
+                            notEmpty: {
+                                message: '打款金额不能为空'
+                            },
+                            regexp: {
+                                regexp:/^\d+$/,
+                                message: '打款金额只能由数字组成'
+                            }
+                        }
+                    },
+                    merchbanktime:{
+                        message: 'The merchbanktime is not valid',
+                        validators:{
+                            notEmpty: {
+                                message: '打款交易时间不能为空'
+                            },
+                            regexp: {
+                                regexp:/^\d{8}$/,
+                                message: '打款交易时间需与快照的时间一致,格式例:20170101'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        //-----打款记录中商户选项--------------
+        $(function () {
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                data:{"bean":"{}"},
+                url: '/pipes/merch/query',
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    $('#filter_merch').find('option').remove();
+                    $('#merchChargeId').find('option').remove();
+                    var content = '';
+                    var headcontent='<option value="">全部商户</option>';
+                    var arr = data.rows||[];
+                    for (var i = 0; i < arr.length; i++) {
+                        content = content + '<option value="' + arr[i].merchid + '">' + arr[i].merchname + '</option>';
+                    }
+                    $('#filter_merch').append(headcontent);
+                    $('#filter_merch').append(content);
+                    $('#merchChargeId').html(content);
+                }
+            });
+
+        });
+    }
+</script>

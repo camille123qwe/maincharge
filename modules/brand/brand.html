@@ -1,0 +1,427 @@
+<div class="page-title">
+    <a id="button-brand-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增品牌</a>
+    <a id="button-brand-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改品牌</a>
+</div>
+<div class="panel-box">    
+    <div class="page-title">
+        <form class="filter-search" >
+            <div style="display: inline-block;margin: 0 50px 0 0;">
+                <label >选择企业：</label>
+                <select id="filter_corpid" name="corpid" style="width:150px;">
+                    <option value="0">全部企业</option>
+                </select>
+            </div>
+            <div style="display: inline-block;margin: 0 50px 0 0;">   
+                <label >品牌名称：</label>
+                <input id="filter_brandname" type="text" placeholder="品牌名称" style="width: 200px;">                
+            </div>
+            <i id="filter-brand-qrybtn" class="fa fa-search" style="position: static;"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="table-brand-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                   <!-- <th id="brandip">品牌编号</th>-->
+                    <th>品牌ID</th>
+                    <th>企业名称</th>
+                    <th>品牌名称</th>
+                    <th>状 态</th>
+                    <th>直拨资费</th>
+                    <th>回拨资费</th>
+                    <th>回拨专线名称</th>
+                    <th>客服QQ</th>
+                    <th>联系人</th>
+                    <th>联系电话</th>
+                    <th>项目对接人</th>
+                    <th>项目对接人QQ</th>
+                    <th>旧版OEM平台版本</th>
+                    <th>备注说明</th>
+                    <th>创建时间</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-brand-update" class="modal fade" tabindex="-1" data-width="850" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header"> 
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="brandClose">×</button>
+        <h4 id="dtitle-brand-update" class="modal-title">修改品牌</h4> 
+    </div>
+    <div class="modal-body" style="background: #fdf8e4">
+        <form id="form-brand-update" class="m-t form-horizontal" role="form">
+            <input  name="brandid" type="hidden" id="brand">
+            <input name="brand36id" type="hidden">
+            <ul class="list-group">
+                <li class="list-group-item"><span class=" panel panel-primary">企业信息</span>
+                    <div class="form-group">
+                        <div class="col-lg-6">
+                            <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>选择企业</label>
+                            <div class="col-lg-8">
+                                <select id="selectCorpId" name="corpid" class="form-control" required></select>
+                            </div>
+                        </div>
+                    <div class="col-lg-6">
+                        <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>状态</label>
+                        <div class="col-lg-8">
+                            <select id="selectBrandStatus" name="status" class="form-control" required>
+                                <option value="10">正常</option>
+                                <option value="20">待审批</option>
+                                <option value="40">冻结</option>
+                                <option value="50">隐藏</option>
+                                <option value="60">关闭</option>
+                                <option value="70">过期</option>
+                                <option value="80">删除</option>
+                            </select>
+                        </div>
+                    </div>
+                    </div>
+                </li>
+            </ul>
+            <ul class="list-group">
+                <li class="list-group-item"><span class=" panel panel-primary">品牌信息</span>
+                    <div class="form-group">
+                        <div class="col-lg-4">
+                            <label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>品牌名称</label>
+                            <div class="col-lg-7"><input  name="brandname" placeholder="品牌名称(必填)" class="form-control" maxlength="32" data-error="品牌名称不能为空"><div class="help-block with-errors"></div></div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="col-lg-5 control-label"><span style="color: red;">*&nbsp;</span>品牌ID</label>
+                            <div class="col-lg-7"><input id="brandno"  name="brandno" placeholder="品牌ID(必填)" class="form-control"><div class="help-block with-errors"></div></div>
+                        </div>
+                        <div class="col-lg-4">
+                            <label class="col-lg-5 control-label">版本号</label>
+                            <div class="col-lg-7"><input name="old_oemver" type="tel" placeholder="旧版OEM版本号" class="form-control" data-error="请输入正确的联系电话"><div class="help-block with-errors"></div></div>
+                        </div>
+                    </div>
+                    </li>
+                </ul>
+                <ul class="list-group">
+                    <li class="list-group-item"><span class=" panel panel-primary">资费信息</span>
+                        <div class="form-group">
+                            <div class="col-lg-4">
+                                <label class="col-lg-6 control-label">语音单价(分)</label>
+                                <div class="col-lg-5"><input name="voiceprice" class="form-control"  data-error="请输入语音单价"><div class="help-block with-errors"></div></div>
+                            </div>
+                            <div class="col-lg-4">
+                                <label class="col-lg-6 control-label">短信单价(分)</label>
+                                <div class="col-lg-5"><input name="noteprice" class="form-control" data-error="请输入短信单价" ><div class="help-block with-errors"></div></div>
+                            </div>
+                            <div class="col-lg-4">
+                                <label class="col-lg-6 control-label">流量单价(分)</label>
+                                <div class="col-lg-5"><input name="flowprice" class="form-control" data-error="请输入流量单价"><div class="help-block with-errors"></div></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-4">
+                                <label class="col-lg-6 control-label">直拨资费(分)</label>
+                                <div class="col-lg-5"><input name="directpirce" class="form-control" data-error="请输入直拨资费"><div class="help-block with-errors"></div></div>
+                            </div>
+                            <div class="col-lg-4">
+                                <label class="col-lg-6 control-label">回拨资费(分)</label>
+                                <div class="col-lg-5"><input name="backprice" class="form-control" data-error="请输入回拨资费"><div class="help-block with-errors"></div></div>
+                            </div>
+                            <div class="col-lg-4">
+                                <label class="col-lg-6 control-label">回拨专线名称</label>
+                                <div class="col-lg-5"><input name="backline" class="form-control" data-error="请输入回拨专线名称"><div class="help-block with-errors"></div></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="list-group">
+                    <li class="list-group-item"><span class=" panel panel-primary">企业联系信息</span>
+                        <div class="form-group">
+                            <div class="col-lg-6">
+                                <label class="col-lg-4 control-label">联系人</label>
+                                <div class="col-lg-8"><input name="linkman" placeholder="联系人" class="form-control" data-error="请输入回拨专线名称"><div class="help-block with-errors"></div></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="col-lg-4 control-label"><span style="color: red;">*&nbsp;</span>联系电话</label>
+                                <div class="col-lg-8"><input name="linktel" type="tel" placeholder="联系电话" class="form-control" data-error="请输入正确的联系电话"><div class="help-block with-errors"></div></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="col-lg-4 control-label">联系QQ</label>
+                                <div class="col-lg-8"><input name="linkqq" placeholder="联系人QQ" class="form-control" data-error="请输入正确的QQ号码"><div class="help-block with-errors"></div></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <ul class="list-group">
+                    <li class="list-group-item"><span class=" panel panel-primary">公司项目对接信息</span>
+                        <div class="form-group">
+                            <div class="col-lg-6">
+                                <label class="col-lg-4 control-label"><span style="color: red;">*&nbsp;</span>项目对接人</label>
+                                <div class="col-lg-8"><input name="busman" type="tel" placeholder="项目对接人" class="form-control" data-error="请输入正确的联系电话"><div class="help-block with-errors"></div></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <label class="col-lg-4 control-label">项目对接QQ</label>
+                                <div class="col-lg-8"><input name="busqq" placeholder="项目对接QQ" class="form-control" data-error="请输入回拨专线名称"><div class="help-block with-errors"></div></div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-lg-12">
+                                <label class="col-lg-2 control-label">备注说明</label>
+                                <div class="col-lg-9"><textarea name="remark" id="brandremark" placeholder="备注说明" style="height: 8rem;" class="form-control"></textarea></div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            <br>
+            <button id="formbtn-brand-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form>
+    </div>
+    <div id="tips-brand-update" class="module-alert-tips"></div><br>  
+</div>
+<script>
+    {
+        if (system_memberinfo && system_memberinfo.memberid) {
+            //----------------------------------------------------
+       /*     brandremark=function(value,type,full){
+                var content=value;
+                content.replace(/\n/,"<br>");
+                return content;
+            }*/
+            var mtable = $('#table-brand-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/brand/query",
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            brandname: $('#filter_brandname').val().trim(),
+                            corpid: $('#filter_corpid').val().trim()
+
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                     /*   $("#table-brand-sheet").children("tr").css("background","red");*/
+                    },
+                },
+                columnDefs: [{
+                        className: 'select-checkbox',
+                        targets: 0
+                    }],
+                columns: [
+                    {"data": "", render: $.defrender},
+                 /*   {"data": "brand36id", render: $.defrender},*/
+                    {"data": "brandno", render: $.defrender},
+                    {"data": "corpinfo.corpname", render: $.defrender},
+                    {"data": "brandname", render: $.defrender},
+                    {"data": "status", render: defStatusRender},
+                    {"data": "directpirce", render: $.defrender},
+                    {"data": "backprice", render: $.defrender},
+                    {"data": "backline", render: $.defrender},
+                    {"data": "linkqq", render: $.defrender},
+                    {"data": "linkman", render: $.defrender},
+                    {"data": "linktel", render: $.defrender},
+                    {"data": "busman", render: $.defrender},
+                    {"data": "busqq", render: $.defrender},
+                    {"data": "old_oemver", render:$.defrender},
+                    {"data": "remark", render: $.defrender},
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+
+            $('#filter-brand-qrybtn').bind("click", function () {
+                mtable.api(true).draw(false);
+                $('#table-brand-sheet').dataTable().fnPageChange(0);
+
+            });
+            //---------------------------点击关闭按钮摧毁验证-----------------------------
+            $("#brandClose").on("click",function(){
+                $("#form-brand-update").data('bootstrapValidator').destroy();
+                 $('#form-brand-update').data('bootstrapValidator', null);
+            });
+
+            //--------------------------- 初始化新增&修改品牌 -----------------------------
+            $('#button-brand-create').bind("click", function () {
+                $("#selectCorpId").attr("disabled", false);
+                $('#form-gfield-password').show();
+                $('#dtitle-brand-update').html("新增品牌");
+                $("#tips-brand-update").html('');
+                $("#form-brand-update").form('reset');
+                $("#brandno").removeAttr("readonly");
+                var markcontent=$("#brandremark").val();
+                markcontent=markcontent.replace(/<br>/g,"\n");
+                $("#brandremark").val(markcontent);
+                brandvalidator();
+                $('#dialog-brand-update').modal('show');
+            });
+            $('#button-brand-update').bind("click", function () {
+                var data = mtable.api(true).row({selected: true}).data();
+                if (!data || !data.brandid) {
+                    alert("请选择一条记录！");
+                    return;
+                }
+                var markcontent=$("#brandremark").val();
+                markcontent=markcontent.replace(/<br>/g,"\n");
+                $("#brandremark").val(markcontent);
+                $('#form-gfield-password').hide();
+                $('#dtitle-brand-update').html("修改品牌");
+                $("#tips-brand-update").html('');
+                $("#form-brand-update").form('reset');
+                $("#form-brand-update").form('load', data);
+                $("#brand").val(data.brandid);
+                $('#dialog-brand-update').modal('show');
+                $("#selectCorpId").attr("disabled", "true");
+                $("#brandno").attr("readonly", "readonly");
+                brandvalidator();
+                /*$("#form-brand-update").data('bootstrapValidator').destroy();
+                $('#form-brand-update').data('bootstrapValidator', null);*/
+            });
+            //---------------提交品牌信息-----------------------------------
+                $('#formbtn-brand-update').bind("click", function (e) {
+                $("#selectCorpId").attr("disabled", false);
+                $("#brandno").removeAttr("readonly", "readonly");
+                var form = $("#form-brand-update");
+                var json = form.serializeJson();
+                var content=json.remark;
+                content=content.replace(/<br>/g,' ');
+                content=content.replace(/\n/g,'<br>');
+                json.remark=content;
+                $('#form-brand-update').bootstrapValidator('validate');
+                if( $('#form-brand-update').data('bootstrapValidator').isValid()){
+                    $.ajax({
+                        cache: false,
+                        dataType: "json",
+                        type: "POST",
+                        url: '/pipes/brand/update',
+                        data: {
+                            "bean": $.objectToString(json),
+                        },
+                        error: function () {//请求失败处理函数
+                            alert('请求失败');
+                        },
+                        success: function (data) {
+                            if (data && data.retcode && data.retcode > 0)
+                            {
+                                alert(data.retinfo);
+                            } else
+                            {
+                                $("#dialog-brand-update").modal('hide');
+                                $("#form-brand-update").data('bootstrapValidator').destroy();
+                                 $('#form-brand-update').data('bootstrapValidator', null);
+                                mtable.api(true).draw(false);
+                            }
+                        }
+                    });
+                }else{
+                    alert("验证失败,请按要求填写");
+                    return;
+                }
+            });
+            //----------------品牌信息校验-------------------------------
+            function brandvalidator() {
+                $('#form-brand-update').bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {/*验证*/
+                        brandname: {/*键名和input name值对应*/
+                            message: 'The corpname is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '品牌名称不能为空'
+                                },
+                                regexp: { /* 只需加此键值对 */
+                                    regexp: /^[A-Za-z0-9\u4e00-\u9fa5]+$/,
+                                    message: '品牌名称不能包含符号'
+                                }
+                            }
+                        },
+                        brandno: {
+                            message:'',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '品牌ID不能为空'
+                                },
+                                regexp: {
+                                    regexp: /^[a-zA-Z0-9]+\w*$/,
+                                    message: '品牌ID只能由字母或数字开头，可包含字母，数字和下划线'
+                                }
+                            }
+                        },
+                        voiceprice: {
+                            message:"",
+                            validators: {
+                                regexp: {
+                                    regexp: /^(\d|[1-9]\d+)(\.\d+)?$/,
+                                    message: '语音单价只能是大于等于0的数字'
+                                }
+                            }
+                        },
+                        noteprice: {
+                            message:"",
+                            validators: {
+                                regexp: {
+                                    regexp: /^(\d|[1-9]\d+)(\.\d+)?$/,
+                                    message: '短信单价只能是大于等于0的数字'
+                                }
+                            }
+                        },
+                        flowprice: {
+                            message:"",
+                            validators: {
+                                regexp: {
+                                    regexp: /^(\d|[1-9]\d+)(\.\d+)?$/,
+                                    message: '流量单价只能是大于等于0的数字'
+                                }
+                            }
+                        },
+                        directpirce: {
+                            message:"",
+                            validators: {
+                                regexp: {
+                                    regexp: /^(\d|[1-9]\d+)(\.\d+)?$/,
+                                    message: '直播资费只能是大于等于0的数字'
+                                }
+                            }
+                        },
+                        backprice: {
+                            message:"",
+                            validators: {
+                                regexp: {
+                                    regexp: /^(\d|[1-9]\d+)(\.\d+)?$/,
+                                    message: '回拨资费只能是大于等于0的数字'
+                                }
+                            }
+                        },
+                    }
+                });
+            }
+        }
+        $(function () {
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/corp/list',
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (corps) {
+                    $('#selectCorpId').find('option').remove();
+                  /*  $("#filter_corpid").find('option').remove();*/
+                    var content = '';
+                    var headcontent='';
+                    for (var i = 0; i < corps.rows.length; i++) {
+                        if( corps.rows[i].corpid==15000001){
+                            headcontent='<option selected value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>';
+                            continue;
+                        }
+                        content = content + '<option value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>'; //corps[i].c
+                    }
+                    $("#selectCorpId").append(headcontent);
+                    $("#selectCorpId").append(content);
+                    $("#filter_corpid").append(headcontent);
+                    $("#filter_corpid").append(content);
+                }
+            });
+
+        });
+    }
+
+</script>

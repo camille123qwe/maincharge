@@ -1,0 +1,336 @@
+<div class="page-title">
+    <h4>用户信息管理查询</h4>
+</div>
+<div class="panel-box">
+    <form class="filter-search" role="form" >
+        <div style="display: inline-block;margin: 0 30px 0 0;">
+            <label>选择企业：</label>
+            <select id="filter_corpid" name="corpid" style="width:150px;">
+                <option value="0">全部企业</option>
+            </select>
+        </div>
+        <div style="display: inline-block;margin: 0 30px 0 0;">
+            <label >选择品牌：</label>
+            <select id="filter_brandid" name="brandid" style="width:150px;">
+                <option value="0">全部品牌</option>
+            </select>
+        </div>
+        <div style="display: inline-block;margin: 0 30px 0 0;">
+            <label >开始日期</label>
+            <input type="date" name="startday" id="startday">
+        </div>
+        <div style="display: inline-block;margin: 0 30px 0 0;" required>
+            <label >结束日期</label>
+            <input type="date" name="endday" id="endday">
+        </div>
+        <div style="display: inline-block;margin: 0 30px 0 0;" required>
+            <label >手机号码</label>
+            <input type="text" name="mobile" id="phonenum">
+        </div>
+        <i id="filter-chart-qrybtn" class="fa fa-search" style="position: static;"></i>
+    </form>
+</div>
+<div class="form-group" id="container" style="display: none">
+    <div class="col-lg-4">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                基本信息详情
+            </div>
+            <div class="panel-body" id="bschtml">
+
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-8">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                充值记录
+            </div>
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <tr><th>套餐名称</th><th>充值金额</th><th>交易时间</th></tr>
+                    </thead>
+                    <tbody  id="chargetable">
+
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $("#filter_corpid").change(function(e){
+        $.ajax({
+            url: "/pipes/brand/query",
+            data: {bean: JSON.stringify({
+                corpid: $('#filter_corpid').val().trim()
+            })},
+            dataType:"json",
+            type:"post",
+            success:function(data){
+                $('#filter_brandid').find('option').remove();
+                var content = '';
+                for (var i = 0; i < data.rows.length; i++) {
+                    content = content + '<option value="' + data.rows[i].brandid + '">' + data.rows[i].brandname + '</option>';
+                }
+                $("#filter_brandid").append(content);
+            }
+        });
+    });
+    function datetime(time){
+        var arr=time.split("-");
+        var num="";
+        for(var i=0;i<arr.length;i++){
+            num+=arr[i];
+        }
+        Number(num);
+        time=num;
+        return time;
+    }
+    function format(now){
+        Y = now.getFullYear() + '-';
+        M = (now.getMonth()+1 < 10 ? '0'+(now.getMonth()+1) : now.getMonth()+1) + '-';
+        D = now.getDate()<10? '0'+(now.getDate()) : now.getDate();
+        var nowDate=Y+M+D;
+        return nowDate;
+    }
+    $("#startday").change(function(){
+        var startvalue=$("#startday").val();
+        startvalue=startvalue.replace(/-/g,"/");
+        startvalue=new Date(startvalue);
+        startvalue=startvalue.getTime();
+        var now=new Date().getTime()-24*60*60*1000;
+        if(startvalue>now){
+            alert("开始日期不能少于当前日期的前一天");
+            now=new Date(now);
+            $("#startday").val(format(now));
+        }
+    });
+    $("#endday").change(function(){
+        var endvalue=$("#endday").val();
+        endvalue=endvalue.replace(/-/g,"/");
+        endvalue=new Date(endvalue);
+        endvalue=endvalue.getTime();
+        var now=new Date().getTime();
+        if(endvalue>now){
+            alert("结束日期最晚在今日");
+            now=new Date(now);
+            $("#endday").val(format(now));
+        }
+    });
+    //----------------------------------
+    $('#filter-chart-qrybtn').bind("click", function () {
+        //-----------------------------------------------
+        var startvalue=$("#startday").val();
+        startvalue=startvalue.replace(/-/g,"/");
+        startvalue=new Date(startvalue);
+        startvalue=startvalue.getTime();
+        var endvalue=$("#endday").val();
+        endvalue=endvalue.replace(/-/g,"/");
+        endvalue=new Date(endvalue);
+        endvalue=endvalue.getTime();
+        if(endvalue-startvalue>29*24*60*60*1000){
+            alert("数据最多显示30条，开始日期到结束日期的间隔不超过29天");
+            endvalue=startvalue+29*24*60*60*1000;
+            endvalue=new Date(endvalue);
+            endvalue=format(endvalue);
+            $("#endday").val(endvalue);
+        }else if(startvalue>endvalue){
+            alert("开始日期不可大于结束日期");
+            endvalue=format(new Date());
+            $("#endday").val(endvalue);
+
+        }else{
+            //-------------------------------------------------
+            var json=$(".filter-search").serializeJson();
+            var min=$("#startday").val();
+            var max=$("#endday").val();
+            min=min.replace(/-/g,"/");
+            min=new Date(min);
+            min=min.getTime();
+            max=max.replace(/-/g,"/");
+            max=new Date(max);
+            max=max.getTime();
+            var createtime={};
+           /* createtime.min=1477986929374;
+             createtime.max=1477993547907;*/
+             createtime.min=min;
+             createtime.max=max;
+            json.createtime=createtime;
+            delete json.startday;
+            delete json.endday;
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/charge/list',
+                data: {
+                    "bean": $.objectToString(json),
+                },
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data && data.retcode && data.retcode > 0)
+                    {
+                        alert(data.retinfo);
+                    } else
+                    {
+                        $("#container").show();
+                        filldata(data);
+                    }
+                }
+            });
+        }
+    });
+    function paystatus(value){
+        if(value==10) {
+            return "待支付";
+        }
+        if(value==30){
+            return "已支付";
+        }
+        if(value==90){
+            return "已关闭";
+        }
+    }
+    function mobnet(value){
+        if(value==2) {
+            return "移动";
+        }
+        if(value==4){
+            return "联通";
+        }
+        if(value==8){
+            return "电信";
+        }
+        return "未知";
+    }
+    function level(value) {
+        if(value==0){
+            return "非VIP"
+        }
+    }
+    function corpuserid(value){
+        if(value==0){
+            return "无邀请"
+        }
+    }
+    function infotime(value1,value2){
+        if(value1==0){
+            return value2
+        }
+        return value1;
+    }
+    function filldata(data){
+        data=JSON.parse(data);
+        var arr=data.chargelist.rows;
+        $("#chargetable").empty();
+        var _html="";
+        for(var i=0;i<arr.length;i++){
+            arr[i].createtime=new Date(arr[i].createtime);
+            _html+='<tr><td>'+arr[i].chargeid+'</td><td>'+arr[i].payedmoney+'</td><td>'+arr[i].createtime+'</td></tr>'
+        }
+        $("#chargetable").html(_html);
+        var basic="";
+        var arrbsc=data.custuser;
+        $("#bschtml").empty();
+        basic='<div class="form-group" style="padding-bottom: 20px">'+
+              '<div class="col-lg-4" style="font-weight: bold">手机号码</div><div class="col-lg-8" id="mobile">'+arrbsc.mobile+'</div></div>'+
+              '<div class="form-group" style="padding-bottom: 20px">'+
+              '<div class="col-lg-4" style="font-weight: bold">注册时间</div><div class="col-lg-8" id="createtime">'+new Date(arrbsc.createtime)+'</div></div>'+
+              '<div class="form-group" style="padding-bottom: 20px">'+
+              '<div class="col-lg-4" style="font-weight: bold">运营商</div><div class="col-lg-8" id="mobnet">'+mobnet(arrbsc.mobnet)+'</div></div>'+
+              '<div class="form-group" style="padding-bottom: 20px">'+
+              '<div class="col-lg-4" style="font-weight: bold">状态</div><div class="col-lg-8" id="status">'+defStatusRender(arrbsc.status)+'</div></div>'+
+              '<div class="form-group" style="padding-bottom: 20px">'+
+              '<div class="col-lg-4" style="font-weight: bold">所属APP</div><div class="col-lg-8" id="apptoken">'+arrbsc.apptoken+'</div></div>'+
+              '<div class="form-group" style="padding-bottom: 20px">'+
+              '<div class="col-lg-4" style="font-weight: bold">VIP等级</div><div class="col-lg-8" id="viplevel">'+level(arrbsc.viplevel)+'</div></div>'+
+              '<div class="form-group" style="padding-bottom: 20px">'+
+              '<div class="col-lg-4" style="font-weight: bold">邀请人ID</div><div class="col-lg-8" id="corpuserid">'+corpuserid(arrbsc.corpuserid)+'</div></div>'+
+              '<div class="form-group" style="padding-bottom: 20px">'+
+              '<div class="col-lg-4" style="font-weight: bold">资料更新时间</div><div class="col-lg-8" id="infotime">'+infotime(arrbsc.infotime,new Date(arrbsc.createtime))+'</div></div>'
+        $("#bschtml").html(basic);
+    }
+    $(function(){
+        var start=new Date().getTime()-29*24*60*60*1000;
+        start=new Date(start);
+        start=format(start);
+        $("#startday").val(start);
+        var end=new Date();
+        end=format(end);
+        $("#endday").val(end);
+
+    });
+    $(function () {//给企业增加选项
+        $.ajax({
+            cache: false,
+            dataType: "json",
+            type: "POST",
+            url: '/pipes/corp/list',
+            error: function () {//请求失败处理函数
+                alert('请求失败');
+            },
+            success: function (corps) {
+                $('#filter_corpid').find('option').remove();
+                var content = '';
+                var headcontent='';
+                for (var i = 0; i < corps.rows.length; i++) {
+                    if( corps.rows[i].corpid==15000001){
+                        headcontent='<option value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>';
+                        $.ajax({
+                            url: "/pipes/brand/query",
+                            data: {bean: JSON.stringify({
+                                corpid: corps.rows[i].corpid
+                            })},
+                            dataType:"json",
+                            type:"post",
+                            success:function(data){
+                                $('#filter_brandid').find('option').remove();
+                                var content = '';
+                                for (var i = 0; i < data.rows.length; i++) {
+                                    content = content + '<option value="' + data.rows[i].brandid + '">' + data.rows[i].brandname + '</option>';
+                                }
+                                $("#filter_brandid").append(content);
+                            }
+                        });
+
+                        continue;
+                    }
+                    content = content + '<option value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>'; //corps[i].c
+                }
+                $("#filter_corpid").append(headcontent);
+                $("#filter_corpid").append(content);
+
+            }
+        });
+    });
+    $(function () {//给品牌增加选项
+        $.ajax({
+            cache: false,
+            dataType: "json",
+            type: "POST",
+            data:{bean: JSON.stringify({
+                corpid: $('#filter_corpid').val().trim()
+            })},
+            url: '/pipes/brand/query',
+            error: function () {//请求失败处理函数
+                alert('请求失败');
+            },
+            success: function (corps) {
+                $('#filter_brandid').find('option').remove();
+                var content = '';
+                for (var i = 0; i < corps.rows.length; i++) {
+                    content = content + '<option value="' + corps.rows[i].brandid + '">' + corps.rows[i].brandname + '</option>';
+                }
+                $("#filter_brandid").append(content);
+            }
+        });
+        $(window).resize();
+    });
+
+</script>
+

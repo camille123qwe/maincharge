@@ -1,0 +1,858 @@
+<div class="page-title">
+    <a id="button-info-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增商户</a>
+    <a id="button-info-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改/查看商户信息</a>
+    <a id="button-cctv-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增视频账号</a>
+   <!-- <a id="button-cctv-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改视频账号</a>-->
+</div>
+<div class="panel-box">
+    <div class="page-title">
+        <form class="filter-search" onsubmit="return false">
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <label >选择分类：</label>
+                <select id="filter_categoryid" name="categoryid" style="width:150px;">
+                    <option value=" ">全部分类</option>
+                </select>
+            </div>
+            <div style="display: inline-block;margin: 0 10px 0 0;position: relative">
+                <label >商户名称:</label>
+                <input id="filter_finance_merchname" name="merchname" style="width:150px;">
+                <div class="table-responsive" id="filter_merchid_table">
+                    <table class="table table-hover">
+                    </table>
+                </div>
+            </div>
+            <button style="width: 120px;" id="showall">显示全部</button>
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <label >状态</label>
+                <select name="status" id="filter_storeinfo_status" style="width:150px;">
+                    <option value="10,20">正常,待审批</option>
+                    <option value="10">正常</option>
+                    <option value="20">待审批</option>
+                    <option value="80">删除</option>
+                    <option value="10,20,80">全部</option>
+                </select>
+            </div>
+            <i id="filter-info-qrybtn" class="fa fa-search" style="position: static;"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="table-info-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>是否开通视频</th>
+                <th>merchid</th>
+                <th>商户36ID</th>
+                <th>商户名称</th>
+                <th>可见范围</th>
+                <th>工商注册号</th>
+                <th>类型</th>
+                <th>状 态</th>
+                <th>商务对接人</th>
+                <th>商务对接QQ</th>
+                <th>联系人</th>
+                <th>联系电话</th>
+                <th>联系QQ</th>
+                <th>联系微信</th>
+                <th>公司地址</th>
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-info-update" class="modal fade" tabindex="-1" data-width="950" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="infoClose">×</button>
+        <h4 id="dtitle-info-update" class="modal-title">新增商户</h4>
+    </div>
+    <div class="modal-body">
+        <ul id="myTab" class="nav nav-tabs">
+            <li class="active"><a href="#home" data-toggle="tab">商户信息</a></li>
+            <li><a href="#docking" data-toggle="tab">对接信息</a></li>
+        </ul>
+        <form id="form-info-update" class="m-t form-horizontal" role="form">
+        <div id="myTabContent" class="tab-content">
+        <div class="tab-pane fade in active" id="home">
+            <input name="merchid" id="merchid"  type="hidden">
+            <input name="createtime" type="hidden">
+            <ul class="list-group">
+                <li class="list-group-item" style="border: 0"><span class=" panel panel-primary">商户信息</span>
+                    <div class="table-responsive">
+                        <table  cellspacing="0" width="100%" style="overflow: hidden">
+                            <tr>
+                                <td width="50%">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>商户名称</label>
+                                        <div class="col-lg-8">
+                                            <input class="form-control" name="merchname">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>行业分类</label>
+                                        <div class="col-lg-8">
+                                            <select  name="categoryid" id="categoryid" class="form-control">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td width="50%">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label"><span style="color: red;">*</span>所属省份城市</label>
+                                        <div class="col-lg-4">
+                                            <select name="province" id="province" class="form-control">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <select name="city" id="city" class="form-control">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>商户详细地址</label>
+                                        <div class="col-lg-8">
+                                            <input class="form-control" name="locaddress">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>状态/类型</label>
+                                        <div class="col-lg-4">
+                                            <select id="selectinfoStatus" name="status" class="form-control" required>
+                                                <option value="10">正常</option>
+                                                <option value="20">待审批</option>
+                                               <!-- <option value="40">冻结</option>
+                                                <option value="50">隐藏</option>
+                                                <option value="60">关闭</option>
+                                                <option value="70">过期</option>-->
+                                                <option value="80">删除</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <select  name="type" class="form-control" required>
+                                                <option value="2">商户</option>
+                                                <option value="4">个人</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>可见范围</label>
+                                        <div class="col-lg-8">
+                                            <select  name="seen" id="select_seen" class="form-control" required>
+                                                <option value="2">所有人可见</option>
+                                                <option value="4">只对会员可见</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">商品图片比例</label>
+                                        <div class="col-lg-8">
+                                            <select  name="goodsradio" id="goodsradio" class="form-control">
+                                                <option value="53">5:3</option>
+                                                <option value="35">3:5</option>
+                                             <!--   <option value="11">1:1注意:商品图片比例确定后不可修改</option>-->
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">视频监控</label>
+                                        <div class="col-lg-8">
+                                            <select  name="cctv" id="select_cctv" class="form-control">
+                                                <option value= true>开通视频监控</option>
+                                                <option value= false>不开通视频监控</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">商户签名</label>
+                                        <div class="col-lg-8">
+                                            <input class="form-control" name="merchsign" placeholder="限8字之内,用于发送短信时的签名">
+                                        </div>
+                                    </div>
+                                </td>
+                                <td >
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">工商注册号</label>
+                                        <div class="col-lg-8"><input name="cnbusno" type="tel" class="form-control" data-error="请输入正确的联系电话"><div class="help-block with-errors"></div></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="form-group" style="padding-left: 50px">
+                        <input type="hidden" id="licence" name="licenceimg">
+                        <div class="btn btn-warning fileinput-button">
+                            <i class="fa fa-fw fa-upload"></i>
+                            <span>点此上传营业执照图片</span>
+                            <input id="fileupload-licence-btn" type="file" name="file">
+                        </div>
+                        <div class="fileupload">
+                            <img id="licence-img" src="" style="border: 1px solid #ddd;max-width: 600px;max-height: 350px;margin-top: 20px"/>
+                        </div>
+                    </div>
+                  <div class="form-group" style="margin-left: 15px">
+                            <p style="color: red;display: inline-block"><span style="color: red;">*</span>注意:1.商品图片比例确定后不可更改</p>
+                            <p style="color: red;display: inline-block">2.是否开通视频监控确定后不可更改</p>
+                            <p style="color: red;display: inline-block;">3.商户可见范围确定后不可更改</p>
+                  </div>
+                </li>
+            </ul>
+        </div>
+        <div class="tab-pane fade" id="docking">
+            <ul class="list-group">
+                <li class="list-group-item" style="border: 0"><span class=" panel panel-primary">企业联系信息</span>
+                    <div class="table-responsive">
+                        <table  cellspacing="0" width="100%" style="overflow: hidden">
+                            <tr>
+                                <td width="50%">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">联系人</label>
+                                        <div class="col-lg-8"><input name="linkman" class="form-control" data-error="请输入回拨专线名称"><div class="help-block with-errors"></div></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>联系电话</label>
+                                        <div class="col-lg-8"><input name="linktel" type="tel" class="form-control" data-error="请输入正确的联系电话"><div class="help-block with-errors"></div></div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">联系QQ</label>
+                                        <div class="col-lg-8"><input name="linkqq" class="form-control" data-error="请输入正确的QQ号码"><div class="help-block with-errors"></div></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">联系微信</label>
+                                        <div class="col-lg-8"><input name="linkwx" class="form-control" data-error="请输入正确的QQ号码"><div class="help-block with-errors"></div></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </li>
+            </ul>
+            <ul class="list-group">
+                <li class="list-group-item" style="border: 0"><span class=" panel panel-primary">公司项目对接信息</span>
+                    <div class="table-responsive">
+                        <table  cellspacing="0" width="100%" style="overflow: hidden">
+                            <tr>
+                                <td width="50%">
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>红柚子对接人</label>
+                                        <div class="col-lg-8"><input name="busman" type="tel" class="form-control" data-error="请输入正确的联系电话"><div class="help-block with-errors"></div></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 control-label">红柚子对接QQ</label>
+                                        <div class="col-lg-8"><input name="busqq" class="form-control" data-error="请输入回拨专线名称"><div class="help-block with-errors"></div></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="form-group">
+                        <div class="col-lg-12">
+                            <label class="col-lg-2 control-label">备注说明</label>
+                            <div class="col-lg-9"><textarea name="remark" id="inforemark" placeholder="备注说明" style="height: 8rem;" class="form-control"></textarea></div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        </div>
+        </form>
+        <br>
+        <button id="formbtn-info-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+    </div>
+</div>
+<div id="mc" class="modal fade" style="overflow: hidden" tabindex="-1" data-width="850" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="recordclose">×</button>
+        <h4 id="dtitle-mc-update" class="modal-title">新增视频监控账号</h4>
+    </div>
+    <div class="modal-body" style="overflow: hidden">
+        <form id="form-merchCctv-update" class="m-t form-horizontal" role="form">
+            <input  name="createtime" type="hidden">
+            <div class="table-responsive">
+                <table  cellspacing="0" width="100%">
+                    <tr>
+                        <td>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>当前商户</label>
+                                <div class="col-lg-9">
+                                    <select name="merchid" id="cctvmerchid" class="form-control"></select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>萤石开放平台账号</label>
+                                <div class="col-lg-9"><input name="ysaccount" class="form-control"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>萤石账号appkey</label>
+                                <div class="col-lg-9"><input name="appkey" type="tel" class="form-control"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>状态</label>
+                                <div class="col-lg-9">
+                                    <select name="status" class="form-control">
+                                        <option value="10">正常</option>
+                                        <option value="20">待审批</option>
+                                        <option value="40">冻结</option>
+                                        <option value="50">隐藏</option>
+                                        <option value="60">关闭</option>
+                                        <option value="70">过期</option>
+                                        <option value="80">删除</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>萤石开放平台密码</label>
+                                <div class="col-lg-9"><input name="yspassword" id="password" type="tel" class="form-control"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>萤石账号appsecret</label>
+                                <div class="col-lg-9"><input name="appsecret" class="form-control"></div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td cols="2">
+                            <div>
+                                <label class="col-lg-2 control-label">备注说明</label>
+                                <div class="col-lg-7">
+                                    <textarea name="remark" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br>
+                <button id="formbtn-merchCctv-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    //获取省份列表
+    $(function(){
+        $.ajax({
+            url:"/pipes/merchcategory/query",
+            data:{"bean":"{}"},
+            dataType:"JSON",
+            type:"POST",
+            success:function(res){
+                var  arr = res.rows||[];
+                var _html="";
+                if(arr.length!=0){
+                    for(var i=0;i<arr.length;i++){
+                        _html+='<option value="'+arr[i].categoryid+'">'+arr[i].categoryname+'</option>'
+                    }
+                }
+                if(_html==""){
+                    $("#categoryid").html("<option value=''>暂不选择或前往商户分类添加</option>");
+                }else{
+                    $("#categoryid").html(_html);
+                }
+                $("#filter_categoryid").append(_html);
+            },
+            error:function(err){
+                console.log(err);
+            }
+        })
+    });
+    var arr="";
+    $.ajaxSettings.async = false;
+    $.getJSON('../../res/json/cityJson.json',function(res){
+        arr= res.data;
+    });
+    $.ajaxSettings.async = true;
+    var _province="";
+    for(var i=0;i<arr.length;i++){
+        _province+='<option value="'+arr[i].name+'">'+arr[i].name+'</option>'
+    }
+    $("#province").empty();
+    $("#province").html(_province);
+    city($("#province").val());
+    //获取城市列表
+    $("#province").change(function(){
+        var key = $("#province").val();
+        city(key);
+    });
+    function city(key){
+        var _city="";
+        $("#city").find('option').remove();
+        //var key = $("#province").val();
+        function citiyarr(key){
+            for(var i=0,l=arr.length;i<l;i++){
+                if(arr[i].name==key){
+                    var citiyarr = arr[i].cities;
+                    return citiyarr;
+                }
+            }
+        }
+        var citiyarr = citiyarr(key);
+        for(var i=0;i<citiyarr.length;i++){
+            _city+='<option value="'+citiyarr[i]+'">'+citiyarr[i]+'</option>';
+        }
+        $("#city").append(_city);
+    }
+</script>
+<script>
+   {
+       $('.form-group').css("margin-right",0);
+        if (system_memberinfo && system_memberinfo.memberid) {
+            //过滤商户名称输入框获得焦点时&&过滤商户名称输入框按键操作时
+            $("#filter_finance_merchname").focus(function(){
+                var data2={
+                    merchname:$("#filter_finance_merchname").val().trim()
+                };
+                ajaxFilterMerch(data2);
+            });
+            $("#filter_finance_merchname").keyup(function(){
+                var data2={
+                    merchname:$("#filter_finance_merchname").val().trim()
+                };
+                ajaxFilterMerch(data2);
+            });
+            //过滤商户名称时所用的ajax
+            function ajaxFilterMerch(data){
+                $.ajax({
+                    url:"/pipes/merch/query",
+                    data:{"bean":$.objectToString(data)},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            $("#merchtable").find("table").html("");
+                            var arr= res.rows||[];
+                            var _html="";
+                            var filterhtml="";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<tr><td>'+arr[i].merchname+'</td></tr>'
+                            }
+                            var filtertable = $("#filter_merchid_table");
+                            filtertable.find("table").html(_html);
+                            filtertable.find('td').css("width","150px");
+                            filtertable.find('td').css("cursor","pointer");
+                            filtertable.show();
+                            filtertable.find('td').css("padding","10px");
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            //输入框失去焦点时
+            $("#filter_finance_merchname").blur(function(){
+                $("#filter_merchid_table").hide();
+            });
+            //过滤商户名称时点击商户名称的table和在输入框直接敲击回车时
+            $("#filter_merchid_table").on('mousedown','td',function(){
+                $("#filter_finance_merchname").val($(this).text());
+                $("#filter_merchid_table").hide();
+            });
+            $('#filter_finance_merchname').bind('keypress', function (event) {
+                if (event.keyCode == 13) {
+                    $('#filter_merchid_table').find('table').children(':first').find('td').trigger('click');
+                }
+            });
+            $("#showall").click(function(){
+                $("#filter_finance_merchname").val("");
+                $("#filter_merchid_table").hide();
+                mtable.api(true).draw(false);
+                $('#table-storeinfo-sheet').dataTable().fnPageChange(0);
+            });
+
+            //商户列表
+            $(function () {
+                $.ajax({
+                    cache: false,
+                    dataType: "json",
+                    type: "POST",
+                    url: '/pipes/merch/query',
+                    data:{"bean":"{}"},
+                    error: function () {//请求失败处理函数
+                        alert('请求失败');
+                    },
+                    success: function (data) {
+                        $('#filter_merchid').find('option').remove();
+                        var content = '';
+                        var headcontent='<option value="">全部商户</option>';
+                        var arr = data.rows||[];
+                        for (var i = 0; i < arr.length; i++) {
+                            content = content + '<option value="' + arr[i].merchid + '">' + arr[i].merchname + '</option>';
+                        }
+
+                        $("#filter_merchid").append(headcontent);
+                        $("#filter_merchid").append(content);
+                    }
+                });
+
+            });
+           seen = function(value){
+             if(value==2) {return "所有人可见"}
+             if(value==4){return "仅会员可见"}
+           };
+            type = function(value){
+                if(value==2) {return "商户"}
+                if(value==4){return "个人"}
+            };
+            var mtable = $('#table-info-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/merch/query",
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            merchname: $('#filter_finance_merchname').val().trim(),
+                            categoryid: $("#filter_categoryid").val().trim(),
+                            //status: Number($('#filter_storeinfo_status').val().trim())==0?[10,20,40,50,60,70,80]:[Number($('#filter_storeinfo_status').val().trim())]
+                            status:$('#filter_storeinfo_status').val().trim().split(',')
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    }
+                },
+                "aLengthMenu": [[10, 25, 50, -1], ["10条", "25条", "50条", "All"]],
+                columnDefs: [
+                    {
+                        className: 'select-checkbox',
+                        targets: 0
+                    },
+                    {
+                        visible: false,
+                        targets: [1,2]
+                    }
+                ],
+                columns: [
+                    {"data": "", render: $.defrender},
+                    {"data": "cctv", render: $.defrender},
+                    {"data": "merchid", render: $.defrender},
+                    {"data": "merch36id", render: $.defrender},
+                    {"data": "merchname", render: $.defrender},
+                    {"data": "seen", render:seen},
+                    {"data": "cnbusno", render: $.defrender},
+                    {"data": "type", render: type},
+                    {"data": "status", render: defStatusRender},
+                    {"data": "busman", render: $.defrender},
+                    {"data": "busqq", render: $.defrender},
+                    {"data": "linkman", render: $.defrender},
+                    {"data": "linktel", render: $.defrender},
+                    {"data": "linkqq", render: $.defrender},
+                    {"data": "linkwx", render: $.defrender},
+                    {"data": "locaddress", render: $.defrender},
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+
+            $('#filter-info-qrybtn').bind("click", function () {
+                mtable.api(true).draw(false);
+                $('#table-info-sheet').dataTable().fnPageChange(0);
+            });
+            //---------------------------点击关闭按钮摧毁验证-----------------------------
+            $("#infoClose").on("click",function(){
+                $("#form-info-update").data('bootstrapValidator').destroy();
+                $('#form-info-update').data('bootstrapValidator', null);
+            });
+            //--------------------------- 初始化新增&修改商户信息 -----------------------------
+            $('#button-info-create').bind("click", function () {
+                $('#dtitle-info-update').html("新增商户");
+                $("#form-info-update").form('reset');
+                $("#goodsradio").removeAttr("disabled");
+                $("#select_seen").removeAttr("disabled");
+                $("#select_cctv").removeAttr("disabled");
+                $("input[name='merchsign']").removeAttr("disabled");
+                var markcontent=$("#inforemark").val();
+                markcontent=markcontent.replace(/<br>/g,"\n");
+                $("#inforemark").val(markcontent);
+                infovalidator();
+                $("#merchid").val("");
+                $("#licence-img").attr('src',"");
+                $("#licence").val("");
+                $('#myTab a[href="#home"]').tab('show');
+                $('#dialog-info-update').modal('show');
+            });
+            $('#button-info-update').bind("click", function () {
+                var data = mtable.api(true).row({selected: true}).data();
+                if(data.province){
+                    var sheng = data.province.indexOf("省");
+                    var shi = data.province.indexOf("市");
+                    var province = "";
+                    if(sheng>0){
+                        province = data.province.substr(0,sheng);
+                    }else if(shi>0){
+                        province = data.province.substr(0,shi);
+                    }else{
+                        province = data.province;
+                    }
+                    data.province = province;
+                    $("#province").val(province);
+                    city(province);
+
+                }
+                if(data.city){
+                    var shi = data.city.indexOf("市");
+                    var cityshi="";
+                    if(shi>0){
+                        cityshi = data.city.substr(0,shi);
+                    }else{
+                        cityshi = data.city;
+                    }
+                    data.city = cityshi;
+                }
+                if (!data || !data.merchid){
+                    alert("请选择一条记录！");
+                    return;
+                }
+                $('#myTab a[href="#home"]').tab('show');
+                $("#goodsradio").attr("disabled",true);
+                $("#select_seen").attr("disabled",true);
+                $("#select_cctv").attr("disabled",true);
+              /*  $("input[name='merchsign']").attr("disabled",true);*/
+                $("#form-info-update").form('reset');
+                $("#form-info-update").form('load', data);
+                if(data.cctv){
+                    $("#select_cctv").val('true');
+                }
+                if(data.licenceimg){
+                    $("#licence-img").attr('src',"/dir/licenceimg/"+data.licenceimg);
+                }else{
+                    $("#licence-img").attr('src','');
+                }
+                var markcontent=$("#inforemark").val();
+                markcontent=markcontent.replace(/<br>/g,"");
+                $("#inforemark").val(markcontent);
+                $('#dtitle-info-update').html("修改商户");
+                $('#dialog-info-update').modal('show');
+                infovalidator();
+            });
+            //---------------提交商户信息-----------------------------------
+            $('#formbtn-info-update').bind("click", function (e) {
+                $(this).attr("disabled",true);
+                $("#goodsradio").removeAttr("disabled");
+                $("#select_seen").removeAttr("disabled");
+                $("#select_cctv").removeAttr("disabled");
+                $("input[name='merchsign']").removeAttr("disabled");
+                var form = $("#form-info-update");
+                var json = form.serializeJson();
+                var content=json.remark;
+                content=content.replace(/<br>/g,' ');
+                content=content.replace(/\n/g,'<br>');
+                json.remark=content;
+                if(json.linktel==""){
+                    alert("对接信息中企业联系人电话不能为空");
+                    $('#formbtn-info-update').removeAttr("disabled");
+                    return;
+                }else if(json.busman==""){
+                    alert("对接信息中红柚子对接人不能为空");
+                    $('#formbtn-info-update').removeAttr("disabled");
+                    return;
+                }
+                if(json.merchid){
+                    var cols=[];
+                    for(var key in json){
+                        if(key=="merchid"||key=="goodsradio"||key=="seen"||key=="cctv"){
+                            continue
+                        }
+                        cols.push(key);
+                    }
+                    data =  {
+                        "bean": $.objectToString(json),
+                        "cols":  $.objectToString(cols)
+                    };
+                }else{
+                    data =  {
+                        "bean": $.objectToString(json)
+                    };
+                }
+                $('#form-info-update').bootstrapValidator('validate');
+                if($('#form-info-update').data('bootstrapValidator').isValid()){
+                    $.ajax({
+                        cache: false,
+                        dataType: "json",
+                        type: "POST",
+                        url: '/pipes/merch/update',
+                        data:data,
+                        error: function () {//请求失败处理函数
+                            $('#formbtn-info-update').removeAttr("disabled");
+                            alert('请求失败');
+                        },
+                        success: function (data) {
+                            $('#formbtn-info-update').removeAttr("disabled");
+                            if (data && data.retcode && data.retcode > 0)
+                            {
+                                alert(data.retinfo);
+                            } else
+                            {
+                                $("#dialog-info-update").modal('hide');
+                                $("#form-info-update").data('bootstrapValidator').destroy();
+                                $('#form-info-update').data('bootstrapValidator', null);
+                                mtable.api(true).draw(false);
+                                alert("保存成功");
+                            }
+                        }
+                    });
+                }else{
+                    alert("验证失败,请按要求填写");
+                    $('#formbtn-info-update').removeAttr("disabled");
+                    return;
+                }
+            });
+            //----------------商户信息校验-------------------------------
+           function infovalidator() {
+                $('#form-info-update').bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields: {/*验证*/
+                        merchname: {/*键名和input name值对应*/
+                            message: 'The corpname is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '商户名称不能为空'
+                                },
+                                regexp: { /* 只需加此键值对 */
+                                    regexp: /^[A-Za-z0-9\u4e00-\u9fa5()]+$/,
+                                    message: '商户名称中只能包含英文括号符号'
+                                }
+                            }
+                        },
+                        cnbusno: {
+                            message:'',
+                            validators: {
+                                regexp: {
+                                    regexp: /^[a-zA-Z0-9]{13,21}$/,
+                                    message: '请输入正确的工商注册号'
+                                }
+                            }
+                        },
+                        linktel: {
+                            message:"",
+                            validators: {
+                                notEmpty: {
+                                    message: '联系电话不能为空'
+                                },
+                                regexp: {
+                                    regexp: /^1[0-9]{10}$/,
+                                    message: '手机号码不正确'
+                                }
+                            }
+                        },
+                        merchsign: {
+                            message:"",
+                            validators: {
+                                notEmpty: {
+                                    message: '签名不能为空'
+                                },
+                                regexp: {
+                                    regexp: /^\s*[\s\S]{1,8}\s*$/,
+                                    message: '签名长度在8位之内'
+                                }
+                            }
+                        },
+                        busman: {
+                            message:"",
+                            validators: {
+                               notEmpty:{
+                                   message:'项目对接人不能为空'
+                               }
+                            }
+                        }
+                    }
+                });
+            }
+            //----------------开通视频账号--------------------------------
+            $('#button-cctv-create').bind("click", function (){
+                var data = mtable.api(true).row({selected: true}).data();
+                if (!data || !data.merchid){
+                    alert("请选择一条记录");
+                    return;
+                }
+                $("#mc").modal('show');
+                $("#cctvmerchid").html('<option value="'+data.merchid+'">'+data.merchname+'</option>');
+                if(data.cctv){
+                    $("#dtitle-mc-update").text('修改视频监控账号')
+                }else{
+                    $("#dtitle-mc-update").text('新增视频监控账号')
+                }
+            });
+            $("#formbtn-merchCctv-update").click(function () {
+                $(this).attr("disabled",true);
+                var form = $("#form-merchCctv-update");
+                var json = form.serializeJson();
+                var data = {
+                    "bean":$.objectToString(json),
+                    "cols":$.objectToString([])
+                };
+                $.ajax({
+                    url:"/pipes/cctv/updatemerch",
+                    data:data,
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if(res.retcode===0){
+                            $("#mc").modal('hide');
+                        }
+                        $("#formbtn-merchCctv-update").removeAttr('disabled');
+                        mtable.api(true).draw(false);
+                    },
+                    error:function(err){
+                        $("#formbtn-merchCctv-update").removeAttr('disabled');
+                        console.log(err);
+                        alert("请求失败");
+                    }
+                })
+            });
+            //------------上传营业执照图片------------------------------
+            $('#fileupload-licence-btn').fileupload({
+                type: 'POST',
+                formData:{},
+                url: '/pipes/upload/licenceimg',
+                done: function (e, data) {//设置文件上传完毕事件的回调函数
+                    var json = JSON.parse(data.result);
+                    $("#licence-img").attr("src","/dir/licenceimg/"+json.fileid);
+                    $("#licence").val(json.fileid);
+                }
+            });
+        }
+   }
+
+</script>

@@ -1,0 +1,239 @@
+<div class="page-title">
+    <a id="button-award-create" href="javascript:void(0);"><i class="fa fa-plus"></i>设置奖励信息</a>
+    <a id="button-award-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改奖励信息</a>
+    <div style="display: inline-block;margin: 0 30px 0 0;">
+        <label >状态</label>
+        <select name="status" id="filter_award_status" style="width:150px;">
+            <option value="10,20">正常,待审批</option>
+            <option value="10">正常</option>
+            <option value="20">待审批</option>
+            <option value="80">删除</option>
+            <option value="10,20,80">全部</option>
+        </select>
+    </div>
+</div>
+<div class="panel-box">
+    <div class="table-responsive">
+        <table id="table-award-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>签到奖励ID</th>
+                <th>状态</th>
+                <th>累计签到天数</th>
+                <!--<th>累计签到轮数</th>-->
+                <th>赠送流量包ID</th>
+                <th>赠送语音时长</th>
+                <th>抽奖券次数</th>
+                <th>实物礼品</th>
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-award-update" class="modal fade" tabindex="-1" data-width="800" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="recordclose">×</button>
+        <h4 id="dtitle-award-update" class="modal-title">设置奖励信息</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-award-update" class="m-t form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>状态</label>
+                <div class="col-lg-8">
+                    <select id="selectStatus" name="status" class="form-control">
+                        <option value="20">待审批</option>
+                        <option value="10">正常</option>
+                        <option value="80">删除</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label" >签到天数</label>
+                <div class="col-lg-8" ><input  name="checkdatecount" placeholder="设置累计签到天数" class="form-control" type="number"></div>
+            </div>
+            <!--<div class="form-group">-->
+                <!--<label class="col-lg-3 control-label" >签到轮数</label>-->
+                <!--<div class="col-lg-8" ><input  name="checkroundcount" placeholder="设置累计签到轮数" class="form-control" type="number"></div>-->
+            <!--</div>-->
+            <div class="form-group">
+                <label class="col-lg-3 control-label" >赠送流量(M)</label>
+                <div class="col-lg-8" >
+                    <select name="fluxpkgid" id="fluxpkgid" class="form-control">
+
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label" >通话时长(分)</label>
+                <div class="col-lg-8" >
+                    <select name="voicetimes" class="form-control">
+                        <option value="0">不赠送</option>
+                        <option value="3600">60分钟 -价值4.8元</option>
+                        <option value="6000">100分钟 -价值8元</option>
+                        <option value="12000">200分钟 -价值16元</option>
+                        <option value="30000">500分钟 -价值40元</option>
+                        <option value="60000">1000分钟 -价值80元</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label" >抽奖券次数</label>
+                <div class="col-lg-8" ><input  name="cdrcount" placeholder="抽奖券次数" class="form-control"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label" >实物礼品</label>
+                <div class="col-lg-8" ><input  name="giftname" placeholder="礼品名称" class="form-control"></div>
+            </div>
+            <input type="hidden" name="createtime" id="createtime">
+            <input type="hidden" name="checkawardid" id="checkawardid">
+            <input type="hidden" name="checkroundcount" value="1">
+
+            <button id="formbtn-award-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form>
+    </div>
+</div>
+<script>
+    (function(){
+        if (system_memberinfo && system_memberinfo.memberid) {
+            //获取流量套餐
+            $.ajax({
+                url: "/pipes/checkaward/fluxpkgs",
+                data: {},
+                dataType: "JSON",
+                type: "POST",
+                success: function (res) {
+                    if (res && res.retcode > 0) {
+                        alert(res.retinfo)
+                    } else {
+                        var _html = "";
+                        $("#fluxpkgid").empty();
+                        for (var i = 0; i < res.length; i++) {
+                            _html += '<option value=' + res[i].fluxpkgid + '>' + res[i].pkgtitle + '</option>';
+                        }
+                        $("#fluxpkgid").html('<option value="0">不赠送流量</option>');
+                        $("#fluxpkgid").append(_html);
+                    }
+                },
+                error: function (err) {
+                    console.log(err);
+                }
+            });
+            //-------新增奖励信息------------------
+            $("#button-award-create").click(function () {
+                $("#formbtn-award-update").removeAttr("disabled");
+                $("#form-award-update").form('reset');
+                $("#createtime").val("");
+                $("#checkawardid").val("");
+                $("#dtitle-award-update").text("设置奖励信息");
+                $("#dialog-award-update").modal("show");
+            });
+            //------修改奖励信息------------------
+            $("#button-award-update").click(function(){
+                var data = mtable.api(true).row({selected: true}).data();
+                if (!data || !data.checkawardid){
+                    alert("请选择一条记录！");
+                    return;
+                }
+                $("#dtitle-award-update").text("修改奖励信息");
+                $("#form-award-update").form('reset');
+                $("#form-award-update").form('load', data);
+                $("#dialog-award-update").modal('show');
+
+            });
+            //----------------提交按钮--------------
+            $("#formbtn-award-update").click(function () {
+                $(this).attr("disabled","disabled");
+                var form = $("#form-award-update");
+                var json = form.serializeJson();
+                console.log(json);
+                var data = "";
+                if(json.checkawardid){
+                    var cols=[];
+                    for(var key in json){
+                        if(key=="checkawardid"){
+                            continue
+                        }
+                        cols.push(key);
+                    }
+                    data =  {
+                        "bean": $.objectToString(json),
+                        "cols":  $.objectToString(cols)
+                    };
+                }else{
+                    data =  {
+                        "bean": $.objectToString(json)
+                    };
+                }
+                $.ajax({
+                    url: "/pipes/checkaward/update/",
+                    data: data,
+                    type: "POST",
+                    error: function (err) {
+                        console.log(err);
+                        $("#formbtn-award-update").removeAttr("disabled");
+                    },
+                    success: function (res) {
+                        $("#formbtn-award-update").removeAttr("disabled");
+                        res = JSON.parse(res);
+                        if (res.retcode == 0) {
+                            alert("保存成功");
+                            $("#dialog-award-update").modal("hide");
+                            mtable.api(true).draw(false);
+                        }
+                    }
+                })
+
+            });
+            var mtable = $('#table-award-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/checkaward/query",//请求后台数据接口
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            status: $('#filter_award_status').val().trim().split(",")
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    }
+                },
+                "aLengthMenu": [[10, 25, 50, -1], ["10条", "25条", "50条", "All"]],
+                columnDefs: [{
+                    className: 'select-checkbox',
+                    targets: 0
+                }],
+                columns: [
+                    {"data": "", render: $.defrender},//data对应的是key
+                    {"data": "checkawardid",render:$.defrender},
+                    {"data": "status", render:defStatusRender},
+                    {"data": "checkdatecount",render:function(value){
+                        return value+"天";
+                    }},
+//                    {"data": "checkroundcount", render:function(value){
+//                        return value+"轮";
+//                    }},
+                    {"data": "fluxpkgid", render:function (value,type,full) {
+                        return full.pkgtitle;
+                    }},
+                    {"data": "voicetimes", render: function(value){
+                        return value/60+"分钟通话"
+                    }},
+                    {"data": "cdrcount", render:function(value){
+                        return value+"次";
+                    }},
+                    {"data": "giftname", render: $.defrender},
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+            //--------更改状态----------------------------
+            $("#filter_award_status").change(function () {
+                mtable.api(true).draw(false);
+                $('#table-award-sheet').dataTable().fnPageChange(0);
+            });
+        }
+    })();
+
+</script>
+
+

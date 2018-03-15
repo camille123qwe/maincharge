@@ -1,0 +1,592 @@
+
+<div class="form-group">
+    <div class="col-lg-3 col-md-3 col-sm-3">
+        <div class="page-title">
+            &nbsp;<a id="osslevel_create" href="#" onclick="return false;">新增等级名称</a>
+            &nbsp;<a id="osslevel_update" href="#" onclick="return false;">修改等级名称</a>
+        </div>
+        <div class="panel-box">
+            <div class="table-responsive">
+                <table id="table-osslevel-sheet" class="table table-hover" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>等级ID</th>
+                        <th>名称</th>
+                        <th>等级名称</th>
+                        <th>单价/天</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9 col-md-9 col-sm-9">
+        <div class="page-title">
+            <a id="button-merchLevel-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增商家等级</a>
+            <a id="button-merchLevel-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改商家等级</a>
+        </div>
+        <div class="panel-box">
+            <div class="page-title">
+                <form class="filter-search" onsubmit="return false">
+                    <div style="display: inline-block;margin: 0 10px 0 0;">
+                        <label >商户名称：</label>
+                        <input id="hidden_filter_merchid" type="hidden">
+                        <input id="filter_merchid" style="width:150px;position: relative">
+                        <div class="table-responsive" id="filter_merchid_table">
+                            <table class="table table-hover">
+                            </table>
+                        </div>
+                    </div>
+                    <button style="width: 120px;" id="showall">显示全部</button>
+                    <!--<div style="display: inline-block;margin: 0 50px 0 0;">-->
+                        <!--<label >状态</label>-->
+                        <!--<select name="status" id="filter_storeinfo_status" style="width:150px;">-->
+                            <!--<option value="">全部</option>-->
+                            <!--<option value="10">正常</option>-->
+                            <!--<option value="20">待审批</option>-->
+                            <!--<option value="80">删除</option>-->
+                        <!--</select>-->
+                    <!--</div>-->
+                    <i id="filter-merchLevel-qrybtn" class="fa fa-search" style="position: static;"></i>
+                </form>
+            </div>
+            <div class="table-responsive">
+                <table id="table-merchLevel-sheet" class="table table-hover" cellspacing="0" width="100%">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>商户名称</th>
+                        <th>所属等级</th>
+                        <th>有效时间</th>
+                        <th>有效时长</th>
+                        <th>创建时间</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="dialog-osslevel-update" class="modal fade" tabindex="-1" data-width="600" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    </div>
+    <div class="modal-body">
+        <form id="form-osslevel-update" class="m-t form-horizontal" role="form">
+            <input  name="createtime" type="hidden">
+            <input name="tlevelid" type="hidden">
+            <div class="form-group">
+                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>阶梯名称</label>
+                <div class="col-lg-9"><input name="name" class="form-control" placeholder="例如:免费版,初级版,VIP定制版"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>单价(元)/天</label>
+                <div class="col-lg-9"><input name="price" class="form-control"></div>
+            </div>
+            <button id="formbtn-osslevel-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form>
+    </div>
+</div>
+
+<div id="dialog-merchlevel-update" class="modal fade" tabindex="-1" data-width="600" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="recordclose">×</button>
+    </div>
+    <div class="modal-body">
+        <form id="form-merchlevel-update" class="m-t form-horizontal" role="form">
+            <div class="form-group">
+                <label class="col-lg-3 col-md-3 control-label"><span style="color: red;">*&nbsp;</span>等级</label>
+                <div class="col-lg-9 col-md-9">
+                    <select id="selectLevelid" name="tlevelid" class="form-control">
+
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 col-md-3 control-label">选择商户</label>
+                <div class="col-lg-9 col-md-9">
+                    <input name="merchid" type="hidden" id="relativemerchid">
+                    <input class="form-control" name="merchname" id="fake_merchid" style="position: relative" placeholder="从列表中点击选择商户" autocomplete="off">
+                    <div class="table-responsive" id="fake_merchid_table" style="width: 90%;left: 10%;height: 150px">
+                        <table class="table table-hover">
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 col-md-3 control-label" >有效期限(天数)</label>
+                <div class="col-lg-9 col-md-9" ><input name="validtime" id="validday" placeholder="为0表示长期有效" class="form-control" ></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 col-md-3 control-label" >起始时间</label>
+                <div class="col-lg-9 col-md-9" ><input  name="validstarttime" id="quanstarttime" placeholder="优惠起始时间" class="form-control"></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 col-md-3 control-label" >截止时间</label>
+                <div class="col-lg-9 col-md-9" ><input  name="validendtime" readonly id="endtime"  placeholder="优惠结束时间，长期有效则默认为0" class="form-control"></div>
+            </div>
+            <button id="formbtn-merchlevel-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form>
+    </div>
+</div>
+<input type="hidden" id="hiddenid">
+
+<script>
+    {
+        $(function(){
+            //--------------------------制定等级区域-----------------------------
+            //等级列表
+            var mtableLevel = $('#table-osslevel-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/osstlevel/query",
+                    dataSrc:"data",
+                    data: function (f) {
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    }
+                },
+                info:false,
+                paging:false,
+                lengthChange:false,
+                "aLengthMenu": [[15, 25, 50, -1], ["15条", "25条", "50条", "All"]],
+                columnDefs: [
+                    {
+                        className: 'select-checkbox',
+                        targets: 0
+                    }
+                ],
+                columns: [
+                    {"data": " ", render: $.defrender},
+                    {"data": "tlevelid", render:$.defrender},
+                    {"data": "name", render:$.defrender},
+                    {"data":"price",render:function(value){
+                        return (value/100).toFixed(2)+"元";
+                    }}
+                ]
+            });
+            //新增等级
+            $("#osslevel_create").click(function(){
+                var levelform=$("#form-osslevel-update");
+                levelform.form('reset');
+                $("#dialog-osslevel-update").modal('show');
+            });
+            //修改等级
+            $("#osslevel_update").click(function(){
+                var data = mtableLevel.api(true).row({selected: true}).data();
+                console.log(data);
+                if (!data || !data.tlevelid) {
+                    alert("请选择一条记录！");
+                    return;
+                }
+                var levelform=$("#form-osslevel-update");
+                levelform.form('reset');
+                data.price = (data.price/100).toFixed(2);
+                levelform.form('load',data);
+                $("#dialog-osslevel-update").modal('show');
+            });
+            //提交新增等级模块
+            $("#formbtn-osslevel-update").click(function(){
+                var form=$("#form-osslevel-update");
+                var json = form.serializeJson();
+                json.price = parseInt(json.price*100);
+                var data = "";
+                if(!json.tlevelid){
+                    data = {"bean":$.objectToString(json)};
+                }else{
+                    data = {
+                        "bean":$.objectToString(json),
+                        "cols":"['name','price']"
+                    };
+                }
+                $.ajax({
+                    url:'/pipes/osstlevel/update',
+                    type:'JSON',
+                    data:data,
+                    error:function(err){
+                        console.log(err);
+                    },
+                    success:function(res){
+                        res = JSON.parse(res);
+                        if (data && data.retcode && data.retcode > 0)
+                        {
+                            alert(data.retinfo);
+                        } else {
+                            alert("操作成功");
+                            $("#dialog-osslevel-update").modal('hide');
+                            mtableLevel.api(true).draw(false);
+                        }
+                    }
+                })
+            });
+            //-------------------------商家等级区域----------------------------------------
+            //获取等级列表option
+            $.get("/pipes/osstlevel/query",function (res) {
+                res = JSON.parse(res);
+                var arr = res.rows;
+                var _html="";
+                for(var i=0;i<arr.length;i++){
+                    _html+='<option value="'+arr[i].tlevelid+'">'+arr[i].name+'</option>'
+                }
+                $("#selectLevelid").html(_html);
+            });
+            $("#fake_merchid").focus(function(){
+                var data={
+                    storename:$("#fake_merchid").val().trim()
+                };
+                ajaxFilterMerchid(data);
+            });
+            $("#fake_merchid").blur(function(){
+                $("#fake_merchid_table").hide();
+            });
+            $("#fake_merchid_button").click(function(){
+                var data={
+                    merchname:$("#fake_merchid").val().trim()
+                };
+                ajaxFilterMerchid(data);
+            });
+            //过滤关联门店名称时所用的ajax
+            function ajaxFilterMerchid(data){
+                $.ajax({
+                    url:"/pipes/merch/query",
+                    data:{"bean":$.objectToString(data)},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            // $("#merchtable").find("table").html("");
+                            var arr= res.rows||[];
+                            var _html="";
+                            var filterhtml="";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<tr><td><input type="hidden" value="'+arr[i].merchid+'">'+arr[i].merchname+'</td></tr>'
+                            }
+                            var filtertable = $("#fake_merchid_table");
+                            filtertable.find("table").html(_html);
+                            filtertable.find('td').css("width","150px");
+                            filtertable.find('td').css("cursor","pointer");
+                            filtertable.show();
+                            filtertable.find('td').css("padding","10px");
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            //过滤商户名称时点击商户名称的table和在输入框直接敲击回车时
+            $("#fake_merchid_table").on('mousedown','td',function(){
+                $("#fake_merchid").val($(this).text());
+                $("#relativemerchid").val($(this).find('input').val());
+                $("#fake_merchid_table").hide();
+            });
+            $('#fake_merchid').bind('keypress', function (event) {
+                if (event.keyCode == 13) {
+                    $('#fake_merchid_table').find('table').children(':first').find('td').trigger('click');
+                }
+            });
+            $('#button-merchLevel-create').bind("click", function () {
+                $("#form-merchlevel-update").form('reset');
+                $('#dialog-merchlevel-update').modal('show');
+            });
+            $('#button-merchLevel-update').bind("click", function () {
+                var data = mtable.api(true).row({selected: true}).data();
+                if (!data || !data.merchid) {
+                    alert("请选择一条记录！");
+                    return;
+                }
+                $("#form-merchlevel-update").form('reset');
+                if(data.validendtime!=0){
+                    data.validendtime = time(data.validendtime);
+                }
+                data.validstarttime = time(data.validstarttime);
+                data.validtime = parseInt(data.validtime/1000/60/60/24);
+                $("#form-merchlevel-update").form('load', data);
+                $('#dialog-merchlevel-update').modal('show');
+            });
+            //
+            //---------------根据商户名称过滤门店管理员信息---------
+            $("#filter_merchid").focus(function(){
+                var data2={
+                    merchname:$("#filter_merchid").val().trim()
+                };
+                ajaxFilterMerch(data2);
+            });
+            $("#filter_merchid").blur(function(){
+                $("#filter_merchid_table").hide();
+            });
+            $("#filter_merchid").keyup(function(){
+                var data2={
+                    merchname:$("#filter_merchid").val().trim()
+                };
+                ajaxFilterMerch(data2);
+            });
+            //过滤商户名称时所用的ajax
+            function ajaxFilterMerch(data){
+                $.ajax({
+                    url:"/pipes/merch/query",
+                    data:{"bean":$.objectToString(data)},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            $("#merchtable").find("table").html("");
+                            var arr= res.rows||[];
+                            var _html="";
+                            var filterhtml="";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<tr><td><input type="hidden" value="'+arr[i].merchid+'">'+arr[i].merchname+'</td></tr>'
+                            }
+                            var filtertable = $("#filter_merchid_table");
+                            filtertable.find("table").html(_html);
+                            filtertable.find('td').css("width","150px");
+                            filtertable.find('td').css("cursor","pointer");
+                            filtertable.show();
+                            filtertable.find('td').css("padding","10px");
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            //过滤商户名称时点击商户名称的table和在输入框直接敲击回车时
+            $("#filter_merchid_table").on('mousedown','td',function(){
+                $("#filter_merchid").val($(this).text());
+                $("#hidden_filter_merchid").val($(this).find('input').val());
+                $("#filter_merchid_table").hide();
+            });
+            $('#filter_merchid').bind('keypress', function (event) {
+                if (event.keyCode == 13) {
+                    $('#filter_merchid_table').find('table').children(':first').find('td').trigger('click');
+                }
+            });
+            $("#showall").click(function(){
+                $("#filter_merchid").val("");
+                $("#hidden_filter_merchid").val("");
+                $("#filter_merchid_table").hide();
+                mtable.api(true).draw(false);
+                $('#table-merchLevel-sheet').dataTable().fnPageChange(0);
+            });
+            //---------------------------------------------------
+            $("#form-merchlevel-update").find('.form-group').css("marginRight","0");
+            var mtable = $('#table-merchLevel-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/ossmerchlevel/query",
+                    dataSrc:"data",
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            merchid:$("#hidden_filter_merchid").val(),
+                            tlevelid:$("#hiddenid").val()
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    }
+                },
+                "aLengthMenu": [[15, 25, 50, -1], ["15条", "25条", "50条", "All"]],
+                columnDefs: [
+                    {
+                        className: 'select-checkbox',
+                        targets: 0
+                    }
+                ],
+                columns: [
+                    {"data": " ", render: $.defrender},
+                    {"data": "merchname", render:$.defrender},
+                    {"data": "tlevelid", render:$.defrender},
+                    {"data": "validstarttime", render: function(value,type,full){
+                        if(full.validendtime==0){
+                            return "自"+time(value)+"长期有效";
+                        }else{
+                            return time(value)+"至"+time(full.validendtime);
+                        }
+                    }},
+                    {"data": "validtime", render: function(value){
+                        if(value==0){
+                            return "长期有效"
+                        }else{
+                            return parseInt(value/1000/60/60/24)+"天";
+                        }
+                    }},
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+            $('#filter-merchLevel-qrybtn').bind("click", function () {
+                $('#table-merchLevel-sheet').dataTable().fnPageChange(0);
+                mtable.api(true).draw(false);
+            });
+            //-------------------------点击提交按钮商家等级--------------------------------------------
+            $("#formbtn-merchlevel-update").on("click",function(){
+                $(this).attr("disabled",true);
+                var form=$("#form-merchlevel-update");
+                var json = form.serializeJson();
+                console.log(json);
+                json.validstarttime = datetime(json.validstarttime);
+                json.validendtime = datetime(json.validendtime);
+                json.validtime = parseInt(json.validtime*1000*60*60*24);
+                var data = "";
+                if(json.tlevelid){
+                    var cols=[];
+                    for(var i in json){
+                        if(i == "tlevelid"){
+                            continue;
+                        }else{
+                            cols.push(i);
+                        }
+                    }
+                    data={
+                        "bean": $.objectToString(json),
+                        "cols": $.objectToString(cols)
+                    }
+                }else{
+                    data={
+                        "bean": $.objectToString(json)
+                    }
+                }
+                $.ajax({
+                    cache: false,
+                    dataType: "json",
+                    type: "POST",
+                    url: '/pipes/ossmerchlevel/update',
+                    data: data,
+                    error: function () {//请求失败处理函数
+                        $("#formbtn-merchlevel-update").removeAttr('disabled');
+                        alert('请求失败');
+                    },
+                    success: function (data) {
+                        $("#formbtn-merchlevel-update").removeAttr('disabled');
+                        if (data && data.retcode && data.retcode > 0)
+                        {
+                            alert(data.retinfo);
+                        } else {
+                            alert("保存成功");
+                            $("#dialog-merchlevel-update").modal('hide');
+                            mtable.api(true).draw(false);
+                        }
+                    }
+                });
+            });
+            //-------有效日期的选择------------------------------------------
+            $("#validday").on('change', function () {
+                endvalue();
+            });
+            timeChange();
+            function timeChange() {
+                var t = new Date().toJSON();
+                var t1 = new Date();
+                var t2 = new Date(t1);
+                t2.setDate(t1.getFullYear() + 5);
+                t2 = t2.toJSON();
+                $("#quanstarttime").datetimepicker({
+                    format: "yyyy-mm-dd", //设置时间格式，默认值: 'mm/dd/yyyy'
+                    weekStart: 0, //一周从哪一天开始。0（星期日）到6（星期六）,默认值0
+                    startDate: new Date(), //可以被选择的最早时间
+                    endDate: new Date(t2), //可以被选择的最晚时间
+                    daysOfWeekDisabled: "", //禁止选择一星期中的某些天，例子中这样是禁止选择周六和周日
+                    autoclose: true, //当选择一个日期之后是否立即关闭此日期时间选择器
+                    startView: 2, //点开插件后显示的界面。0、小时1、天2、月3、年4、十年，默认值2
+                    minView: 2, //插件可以精确到那个时间，比如1的话就只能选择到天，不能选择小时了
+                    maxView: 4, //同理
+                    todayBtn: true, //是否在底部显示“今天”按钮
+                    todayHighlight: true, //是否高亮当前时间
+                    keyboardNavigation: true, //是否允许键盘选择时间
+                    language: 'zh-CN', //选择语言，前提是该语言已导入
+                    forceParse: true, //当选择器关闭的时候，是否强制解析输入框中的值。也就是说，当用户在输入框中输入了不正确的日期，选择器将会尽量解析输入的值，并将解析后的正确值按照给定的格式format设置到输入框中
+                    minuteStep: 5, //分钟的间隔
+                    pickerPosition: "top-left", //显示的位置，还支持bottom-left
+                    viewSelect: 2, //默认和minView相同
+                    showMeridian: true, //是否加上网格
+                    initialDate: new Date(t),//初始化的时间
+                    zIndex: 1080
+                }).on('changeDate', function () {
+                    endvalue();
+                });
+                $("#validday").on('change', function () {
+                    endvalue();
+                });
+                function endvalue() {
+                    if ($("#validday").val() == 0) {
+                        $("#endtime").val("0");
+                    } else {
+                        var v = $("#validday").val()-1;
+                        var t = $("#quanstarttime").val();
+                        t = datetime(t);
+                        var t2 = new Date(t);
+                        var t2 = t2.setDate(t2.getDate() + Number(v));
+                        var year = new Date(t2).getFullYear();
+                        var month = new Date(t2).getMonth() + 1;
+                        var date = new Date(t2).getDate();
+                        if (month < 10) {
+                            month = "0" + month;
+                        }
+                        if (date < 10) {
+                            date = "0" + date;
+                        }
+                        var result = year + "-" + month + "-" + date;
+                        $("#endtime").val(result);
+                    }
+                }
+            }
+            function time(date) {
+                var year = new Date(date).getFullYear();
+                var month = new Date(date).getMonth() + 1;
+                var date1 = new Date(date).getDate();
+                if (month < 10) {
+                    month = "0" + month;
+                }
+                if (date1 < 10) {
+                    date1 = "0" + date1;
+                }
+                var result = year + "-" + month + "-" + date1;
+                return result;
+            }
+            function endvalue() {
+                if ($("#validday").val() == 0) {
+                    $("#endtime").val("0");
+                } else {
+                    var v = $("#validday").val()-1;
+                    var t = $("#quanstarttime").val();
+                    t = datetime(t);
+                    var t2 = new Date(t);
+                    var t2 = t2.setDate(t2.getDate() + Number(v));
+                    var year = new Date(t2).getFullYear();
+                    var month = new Date(t2).getMonth() + 1;
+                    var date = new Date(t2).getDate();
+                    if (month < 10) {
+                        month = "0" + month;
+                    }
+                    if (date < 10) {
+                        date = "0" + date;
+                    }
+                    var result = year + "-" + month + "-" + date;
+                    $("#endtime").val(result);
+                }
+            }
+            //将日历中取出的值转换成后台所需的格式
+            function datetime(time) {
+                time1 = time.replace(/-/g, "/");
+                time2 = new Date(time1).getTime();
+                return time2;
+            }
+            //------------------点击列表筛选--------------------------
+            //点击标签进行会员的筛选
+            $("#table-osslevel-sheet").on('click','td',function(){
+                var data = mtableLevel.api(true).row({selected: true}).data();
+                if(data&&data.tlevelid){
+                    $("#hiddenid").val(data.tlevelid);
+                }else{
+                    $("#hiddenid").val("");
+                }
+                mtable.api(true).draw(false)
+            });
+        });
+    }
+</script>

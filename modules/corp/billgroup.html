@@ -1,0 +1,213 @@
+<div class="page-title">
+    <a id="button-bill-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增打款分类</a>
+    <a id="button-bill-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>打款分类查询</a>
+</div>
+<div class="panel-box">
+    <div class="page-title">
+        <form class="filter-search">
+            <!--<div style="display: inline-block;margin: 0 50px 0 0;">
+                <label >选择企业：</label>
+                <select id="filter_corpid" name="corpid" style="width:100px;">
+                    <option value="0">全部企业</option>
+                </select>
+            </div>-->
+            <div style="display: inline-block;margin: 0 50px 0 0;">
+                <label >打款分类ID：</label>
+                <input id="filter_bill" type="text" placeholder="打款分类ID" style="width: 200px;">
+            </div>
+            <i id="filter-bill-qrybtn" class="fa fa-search" style="position: static;"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="table-bill-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>打款分类ID</th>
+                <th>打款走向</th>
+               <!-- <th>操作人名称</th>
+                <th>操作人ID</th>-->
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-bill-update" class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="dtitle-bill-update" class="modal-title">修改企业</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-bill-update" class="m-t form-horizontal" role="form">
+            <!--<input  name="billid" type="hidden">-->
+           <!-- <div class="form-group">
+                <label class="col-lg-3 control-label">选择企业</label>
+                <div class="col-lg-9">
+                    <select id="selectCorpId" name="corpid" class="form-control"></select>
+                </div>
+            </div>-->
+            <div class="form-group">
+                <label class="col-lg-3 control-label">打款分类ID</label>
+                <div class="col-lg-9"><input id="account" name="billgroupid" placeholder="打款分类ID" class="form-control" maxlength="32"  required  data-error="员工账号不能为空"><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">打款走向</label>
+                <div class="col-lg-9"><input name="billgroupname" id="billname" type="tel" placeholder="打款走向" class="form-control" required pattern="^\d{8,13}$" data-error="请输入正确的手机号码"><div class="help-block with-errors"></div></div>
+            </div>
+         <!--   <div class="form-group">
+                <label class="col-lg-3 control-label">操作人</label>
+                <div class="col-lg-9"><input name="membername"  id="membername" placeholder="操作人" class="form-control" maxlength="32" required data-error="请输入员工昵称"><div class="help-block with-errors"></div></div>
+            </div>
+            <div class="form-group">
+                <label class="col-lg-3 control-label">操作人ID</label>
+                <div class="col-lg-9"><input name="memberid" id="memberid" placeholder="操作人ID" class="form-control" maxlength="32" required data-error="请输入员工昵称"><div class="help-block with-errors"></div></div>
+            </div>-->
+            <input name="createtime" type="hidden">
+
+
+           <!-- <div class="form-group">
+                <label class="col-lg-3 control-label">用户类型</label>
+                <div class="col-lg-9">
+                    <label style="margin: 0 10px;"><input type="radio" name="type" value="10">超级管理员</label>
+                    <label style="margin: 0 10px;"><input type="radio" name="type" value="20" checked>非管理员</label>
+                </div>
+            </div>-->
+          <!--  <div id="form-gfield-password" class="form-group">
+                <label class="col-lg-3 control-label">密    码</label>
+                <div class="col-lg-9"><input name="password" placeholder="密码" type="password" class="form-control" maxlength="32" required data-error="请输入密码"><div class="help-block with-errors"></div></div>
+            </div>-->
+            <!--<div class="form-group">
+                <label class="col-lg-3 control-label">备注说明</label>
+                <div class="col-lg-9"><textarea name="remark" id="remark" placeholder="备注说明" style="height: 8rem;" class="form-control"></textarea></div>
+            </div>-->
+            <br>
+            <button id="formbtn-bill-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+        </form>
+    </div>
+    <div id="tips-bill-update" class="module-alert-tips"></div><br>
+</div>
+<script>
+    {
+        if (system_memberinfo && system_memberinfo.memberid) {
+            defbillTypeRender = function (value, type, full) {
+                if (value === 10) return "<font color=#FF00FF>超级管理员</font>";
+                if (value === 20) return "<font color=green>非管理员</font>";
+                return "<font color=red>未知</font>";
+            };
+            //----------------------------------------------------
+            var mtable = $('#table-bill-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/billgroup/query",
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            billgroupid: $('#filter_bill').val().trim()
+                           /* corpid: $('#filter_corpid').val().trim()*/
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    },
+                },
+                columnDefs: [{
+                    className: 'select-checkbox',
+                    targets: 0
+                }],
+                columns: [
+                    {"data": "", render: $.defrender},
+                    {"data": "billgroupid", render: $.defrender},
+                    {"data": "billgroupname", render: $.defrender},
+                    /*{"data": "membername", render: $.defrender},
+                    {"data": "memberid", render: $.defrender},*/
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+            $('#filter-bill-qrybtn').bind("click", function () {
+                mtable.api(true).draw(false);
+            });
+//--------------------------- 初始化修改企业 -----------------------------
+            $('#button-bill-create').bind("click", function () {
+               // $('#form-gfield-password').show();
+                $('#dtitle-bill-update').html("新增打款");
+                $("#tips-bill-update").html('');
+                $("#form-bill-update").form('reset');
+                $("#selectCorpId").attr("disabled",false);
+                $("#account").attr("disabled",false);
+                $("#billname").attr("disabled",false);
+                $("#membername").attr("disabled",false);
+                $("#memberid").attr("disabled",false);
+                $("#remark").attr("disabled",false);
+                $('#dialog-bill-update').modal('show');
+            });
+            $('#button-bill-update').bind("click", function () {
+                var data = mtable.api(true).row({selected: true}).data();
+                console.log(data);
+                if (!data || !data.billgroupid) {
+                    alert("请选择一条记录！");
+                    return;
+                }
+               // $('#form-gfield-password').hide();
+                $('#dtitle-bill-update').html("打款信息查询");
+                $("#tips-bill-update").html('');
+                $("#form-bill-update").form('reset');
+                $("#form-bill-update").form('load', data);
+                $("#selectCorpId").attr("disabled",true);
+                $("#account").attr("disabled",true);
+                $("#billname").attr("disabled",true);
+                $("#membername").attr("disabled",true);
+                $("#memberid").attr("disabled",true);
+                $("#remark").attr("disabled",true);
+                $('#dialog-bill-update').modal('show');
+            });
+            //------------------------ 新增打款信息 -----------------------------
+            $('#formbtn-bill-update').bind("click", function (e) {
+                var form = $("#form-bill-update");
+//                if (form.validator('validate').hasErrors()) return;
+                var json = form.serializeJson();
+              /*  json.password = $.md5(json.password);*/
+                $.ajax({
+                    cache: false,
+                    dataType: "json",
+                    type: "POST",
+                    url: '/pipes/billgroup/create',
+                    data: {
+                        "bean": $.objectToString(json),
+                    },
+                    error: function () {//请求失败处理函数
+                        alert('请求失败');
+                    },
+                    success: function (data) {
+                        console.log("新增打款信息");
+                        console.log(data);
+                        $("#dialog-bill-update").modal('hide');
+                        mtable.api(true).draw(false);
+                    }
+                });
+            });
+        }
+        $(function () {
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/corp/list',
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (corps) {
+                    $('#selectCorpId').find('option').remove();
+                    var content = '';
+                    for (var i = 0; i < corps.length; i++) {
+                        content = content + '<option value="' + corps[i].corpid + '">' + corps[i].corpname + '</option>'; //corps[i].c
+                    }
+                    $("#selectCorpId").append(content);
+                    $("#filter_corpid").append(content);
+                }
+            });
+        });
+        //------------------------验证信息-----------------------------------
+
+        //-----------------------------------------------------------------
+
+    }
+</script>

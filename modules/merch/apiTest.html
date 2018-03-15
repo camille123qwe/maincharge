@@ -1,0 +1,158 @@
+<!--
+    (function(){
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "http://api.map.baidu.com/api?v=2.0&ak=xHnkO8DAAhLrU1cuTKMafLAapIMEm0ju&callback=init";
+        document.body.appendChild(script);
+    })();
+    function init(){
+        initCitySelect();
+        $.getScript("http://api.map.baidu.com/api/library/DrawingManager/1.4/src/DrawingManager_min.js",function(){
+            bmap.init();
+            bmap.loadOverlay();
+        })
+    }
+    this.status = true;
+    this.map = new BMap.Map('map');
+    var map = this.map;
+    this.point = new BMap.Point(120.393616, 31.629307);
+    var styleOptions = this.styleOPtions;
+    var cityname = cityObj[$("#cityselect").val()]['cityname'];
+    map.setCurrentCity('cityname');
+    map.centerAndZoom(cityname, 13);
+    map.enableScrollWheelZoom("true");
+    //实例化鼠标绘制工具
+    this.drawingManager = new BMapLib.DrawingManager(map,{
+        isOpen: false,//是否开启绘制模式
+        enableDrawingTool:false,//是否显示工具栏
+        polygonOptions: styleOptions,//多边形的样式
+        drawingToolOptions:{
+            anchor:BMAP_ANCHOR_TOP_RIGHT,//位置
+            offset:new BMap.Size(5,5),//偏离值
+            scale:0.8,//工具栏缩放比例
+            drawingTypes:[
+                    BMAP_DRAWING_POLYGON
+            ]
+        }
+    });
+    //添加鼠标绘制工具监听事件，用于获取绘制结果
+    this.drawingManager.setDrawingMode( BMAP_DRAWING_POLYGON);
+    map.addEventListener("rightclick",function(e){
+
+    });
+    this.drawingManager.addEventListener("polygoncomplete",function(e,overlay){});
+    this.drawingManager.addEventListener("overlaycomplete",self.overlayComplete);
+    map.addControl(new BMap.NavigationControl({
+        anchor:BMAP_ANCHOR_TOP_RIGHT,
+        type:BMAP_NAVIGATION_CONTROL_SMALL
+    }))
+</script>-->
+<div id="bdmap" class="modal fade" tabindex="-1" data-width="650"  style="height:550px" data-backdrop="static" data-keyboard="false">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+    </div>
+    <div class="modal-body">
+        <p><span style="display:inline-block;width: 80px;text-align: right">商户地址：</span><input id="text_" type="text" id=suggestId" style="width:250px;"/>
+            <input type="button" value="查询" id="mapquery"/></p>
+        <p>
+            <span style="display:inline-block;width: 80px;text-align: right">(经纬度)：</span>
+            <input id="result_" type="text" style="width:250px"/>
+            <input type="button" value="保存" id="mapsave"/></p>
+        <div id="container"
+             style="position: absolute;
+                    margin-top:30px;
+                    width: 600px;
+                    height: 350px;
+                    top: 50px;
+                    border: 1px solid gray;
+                    overflow:hidden;">
+        </div>
+    </div>
+</div>
+<script>
+    (function(){
+        var script = document.createElement("script");
+        script.type = "text/javascript";
+        script.src = "http://api.map.baidu.com/api?v=2.0&ak=xHnkO8DAAhLrU1cuTKMafLAapIMEm0ju&callback=init";
+        document.body.appendChild(script);
+    })();
+    function init(){
+        /*  $.getScript("http://api.map.baidu.com/api/library/DrawingManager/1.4/src/DrawingManager_min.js",function(){*/
+        var map = new BMap.Map("container");
+        map.centerAndZoom("深圳", 15);
+        map.enableScrollWheelZoom();    //启用滚轮放大缩小，默认禁用
+        map.enableContinuousZoom();    //启用地图惯性拖拽，默认禁用
+
+        map.addControl(new BMap.NavigationControl());  //添加默认缩放平移控件
+        map.addControl(new BMap.OverviewMapControl()); //添加默认缩略地图控件
+        map.addControl(new BMap.OverviewMapControl({ isOpen: true, anchor: BMAP_ANCHOR_BOTTOM_RIGHT }));   //右下角，打开
+        map.addControl( new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE})); //添加默认缩略地图控件
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+        map.addEventListener("click",function(e){
+            /* alert(e.point.lng + "," + e.point.lat);*/
+            var marker = new BMap.Marker(new BMap.Point(e.point.lng, e.point.lat));  // 创建标注，为要查询的地方对应的经纬度
+            map.clearOverlays();
+            map.addOverlay(marker);
+            document.getElementById("result_").value = e.point.lng + "," + e.point.lat;
+            map.centerAndZoom(e.point, map.getZoom());
+            //------------------------------
+            var point = e.point;
+            var gc = new BMap.Geocoder();
+
+            /*
+             //根据经纬度获取地址
+             gc.getLocation(point, function(rs){
+             var addComp = rs.addressComponents;
+             document.getElementById("text_").value= addComp.province + ", " + addComp.city + ", " + addComp.district + ", " + addComp.street + ", " + addComp.streetNumber;
+
+             });*/
+            //百度地图JS API 坐标转地址，没有加载地图时获取不到rs,总是null
+            function getLocation(myGeo,pt,rs) {
+                // 根据坐标得到地址描述
+                myGeo.getLocation(pt, function (rs) {
+                    if (rs) {
+                        var addComp = rs.addressComponents;
+                        window.clearInterval(interval);
+                        alert(addComp);
+                    }
+                    return rs;
+                });
+            }
+
+        });
+        var localSearch = new BMap.LocalSearch(map);
+        localSearch.enableAutoViewport(); //允许自动调节窗体大小
+        $("#mapquery").click(function(){
+            searchByStationName();
+        });
+        function searchByStationName() {
+            map.clearOverlays();//清空原来的标注
+            var keyword = document.getElementById("text_").value;
+            localSearch.setSearchCompleteCallback(function (searchResult) {
+                var poi = searchResult.getPoi(0);
+                document.getElementById("result_").value = poi.point.lng + "," + poi.point.lat;
+                map.centerAndZoom(poi.point, 15);
+                var marker = new BMap.Marker(new BMap.Point(poi.point.lng, poi.point.lat));  // 创建标注，为要查询的地方对应的经纬度
+                map.addOverlay(marker);
+                var content = document.getElementById("text_").value + "<br/><br/>经度：" + poi.point.lng + "<br/>纬度：" + poi.point.lat;
+                var infoWindow = new BMap.InfoWindow("<p style='font-size:14px;'>" + content + "</p>");
+                marker.addEventListener("click", function () { this.openInfoWindow(infoWindow); });
+            });
+            localSearch.search(keyword);
+        }
+    }
+</script>
+<script>
+//----------------百度地图------------------------------
+$("#localaddress").focus(function(){
+$("#bdmap").modal('show');
+$("#mapsave").click(function(){
+$("#localaddress").val($("#text_").val());
+$("#gnote").val($("#result_").val());
+$("#bdmap").modal('hide');
+});
+})
+</script>

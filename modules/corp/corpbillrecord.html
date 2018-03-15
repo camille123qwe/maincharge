@@ -1,0 +1,555 @@
+<div class="page-title">
+    <a id="button-corpbillrecord-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增企业打款记录</a>
+    <a id="button-corpbillrecord-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>企业打款记录查询</a>
+    <a id="button-corpbillallot-create" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>企业打款分配</a>
+    <!-- <h4 style="padding-left: 10px">企业财务查询 </h4>-->
+</div>
+<div class="panel-box">
+    <div class="page-title">
+        <form class="filter-search" >
+                <div style="display: inline-block;margin: 0 50px 0 0;">
+                    <label >选择企业：</label>
+                    <select id="filter_contract_corpid" name="corpid" style="width:150px;">
+                        <option value="0">全部企业</option>
+                    </select>
+                </div>
+                <div style="display: inline-block;margin: 0 50px 0 0;">
+                    <label >处理状态：</label>
+                    <select id="billstate" name="billstate" style="width:100px;">
+                        <option value="">全部</option>
+                        <option value="10">待处理</option>
+                        <option value="20">已处理</option>
+                    </select>
+                </div>
+           <!-- <div style="display: inline-block;margin: 0 50px 0 0;">
+                <label >企业ID：</label>
+                <input id="filter_billrecordno" type="text" placeholder="企业ID" style="width: 200px;">
+            </div>-->
+            <i id="filter-corpbillrecord-qrybtn" class="fa fa-search" style="position: static;"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="table-corpbillrecord-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>企业名称</th>
+                <th>处理状态</th>
+                <th>交易流水号</th>
+                <th>流水快照图片名</th>
+                <th>入账类型</th>
+                <th>企业打款账号</th>
+                <th>公司接收账号</th>
+                <th>打款金额</th>
+                <th>打款交易时间</th>
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-corpbillrecord-update" class="modal fade" tabindex="-1" data-width="800" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="billrecordclose">×</button>
+        <h4 id="dtitle-corpbillrecord-update" class="modal-title">修改企业</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-corpbillrecord-update" class="m-t form-horizontal" role="form">
+            <input  name="corpbillrecordid" type="hidden">
+            <input name="billimg" id="billimg" type="hidden" class="form-control">
+            <div class="form-group">
+                <div class="col-lg-8">
+                 <!--   <div class="form-group">
+                        <label class="col-lg-3 control-label">企业打款ID</label>
+                        <div class="col-lg-9"><input  name="corpbillid" id="billrecordId" placeholder="企业打款ID" class="form-control" maxlength="128"  required  data-error="工商注册号不能为空"><div class="help-block with-errors"></div></div>
+                    </div>-->
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">选择企业</label>
+                        <div class="col-lg-9"> <select id="selectCorpId" name="corpid" class="form-control" required></select>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">交易流水号</label>
+                        <div class="col-lg-9"><input name="billno" placeholder="交易流水号" class="form-control  datetimepicker"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">企业打款账号</label>
+                        <div class="col-lg-9"><input name="corpbankno" placeholder="企业打款账号" class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+
+                            <label class="col-lg-3 control-label">公司接收账号</label>
+                            <div class="col-lg-9"><input name="recvbankno" type="tel" placeholder="公司接收账号" class="form-control"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">打款金额(元)</label>
+                        <div class="col-lg-9"><input name="money" type="tel" placeholder="打款金额" class="form-control"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">打款交易时间</label>
+                        <div class="col-lg-9"><input name="recvbanktime"  placeholder="需与快照中的时间一致,格式例：20170101" class="form-control"></div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">处理状态</label>
+                        <div class="col-lg-8">
+                            <select id="selectCorpStatus" name="billstate" class="form-control">
+                                <option value="10">待处理</option>
+                                <option value="20">已处理</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">入账类型</label>
+                        <div class="col-lg-8">
+                            <select id="selecttypeStatus" name="acctype" class="form-control">
+                                <option value="10">对公入账</option>
+                                <option value="20">对私入账</option>
+                            </select>
+                        </div>
+                    </div>
+                  <!--  <div class="form-group">
+                        &nbsp;
+                    </div>-->
+                    <div class="form-group col-lg-12" style="margin-left: 10px">
+                        <img id="quickbillimg" src="" style="width: 180px;height: 200px; display: block">
+                    </div>
+                    <div class="btn btn-success fileinput-button" style="margin-left: 50px;">
+                        <i class="fa fa-fw fa-upload"></i>
+                        <span>上传流水快照</span>
+                        <input id="fileupload-goods-btn"  type="file" name="file">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <button id="formbtn-corpbillrecord-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+
+        </form>
+    </div>
+    <div id="tips-corpbillrecord-update" class="module-alert-tips"></div><br>
+</div>
+<!-------------------------企业打款分配模块------------------------------------------->
+
+<div id="dialog-corpbillallot-update" class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="dtitle-corpbillallot-update" class="modal-title">企业打款分配</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-corpbillallot-update" class="m-t form-horizontal" role="form">
+            <input name="billimg" id="allotbillimg" type="hidden" class="form-control">
+            <input  name="corpbillallotid" id="billallotId" type="hidden" placeholder="企业打款分配记录ID" class="form-control" >
+            <input  name="corpid" id="allotcompanyId" placeholder="企业ID" type="hidden" class="form-control">
+            <input name="corpbillid" id="corpbillid" placeholder="企业打款记录ID" type="hidden" class="form-control">
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">分配分类</label>
+                    <div class="col-lg-7">
+
+                        <select name="billgroupid" class="form-control selectBillGroupId">
+                        </select>
+
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-4 control-label">分配金额(元)</label>
+                    <div class="col-lg-7"><input name="money" type="tel" placeholder="分配金额" class="form-control" required pattern="^\d{8,13}$" data-error="请输入正确的联系电话"><div class="help-block with-errors"></div></div>
+                </div>
+                <div class="form-group pull-right" style="margin-right: 30px" id="new-allot-div">
+                    <button id="new-allot-btn" type="button" class="btn btn-link btn-sm" style="color: orange">新增分类</button>
+                </div>
+
+            <br>
+            <button id="formbtn-corpbillallot-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+
+        </form>
+    </div>
+    <div id="tips-corpbillallot-update" class="module-alert-tips"></div><br>
+</div>
+<div id="mcdialog"  class="modal fade" tabindex="-1" data-width="550" data-backdrop="static" data-keyboard="false" style="display: none">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">提示:</h4>
+    </div>
+    <div class="modal-body">
+        <h4 id="mcmessage">打款分类已处理，不可进行二次分配</h4>
+    </div>
+</div>
+
+<!-------------------------企业打款分配模块结束---------------------------------------->
+<script>
+    {
+        if (system_memberinfo && system_memberinfo.memberid) {
+            addoption();
+            billrecordtimglink = function (billrecordimg, type, full) {
+                if(billrecordimg==undefined){
+                    return "";
+                }else{
+                    return "<a href='/dir/billimg/"+ billrecordimg + "' target='_blank'>"+billrecordimg+"</a>";
+                }
+
+            }
+            defcorpTyperecord = function (value, type, full) {
+               if(value=="10"){return '<font color="red">待处理</font>'}
+                if(value=="20"){return '<font color="green">已处理</font>'}
+                return "未知"
+            };
+            defcorpaccTyperecord = function (value, type, full) {
+                if(value=="10"){return '<font>对公入账</font>'}
+                if(value=="20"){return '<font>对私入账</font>'}
+            };
+            money=function(value, type, full){
+                return value/1000000+"万";
+            };
+            //----------------------------------------------------
+            var mtable = $('#table-corpbillrecord-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/corpbill/query",
+                    dataSrc:"data",
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            corpid: $('#filter_contract_corpid').val().trim(),
+                            billstate: $('#billstate').val().trim()
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    },
+                },
+                columnDefs: [{
+                    className: 'select-checkbox',
+                    targets: 0
+                }],
+                columns: [
+                    {"data": " ", render: $.defrender},
+                    {"data":"corpinfo.corpname",render:$.defrender},
+                    {"data": "billstate", render: defcorpTyperecord },
+                    {"data": "billno", render: $.defrender},
+                    {"data": "billimg", render:billrecordtimglink},
+                    {"data": "acctype", render:defcorpaccTyperecord},
+                    {"data": "corpbankno", render: $.defrender},
+                    {"data": "recvbankno", render: $.defrender},
+                    {"data": "money", render: money},
+                    {"data": "recvbanktime", render:$.defrender},
+                    {"data": "createtime", render: Date.DateFormatter}
+                 /*   {"data": "memberid", render: $.defrender},
+                    {"data": "membername", render: $.defrender},*/
+
+
+                ]
+            });
+            $('#filter-corpbillrecord-qrybtn').bind("click", function () {
+                    $('#table-corpbillrecord-sheet').dataTable().fnPageChange(0);
+                    mtable.api(true).draw(false);
+            });
+        }
+        //---------------上传图片到服务器-----------------------
+        $('#fileupload-goods-btn').fileupload({
+            type: 'POST',
+            url: '/pipes/ueditor?action=uploadimage_billimg',
+            done: function (e, data) {//设置文件上传完毕事件的回调函数
+                var json = JSON.parse(data.result);
+                console.log(json.fileid);
+                $("#billimg").val(json.fileid);
+                document.getElementById('quickbillimg').src = '/dir/billimg/' + json.fileid;
+
+            }
+        });
+        //-----------------------------------------------------------------
+        //-------------------------新增企业打款记录-----------------------------
+        $('#button-corpbillrecord-create').bind("click", function () {
+            //$('#form-gfield-password').show();
+            $('#dtitle-corpbillrecord-update').html("新增企业打款记录");
+            $("#tips-corpbillrecord-update").html('');
+            $("#form-corpbillrecord-update").form('reset');
+            document.getElementById('quickbillimg').src =" ";
+            $('#dialog-corpbillrecord-update').modal('show');
+            $("#form-corpbillrecord-update").find('input,select,textarea').attr("disabled",false);
+            billrecordvali();
+        });
+        //-------------------------查询企业打款记录-----------------------------------------------------
+        $('#button-corpbillrecord-update').bind("click", function () {
+            var data = mtable.api(true).row({selected: true}).data();
+            if (!data || !data.corpid) {
+                alert("请选择一条记录！");
+                return;
+            }
+            data.money=data.money/100;
+            $('#form-gfield-password').hide();
+            $('#dtitle-corpbillrecord-update').html("查询企业打款记录");
+            $("#tips-corpbillrecord-update").html('');
+            $("#form-corpbillrecord-update").form('reset');
+            $("#form-corpbillrecord-update").form('load', data);
+            document.getElementById('quickbillimg').src = '/dir/billimg/' + $("#billimg").val();
+            $("#form-corpbillrecord-update").find('input,select,textarea').attr("disabled",true);
+            $('#dialog-corpbillrecord-update').modal('show');
+
+        });
+        //-------------------------点击提交按钮新增企业打款记录--------------------------------------------
+
+        $("#formbtn-corpbillrecord-update").on("click",function(){
+            var form=$("#form-corpbillrecord-update");
+            var json = form.serializeJson();
+            json.money=json.money*100;
+            $('#form-corpbillrecord-update').bootstrapValidator('validate');
+            if($('#form-corpbillrecord-update').data('bootstrapValidator').isValid()){
+                $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/corpbill/create',
+                data: {
+                    "bean": $.objectToString(json),
+                },
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data && data.retcode && data.retcode > 0)
+                    {
+                        alert(data.retinfo);
+                    } else
+                    {
+                        alert("保存成功");
+
+                        $('#form-corpbillrecord-update').data('bootstrapValidator').destroy();
+                        $('#form-corpbillrecord-update').data('bootstrapValidator', null);
+                        $("#dialog-corpbillrecord-update").modal('hide');
+                        mtable.api(true).draw(false);
+                    }
+                }
+            });
+            }else{
+                alert("验证失败，请按要求填写信息")
+            }
+        });
+        $("#billrecordclose").on("click",function () {
+            $('#form-corpbillrecord-update').data('bootstrapValidator').destroy();
+            $('#form-corpbillrecord-update').data('bootstrapValidator', null);
+        })
+        //--------------------------企业打款分配-----------------------------------------
+        $("#button-corpbillallot-create").on("click",function(){
+            var data = mtable.api(true).row({selected: true}).data();
+            if (!data || !data.corpid) {
+                alert("请选择一条记录！");
+                return;
+            }
+            if($(".selected td:eq(2)").children("font").html()=="已处理"){
+                $("#mcdialog").modal("show");
+                $("#mcmessage").text("打款分配已处理，不可进行二次处理")
+                return;
+            };
+            $("#corpbillallotid").val()
+            $("#allotcompanyId").val(data.corpid);
+            $("#corpbillid").val(data.corpbillid);
+            $("#dialog-corpbillallot-update").modal('show');
+            $("form-corpbillallot-update").html('<input name="corpbillallotid" type="hidden">'+
+                    '<input name="billimg" id="billimg" type="hidden" class="form-control">'+
+                    '<input  name="corpbillallotid" id="billallotId" type="hidden">'+
+                    '<input type="hidden" name="corpbillid"><div class="form-group"><label class="col-lg-4 control-label">分配分类</label>'+
+                    '<div class="col-lg-7"><select name="billgroupid" class="form-control select-allot-groupid"></select>'+
+                    '<div class="help-block with-errors"></div></div></div>'+
+                    '<div class="form-group"><label class="col-lg-4 control-label">分配金额</label>'+
+                    '<div class="col-lg-7"><input name="money" type="tel" placeholder="分配金额" class="form-control" required pattern="^\d{8,13}$" data-error="请输入正确的联系电话">'+
+                    '<div class="help-block with-errors"></div>'+'</div></div>'+
+                    '<div class="form-group pull-right" style="margin-right: 30px" id="new-allot-div">'+
+                    '<button id="new-allot-btn" type="button" class="btn btn-link btn-sm" style="color: orange">新增分类</button>'+
+                    '</div><br>'+
+                    '<button id="formbtn-corpbillallot-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>'
+            )
+        });
+
+        //--------新增打款分类------
+        $("#new-allot-btn").on("click",function(){
+            $("#new-allot-div").before('<div class="form-group"><label class="col-lg-4 control-label">分配分类</label>'+
+                    '<div class="col-lg-7"><select name="billgroupid" class="form-control selectBillGroupId"></select>'+
+                    '<div class="help-block with-errors"></div></div></div>'+
+                    '<div class="form-group"><label class="col-lg-4 control-label">分配金额(元)</label>'+
+                    '<div class="col-lg-7"><input name="money" type="tel" placeholder="分配金额" class="form-control" required pattern="^\d{8,13}$" data-error="请输入正确的联系电话">'+
+                    '<div class="help-block with-errors"></div>'+'</div></div>')
+            addoption();
+        });
+        $("#formbtn-corpbillallot-update").on("click",function(){
+            var form=$("#form-corpbillallot-update");
+            var json = form.serializeJson();
+            var arr=[json];
+            json=jsonchange(arr);
+            //数据转换
+            function jsonchange(arrList){
+                var jsonO =arrList;
+                // 获取可变数组长度
+                if(typeof (jsonO[0].billgroupid)=="string"){
+                    json.money=json.money*100;
+                    return [json];
+                }
+                var billgroupidLength = jsonO[0].billgroupid.length;
+                console.log(billgroupidLength);
+                //构造一个数组存取解析的json数据
+                var arrZ = [];
+                for(var v=0;v<billgroupidLength;v++){
+                    var obj1 = new Object();
+                    obj1.billimg = jsonO[0].billimg;
+                    obj1.corpbillallotid = jsonO[0].corpbillallotid;
+                    obj1.corpid = jsonO[0].corpid;
+                    obj1.corpbillid = jsonO[0].corpbillid;
+                    obj1.billgroupid = jsonO[0].billgroupid[v];
+                    obj1.money = jsonO[0].money[v]*100;
+                    arrZ[v] = obj1;
+                }
+             json=arrZ;
+                return json;
+            }
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/corpbillallot/create',
+                data: {
+                    "beans": $.objectToString(json),
+                },
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (data) {
+                    if (data && data.retcode && data.retcode > 0)
+                    {
+                        $("#mcdialog").modal("show");
+                        $("#mcmessage").text("分配金额有误，分配金额必须一次分配完毕")
+                    } else
+                    {
+                        $("#dialog-corpbillallot-update").modal('hide');
+                        data.billstate="20";
+                        mtable.api(true).draw(false);
+
+                    }
+                }
+            });
+        });
+        //---------------验证新增打款记录----------------------------------------------
+        function billrecordvali(){
+            $("#form-corpbillrecord-update").bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields:{
+                    billno:{
+                        message: 'The billno is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '交易流水号不能为空'
+                            },
+                            regexp: { /* 只需加此键值对 */
+                                regexp: /^[A-Za-z0-9]+$/,
+                                message: '交易流水号只能由字母数字组成'
+                            }
+                       }
+                    },
+                    corpbankno:{
+                        message: 'The corpbankno is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: '企业打款账号不能为空'
+                            },
+                            regexp: {
+                                regexp:/^\d{11,19}$/,
+                                message: '企业打款账号只能由数字组成，长度为11-19位'
+                            }
+                        }
+                    },
+                    recvbankno:{
+                        message: 'The recvbankno is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: '企业打款账号不能为空'
+                            },
+                            regexp: {
+                                regexp:/^\d{11,19}$/,
+                                message: '公司接收账号只能由数字组成，长度为11-19位'
+                            }
+                        }
+                    },
+                    money:{
+                        message: 'The money is not valid',
+                        validators:{
+                            notEmpty: {
+                                message: '打款金额不能为空'
+                            },
+                            regexp: {
+                                regexp:/^\d+$/,
+                                message: '打款金额只能由数字组成'
+                            }
+                        }
+                    },
+                    recvbanktime:{
+                        message: 'The recvbanktime is not valid',
+                        validators:{
+                            notEmpty: {
+                                message: '打款交易时间不能为空'
+                            },
+                            regexp: {
+                                regexp:/^\d{8}$/,
+                                message: '打款交易时间只能由数字组成,格式例:20170101'
+                            }
+                        }
+                    },
+                }
+            });
+        }
+        //-----打款分配中的企业名称及ID选项------
+       function addoption() {
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/billgroup/query',
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (corps) {
+                    $('.selectBillGroupId').find('option').remove();
+                    var content = '';
+                    for(var i = 0; i < corps.rows.length; i++){
+                        content = content + '<option value="' + corps.rows[i].billgroupid + '">' + corps.rows[i].billgroupname + '</option>';
+                    }
+                    $(".selectBillGroupId").append(content);
+
+                }
+            });
+        }
+        //-----打款记录中企业选项--------------
+        $(function () {
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                url: '/pipes/corp/list',
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (corps) {
+                    $('#selectCorpId').find('option').remove();
+                    var content = '';
+                    var headcontent='';
+                    for (var i = 0; i < corps.rows.length; i++) {
+                        if( corps.rows[i].corpid==15000001){
+                            headcontent='<option selected value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>';
+                            continue;
+                        }
+                        content = content + '<option value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>'; //corps[i].c
+                    }
+                    $("#selectCorpId").append(headcontent);
+                    $("#selectCorpId").append(content);
+                    $("#filter_corpid").append(headcontent);
+                    $("#filter_corpid").append(content);
+                    $("#filter_contract_corpid").append(headcontent);
+                    $("#filter_contract_corpid").append(content);
+                }
+            });
+
+        });
+    }
+</script>

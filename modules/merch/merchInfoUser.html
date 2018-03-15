@@ -1,0 +1,519 @@
+<div class="page-title">
+    <a id="button-merchUser-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增管理员</a>
+    <a id="button-merchUser-update" href="javascript:void(0);"><i class="fa fa-pencil-square-o"></i>修改管理员</a>
+</div>
+<div class="panel-box">
+    <div class="page-title">
+        <form class="filter-search" onsubmit="return false">
+            <div style="display: inline-block;margin: 0 10px 0 0;">
+                <label >商户名称：</label>
+                <input id="hidden_filter_merchid" type="hidden">
+                <input id="filter_merchid" style="width:150px;position: relative">
+                <div class="table-responsive" id="filter_merchid_table">
+                    <table class="table table-hover">
+                    </table>
+                </div>
+            </div>
+            <button style="width: 120px;" id="showall">显示全部</button>
+            <div style="display: inline-block;margin: 0 10px 0 0;">
+                <label >员工昵称：</label>
+                <input id="filter_merchuser" style="width:150px;position: relative">
+            </div>
+            <label>手机号码:</label><input placeholder="手机号码" id="filter_mobile">
+            <div style="display: inline-block;margin: 0 50px 0 0;">
+                <label >状态</label>
+                <select name="status" id="filter_storeinfo_status" style="width:150px;">
+                    <option value="">全部</option>
+                    <option value="10">正常</option>
+                    <option value="20">待审批</option>
+                    <option value="80">删除</option>
+                </select>
+            </div>
+            <i id="filter-merchUser-qrybtn" class="fa fa-search" style="position: static;"></i>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="table-merchUser-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>门店名称</th>
+                <th>用户类型</th>
+                <th>员工昵称</th>
+                <th>员工账号</th>
+                <th>状态</th>
+                <th>手机号码</th>
+                <th>密码</th>
+              <!--  <th>备注说明</th>-->
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-merchUser-update" class="modal fade" tabindex="-1" data-width="800" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="recordclose">×</button>
+        <h4 id="dtitle-merchUser-update" class="modal-title">修改企业</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-merchUser-update" class="m-t form-horizontal" role="form">
+            <input id="merchuserid" name="merchuserid" type="hidden">
+            <input  name="createtime" type="hidden">
+            <input name="updatetime" type="hidden">
+            <input name="storeid" value="0" type="hidden">
+            <input name="type" value="10" type="hidden">
+            <div class="table-responsive">
+                <table  cellspacing="0" width="100%">
+                    <tr>
+                        <td>
+                            <div class="form-group" id="createmerch">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>选择商户</label>
+                                <div class="col-lg-9">
+                                    <input type="hidden" name="merchid" id="hiddenmerchid">
+                                    <input id="merchid" name="merchname" class="form-control" style="position: relative">
+                                    <div id="merchtable" class="table-responsive"
+                                         style="position: absolute;background:#fff;z-index: 888;
+                                                 border: solid 1px #eee;max-height:150px;overflow-y: auto;
+                                                    display: none">
+                                        <table class="table table-hover" cellspacing="0" width="100%"></table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>员工账号</label>
+                                <div class="col-lg-9"><input name="account" class="form-control"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>员工昵称</label>
+                                <div class="col-lg-9"><input name="username" type="tel" class="form-control"></div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>手机号码</label>
+                                <div class="col-lg-9"><input name="mobile" class="form-control"></div>
+                            </div>
+                            <div class="form-group" id="password">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>密码</label>
+                                <div class="col-lg-9"><input name="password"  type="tel" class="form-control"></div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-lg-3 control-label"><span style="color: red;">*&nbsp;</span>状态</label>
+                                <div class="col-lg-9">
+                                    <select name="status" class="form-control">
+                                        <option value="10">正常</option>
+                                        <option value="20">待审批</option>
+                                        <option value="80">删除</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <div class="form-group">
+                                <label class="col-lg-2 control-label">备注说明</label>
+                                <div class="col-lg-8">
+                                    <textarea name="remark" class="form-control"></textarea>
+                                </div>
+                            </div>
+                        </td>
+                        <td></td>
+                    </tr>
+                </table>
+                <br>
+                <button id="formbtn-merchUser-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    {
+        $(function(){
+            if(system_memberinfo.type==system_adminpid){
+                $("#button-merchUser-update").after(' <a id="button-user-reset" href="javascript:void(0);">' +
+                        '<i class="fa fa-pencil"></i>密码重置</a>')
+            }
+            //---------------根据商户名称过滤门店管理员信息---------
+            $("#filter_merchid").focus(function(){
+                var data2={
+                    merchname:$("#filter_merchid").val().trim()
+                };
+                ajaxFilterMerch(data2);
+            });
+            $("#filter_merchid").blur(function(){
+                $("#filter_merchid_table").hide();
+            });
+            $("#filter_merchid").keyup(function(){
+                var data2={
+                    merchname:$("#filter_merchid").val().trim()
+                };
+                ajaxFilterMerch(data2);
+            });
+            //过滤商户名称时所用的ajax
+            function ajaxFilterMerch(data){
+                $.ajax({
+                    url:"/pipes/merch/query",
+                    data:{"bean":$.objectToString(data)},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            $("#merchtable").find("table").html("");
+                            var arr= res.rows||[];
+                            var _html="";
+                            var filterhtml="";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<tr><td><input type="hidden" value="'+arr[i].merchid+'">'+arr[i].merchname+'</td></tr>'
+                            }
+                            var filtertable = $("#filter_merchid_table");
+                            filtertable.find("table").html(_html);
+                            filtertable.find('td').css("width","150px");
+                            filtertable.find('td').css("cursor","pointer");
+                            filtertable.show();
+                            filtertable.find('td').css("padding","10px");
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            //过滤商户名称时点击商户名称的table和在输入框直接敲击回车时
+            $("#filter_merchid_table").on('mousedown','td',function(){
+                $("#filter_merchid").val($(this).text());
+                $("#hidden_filter_merchid").val($(this).find('input').val());
+                $("#filter_merchid_table").hide();
+            });
+            $('#filter_merchid').bind('keypress', function (event) {
+                if (event.keyCode == 13) {
+                    $('#filter_merchid_table').find('table').children(':first').find('td').trigger('click');
+                }
+            });
+            $("#showall").click(function(){
+                $("#filter_merchid").val("");
+                $("#hidden_filter_merchid").val("");
+                $("#filter_merchid_table").hide();
+                mtable.api(true).draw(false);
+                $('#table-merchUser-sheet').dataTable().fnPageChange(0);
+            });
+            //---------------------------------------------------
+            $.ajax({
+                url: "/pipes/merch/query",
+                data:{"bean":"{}"},
+                dataType:"JSON",
+                type:"POST",
+                success:function(res){
+                   var qjmerchname = res.rows||[];
+                    //门店商户名称输入框获得焦点时&&新增门店信息商户名称输入框按键操作时
+                },
+                error:function(err){
+                    console.log(err);
+                    alert("请求失败");
+                }
+            });
+            $("#merchid").focus(function(){
+                var data = {
+                    merchname:$("#merchid").val().trim()
+                };
+                ajaxMerch(data);
+            });
+            $("#merchid").blur(function(){
+                $("#merchtable").hide();
+            });
+            $("#merchid").keyup(function(){
+                var data = {
+                    merchname:$("#merchid").val().trim()
+                };
+                ajaxMerch(data);
+            });
+            //新增门店信息时点击商户名称的table和在输入框直接敲击回车时
+            $("#merchtable").on('mousedown','td',function(){
+                $("#merchid").val($(this).text());
+                $("#hiddenmerchid").val($(this).find('input').val());
+                $("#merchtable").hide();
+            });
+            $("#merchid").keydown(function(e){
+                if(e.keyCode==13){
+                    $('#merchtable').find('table').children(':first').find('td').trigger('click');
+                }
+            });
+            //新增门店信息时获取商户名称所用的ajax
+            function ajaxMerch(data){
+                $.ajax({
+                    url:"/pipes/merch/query",
+                    data:{"bean":$.objectToString(data)},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if (res && res.retcode && res.retcode > 0)
+                        {
+                            alert(res.retinfo);
+                        }else{
+                            $("#merchtable").find("table").html("");
+                            var arr= res.rows||[];
+                            var _html="";
+                            var filterhtml="";
+                            for(var i=0;i<arr.length;i++){
+                                _html+='<tr><td><input type="hidden" value="'+arr[i].merchid+'">'+arr[i].merchname+'</td></tr>'
+                            }
+                            $("#merchtable").find("table").html(_html);
+                            $("#merchtable").find('td').css("width",$('#merchid').width()+24+"px");
+                            $("#merchtable").find('td').css("cursor","pointer");
+                            $("#merchtable").show();
+                            $("#merchtable").find('td').css("padding","10px");
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            }
+            $("#form-merchUser-update").find('.form-group').css("marginRight","0");
+            if (system_memberinfo && system_memberinfo.memberid) {
+                type = function (value, type, full) {
+                    if(value=="10"){return '<font>管理员</font>'}
+                    if(value=="20"){return '<font>店长</font>'}
+                };
+                merchInfo = function (value) {
+                    if(value){
+                        return value.merchname;
+                    }else{
+                        return "暂无";
+                    }
+
+                };
+                //----------------------------------------------------
+                var mtable = $('#table-merchUser-sheet').dataTable({
+                    ajax: {
+                        url: "/pipes/merch/merchuser/query",
+                        dataSrc:"data",
+                        data: function (f) {
+                            f.bean = JSON.stringify({
+                                type: 10,
+                                mobile: $('#filter_mobile').val().trim(),
+                                username:$("#filter_merchuser").val().trim(),
+                                merchid:$("#hidden_filter_merchid").val(),
+                                status: Number($('#filter_storeinfo_status').val().trim())==0?[10,20,40,50,60,70,80]:[Number($('#filter_storeinfo_status').val().trim())]
+                            });
+                            f.sort = 'createtime';
+                            f.order = 'DESC';
+//                            f.length = 15;
+                        }
+                    },
+                    "aLengthMenu": [[15, 25, 50, -1], ["15条", "25条", "50条", "All"]],
+                    columnDefs: [
+                        {
+                            className: 'select-checkbox',
+                            targets: 0
+                        },
+                        {
+                            targets:7,
+                            visible:false
+                        }
+                    ],
+                    columns: [
+                        {"data": " ", render: $.defrender},
+                        {"data": "merchInfo", render:merchInfo},
+                        {"data": "type", render:type},
+                        {"data":"username",render:$.defrender},
+                        {"data": "account", render: $.defrender},
+                        {"data": "status", render: defStatusRender},
+                        {"data": "mobile", render: $.defrender},
+                        {"data": "password", render: $.defrender},
+                        /*  {"data": "remark", render: $.defrender},*/
+                        {"data": "createtime", render: Date.DateFormatter}
+                    ]
+                });
+                $('#filter-merchUser-qrybtn').bind("click", function () {
+                    $('#table-merchUser-sheet').dataTable().fnPageChange(0);
+                    mtable.api(true).draw(false);
+                });
+            }
+            //-------------------------点击新增管理员信息-----------------------------
+            $('#button-merchUser-create').bind("click", function () {
+                $('#dtitle-merchUser-update').html("新增管理员信息");
+                $("#form-merchUser-update").form('reset');
+                $('#dialog-merchUser-update').modal('show');
+                $("#createmerch").show();
+                $('#password').show();
+                merchUserValidator();
+            });
+            //-------------------------点击修改管理员信息-----------------------------------------------------
+            $('#button-merchUser-update').bind("click", function () {
+                var data = mtable.api(true).row({selected: true}).data();
+                if (!data || !data.merchid) {
+                    alert("请选择一条记录！");
+                    return;
+                }
+                $('#dtitle-merchUser-update').html("修改管理员信息");
+                $("#form-merchUser-update").form('reset');
+                $("#form-merchUser-update").form('load', data);
+                $("#createmerch").hide();
+                $("#password").hide();
+                merchUserValidator();
+                $('#dialog-merchUser-update').modal('show');
+
+            });
+            //-----------------------------重置密码---------------------------------
+            $("#button-user-reset").bind("click",function () {
+                var data = mtable.api(true).row({selected: true}).data();
+                if (!data || !data.merchid) {
+                    alert("请选择一条记录！");
+                    return;
+                }
+                if (data.type == system_adminpid) {
+                    alert("不允许修改管理员账号");
+                    return;
+                }
+                if (system_memberinfo.type==system_adminpid&&system_adminpid==8192) {
+                    $("#dialog-merchUser-update").modal('show');
+                    $("#form-merchUser-update").form('load', data);
+                    $('#dtitle-user-update').html("重置密码");
+                    $("#createmerch").hide();
+                    $("#password").show();
+                    $("#password").find('input').val("");
+                    merchUserValidator();
+                }
+            });
+            //-------------------------点击提交按钮新增管理员记录--------------------------------------------
+            $("#formbtn-merchUser-update").on("click",function(){
+                $(this).attr("disabled",true);
+                var form=$("#form-merchUser-update");
+                var json = form.serializeJson();
+                if(json.password.length<32){
+                    json.password = $.md5(json.password);
+                }
+                $('#form-merchUser-update').bootstrapValidator('validate');
+                if(json.type==10){
+                    json.admin=true;
+                }
+                //-----去json数据中的空格-----------------
+                var json1= {};
+                $.each(json,function(key,value){
+                    value = (value + "").replace(/\s/g,'');
+                    json1[key] = value;
+                });
+                json = json1;
+                //---------------------------------
+                var data = "";
+                if(json.merchuserid){
+                    var cols=[];
+                    for(var i in json){
+                        if(json.password.length>32){
+                            if(i!='password'){
+                                cols.push(i);
+                            }
+                        }else{
+                            cols.push(i);
+                        }
+                    }
+                    data={
+                        "bean": $.objectToString(json),
+                        "cols": $.objectToString(cols)
+                    }
+                }else{
+                    data={
+                        "bean": $.objectToString(json)
+                    }
+                }
+                if( $('#form-merchUser-update').data('bootstrapValidator').isValid()){
+                    $.ajax({
+                        cache: false,
+                        dataType: "json",
+                        type: "POST",
+                        url: '/pipes/merch/merchuser/update',
+                        data: data,
+                        error: function () {//请求失败处理函数
+                            $("#formbtn-merchUser-update").removeAttr('disabled');
+                            alert('请求失败');
+                        },
+                        success: function (data) {
+                            $("#formbtn-merchUser-update").removeAttr('disabled');
+                            if (data && data.retcode && data.retcode > 0)
+                            {
+                                alert(data.retinfo);
+                            } else {
+                                alert("保存成功");
+                                $('#form-merchUser-update').data('bootstrapValidator').destroy();
+                                $('#form-merchUser-update').data('bootstrapValidator', null);
+                                $("#dialog-merchUser-update").modal('hide');
+                                mtable.api(true).draw(false);
+                            }
+                        }
+                    });
+                }else{
+                    $("#formbtn-merchUser-update").removeAttr('disabled');
+                    alert("验证失败，请按要求填写信息");
+                }
+            });
+            $("#recordclose").on("click",function () {
+                $('#form-merchUser-update').data('bootstrapValidator').destroy();
+                $('#form-merchUser-update').data('bootstrapValidator', null);
+            });
+            //---------------表单验证----------------------------------------------
+            function merchUserValidator(){
+                $("#form-merchUser-update").bootstrapValidator({
+                    message: 'This value is not valid',
+                    feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                        valid: 'glyphicon glyphicon-ok',
+                        invalid: 'glyphicon glyphicon-remove',
+                        validating: 'glyphicon glyphicon-refresh'
+                    },
+                    fields:{
+                        account:{
+                            message: 'The billno is not valid',
+                            validators: {
+                                notEmpty: {/*非空提示*/
+                                    message: '员工账号不能为空'
+                                },
+                                regexp: { /* 只需加此键值对 */
+                                    regexp: /^[a-zA-Z][\d\w@.]{4,36}$/,
+                                    message: '员工帐号必须以字母开头，5位以上长度,不能包含汉字和特殊符号'
+                                }
+                            }
+                        },
+                        password:{
+                            message: 'The password is not valid',
+                            validators: {
+                                notEmpty: {
+                                    message: '密码不能为空'
+                                },
+                                regexp: {
+                                    regexp:/^\w{6,20}$/,
+                                    message: '密码只能由字母数字下划线组成，长度为6-20位'
+                                }
+                            }
+                        },
+                        username:{
+                            message: 'The username is not valid',
+                            validators: {
+                                notEmpty: {
+                                    message: '员工昵称不能为空'
+                                }
+                            }
+                        },
+                        mobile:{
+                            message: 'The mobile is not valid',
+                            validators:{
+                                notEmpty: {
+                                    message: '手机号码不能为空'
+                                },
+                                regexp: {
+                                    regexp:/^1\d{10}$/,
+                                    message: '请输入正确的手机号码'
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+        });
+    }
+</script>

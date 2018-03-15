@@ -1,0 +1,1003 @@
+<div class="page-title">
+   <h4>企业商品分类查询</h4>
+</div>
+<div class="panel-box">
+    <form class="filter-search" >
+        <div style="display: inline-block;margin: 0 30px 0 0;">
+            <label >选择企业：</label>
+            <select id="filter_corpid" name="corpid" style="width:150px;">
+                <option value="0">全部企业</option>
+            </select>
+        </div>
+        <i id="filter-goods-qrybtn" class="fa fa-search" style="position: static;"></i>
+        <button type="button" id="newGoods" onmouseover="style='background:#f7b03e;color:white;margin-left: 10px;outline: none;border: solid 1px lightgray'" onmouseleave='style="background: white;margin-left: 10px;outline: none;border: solid 1px lightgray;"' style="background: white;margin-left: 10px;outline: none;border: solid 1px lightgray;"><span class="fa fa-plus"></span>&nbsp;新增商品</button>
+    </form>
+</div>
+<div id="page-body"  class="panel panel-body">
+    <div class="form-group">
+        <div class="col-lg-3">
+            <div id="tree">
+                <ul id="goodsTree" class="ztree" style="min-width: 220px;min-height: 360px;">
+
+                </ul>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            <div class="table-responsive">
+                <table id="table-corpbillallot-sheet" class="table table-hover" cellspacing="0" >
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th>商品名称</th>
+                        <th>商品描述</th>
+                        <th>状态</th>
+                        <th>市场积分</th>
+                        <th>兑换所需积分</th>
+                        <th>售卖价格</th>
+                        <th>商品库存</th>
+                        <th>创建时间</th>
+                        <th>操作</th>
+                    </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+   <!-- <div class="table-responsive" style="width:75%;min-height:360px;float: left;border: solid 1px lightgray; padding: 10px">
+        <table id="table-corpbillallot-sheet" class="table table-hover" cellspacing="0" >
+            <thead>
+            <tr>
+             &lt;!&ndash;   <th></th>&ndash;&gt;
+                <th>商品名称</th>
+                <th>商品描述</th>
+                <th>市场积分</th>
+                <th>兑换所需积分</th>
+                <th>售卖价格</th>
+                <th>商品库存</th>
+                <th>创建时间</th>
+                <th>商品详情</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>-->
+    <div id="treeMenu" style=" padding:8px; width: 150px;height: 90px; border:solid 1px cadetblue;background: white;position: absolute;color: black;display:none">
+        <ul id="treeMenuUl" style="height: 25px; line-height: 25px;font-size: 16px; margin: 0;padding: 0;">
+            <li style="list-style: none" onmouseover="style='background:#eee5a4;list-style:none'" onmouseleave="style='background:none;list-style:none'" value="1">添加</li>
+            <!--<li style="list-style: none" onmouseover="style='background:red;list-style:none'" onmouseleave="style='background:none;list-style:none'" value="2">修改</li>-->
+            <li style="list-style: none" onmouseover="style='background:#eee5a4;list-style:none'" onmouseleave="style='background:none;list-style:none'" value="3">删除</li>
+            <li style="list-style: none" onmouseover="style='background:#eee5a4;list-style:none'" onmouseleave="style='background:none;list-style:none'" value="4">查看</li>
+        </ul>
+    </div>
+</div>
+<div id="dialog-goods-group-create" class="modal" tabindex="-1"  data-backdrop="static" data-keyboard="false" data-width="450" data-height="200" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="dtitle-goods-group" class="modal-title">新增商品分类</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-goods-group" class="m-t form-horizontal" enctype="multipart/form-data" role="form">
+            <input name="groupid" id="groupid" type="hidden">
+            <div class="form-group">
+                <div class="col-lg-4"><label class="control-label">当前所属类别</label></div>
+                <div class="col-lg-8"><input type="form-control" name="parentname" id="parentname" placeholder="分类名称" style="color: dimgrey"></div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-4"><label class="control-label" id="goods-group-name">新增分类名称</label></div>
+                <div class="col-lg-8"><input type="form-control" name="groupname" id="groupname" placeholder="分类名称"  style="color: dimgrey"></div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-5 col-lg-offset-3">
+                    <button id="formbtn-goods-group-update" type="button" class="btn btn-theme btn-lg " style="width: 45%;margin-left:27.5%;color: white;margin-top: 8px;">提 交</button><br>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="dialog-goods-group-delete" class="modal" tabindex="-1"  data-backdrop="static" data-keyboard="false" data-width="450" data-height="200" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="dtitle-goods-delete" class="modal-title">删除商品分类</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-goods-delete" class="m-t form-horizontal" enctype="multipart/form-data" role="form">
+            <input name="groupid" id="deletegroupid" type="hidden">
+            <div class="form-group">
+                <div class="col-lg-3"><label class="control-label">商品分类名称</label></div>
+                <div class="col-lg-9"><input type="form-control" name="parentname" id="deletename" style="color: dimgrey"></div>
+            </div>
+            <div class="form-group" style="text-align: center">
+                <div class="col-lg-12"><label class="control-label" id="surecancel">确定删除？</label></div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-5">
+                    <button  type="button" class="btn btn-theme btn-sm pull-right buttn sure" >确定</button><br>
+                </div>
+                <div class="col-lg-5">
+                    <button  type="button" class="btn btn-theme btn-sm pull-right buttn cancel" >取消</button><br>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="dialog-goods-update" class="modal" tabindex="-1"  data-backdrop="static" data-keyboard="false" data-width="900" data-height="650" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 id="dtitle-goods-update" class="modal-title">商品信息</h4>
+    </div>
+    <div class="modal-body">
+        <ul id="myTab" class="nav nav-tabs">
+            <li class="active"><a href="#home" data-toggle="tab">基本信息</a></li>
+            <li><a href="#detail" data-toggle="tab">商品详情</a></li>
+        </ul>
+        <form id="form-goods-update" class="m-t form-horizontal" enctype="multipart/form-data" role="form">
+            <input type="hidden" name="goodsid">
+            <div id="myTabContent" class="tab-content">
+                <div class="tab-pane fade in active" id="home">
+                    <div class="form-group">
+                        <table>
+                            <tr>
+                                <td style="width:435px;">
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >商品名称</label>
+                                        <div class="col-lg-8" ><input  name="goodsname" placeholder="商品名称" class="form-control"  data-bv-trigger="blur" required="" ></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label">商品描述</label>
+                                        <div class="col-lg-8" ><input  name="goodsdesc" placeholder="描述商品的别名、特点等" class="form-control" required=""  data-bv-trigger="blur"  data-bv-notempty-message="商品描述不能为空"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label">商品数量</label>
+                                        <div class="col-lg-8" ><input  name="stocks" placeholder="商品库存量" class="form-control" required=""  data-bv-trigger="blur"  data-bv-notempty-message="商品描述不能为空"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >商品单位</label>
+                                        <div class="col-lg-8" ><input  name="unit" placeholder="例如：盒、袋等" class="form-control" required=""   data-bv-trigger="blur" data-bv-notempty-message="商品单位不能为空"></div>
+                                    </div>
+                                </td>
+                                <td style="width:440px;padding-left:200px;">
+                                    <div class="fileupload">
+                                        <img id="img-goods-img" src="" class="detailimg" style="width:150px;height:150px;border: 1px solid #ddd"/>
+                                        <div  id="fileupload-goods-btn" class="btn btn-success fileinput-button" style="margin:10px 0 10px 20px ">
+                                            <i class="fa fa-fw fa-upload"></i>
+                                            <span>上传图片<br/>(比例: 640 x 640)</span>
+                                            <input type="file" class="green_upload_btn" name="file">
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >商品分类</label>
+                                        <div class="col-lg-8"><select  name="groupid" id="updategoods" placeholder="商品分类" class="form-control">
+
+                                        </select></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >市场积分</label>
+                                        <div class="col-lg-8" ><input  name="marketexper" id="marketexper" placeholder="市场积分" class="form-control"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >市场价格</label>
+                                        <div class="col-lg-8" ><input  name="marketprice" id="marketprice" placeholder="市场价格" class="form-control"></div>
+                                   </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >状 态</label>
+                                        <div class="col-lg-8" >
+                                            <select id="field-hotment-status" name="status" class="form-control" required=""   data-bv-trigger="blur"  data-bv-notempty-message="状态不能为空">
+                                                <option value="10" style="color:green;">正常</option>
+                                                <option value="20" style="color:#FF00FF;">待审批</option>
+                                                <option value="30">隐藏</option>
+                                                <option value="40">下架</option>
+                                                <option value="70" style="color:red;">过期</option>
+                                                <option value="80" style="color:red;">删除</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >兑换积分</label>
+                                        <div class="col-lg-8" ><input  name="sellexper" id="sellexper" placeholder="兑换积分" class="form-control"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >销售金额</label>
+                                        <div class="col-lg-8" ><input  name="sellprice" id="sellprice" placeholder="销售金额" class="form-control"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                <!--    <div class="form-group">
+                        <label class="col-sm-2 control-label" >商品分类</label><input  name="groupid" style="display:none;" placeholder="商品分类" class="form-control"  >
+                        <div class="col-sm-4"><input  name="groupname"  data-bv-field="groupname" placeholder="商品分类" class="form-control"  readonly="readonly" required="" data-bv-notempty-message="商品分类不能为空"></div>
+                        <label class="col-sm-2 control-label" >状 态</label>
+                        <div class="col-sm-4" >
+                            <select id="field-hotment-status" name="status" class="form-control" required=""   data-bv-trigger="blur"  data-bv-notempty-message="状态不能为空">
+                                <option value="10" style="color:green;">正常</option>
+                                <option value="20" style="color:#FF00FF;">待审批</option>
+                                <option value="30">隐藏</option>
+                                <option value="40">下架</option>
+                                <option value="70" style="color:red;">过期</option>
+                                <option value="80" style="color:red;">删除</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" >市场积分</label>
+                        <div class="col-sm-4" ><input  name="marketexper" id="marketexper" placeholder="市场积分" class="form-control"></div>
+                        <label class="col-sm-2 control-label" >兑换积分</label>
+                        <div class="col-sm-4" ><input  name="sellexper" id="sellexper" placeholder="兑换积分" class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" >市场价格</label>
+                        <div class="col-sm-4" ><input  name="marketprice" id="marketprice" placeholder="市场价格" class="form-control"></div>
+                        <label class="col-sm-2 control-label" >销售金额</label>
+                        <div class="col-sm-4" ><input  name="sellprice" id="sellprice" placeholder="销售金额" class="form-control"></div>
+                    </div>-->
+                 <!--   <div class="form-group">
+                        <label class="col-sm-2 control-label" >起始出售时间</label>
+                        <div class="col-sm-4" ><input  name="startselltime" id="startselltime" placeholder="起始出售时间" class="form-control"></div>
+                        <label class="col-sm-2 control-label" >结算出售时间</label>
+                        <div class="col-sm-4" ><input  name="endselltime" id="endselltime" placeholder="结束出售时间" class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" >利润率(%)</label>
+                        <div class="col-sm-4" ><input  name="pecent" type="number" placeholder="利润率" class="form-control" data-bv-trigger="blur"></div>
+                        <label class="col-sm-2 control-label" >促销利润率(%)</label>
+                        <div class="col-sm-4" ><input  name="hotpecent" type="number" placeholder="为0表示无促销" class="form-control" data-bv-trigger="blur" ></div>
+                    </div>
+                    <div class="form-group" style="display:none;">
+                        <label class="col-sm-2 control-label" >促销开始时间</label>
+                        <div class="col-sm-4" ><input  name="hotstarttime" id="hotstarttime" placeholder="促销开始时间" class="form-control"></div>
+                        <label class="col-sm-2 control-label" >促销结束时间</label>
+                        <div class="col-sm-4" ><input  name="hotendtime" id="hotendtime" placeholder="促销结束时间" class="form-control"></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" >小单位1数量</label>
+                        <div class="col-sm-4" ><input  name="pack1count" type="number" placeholder="例如：一箱有10盒" class="form-control" data-bv-trigger="blur"></div>
+                        <label class="col-sm-2 control-label" >小单位1名称</label>
+                        <div class="col-sm-4" ><input  name="pack1name" placeholder="例如：一箱有10盒" class="form-control" data-bv-trigger="blur"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" >小单位2数量</label>
+                        <div class="col-sm-4" ><input  name="pack2count" type="number" placeholder="例如：一盒有10袋" class="form-control" data-bv-trigger="blur"></div>
+                        <label class="col-sm-2 control-label" >小单位2名称</label>
+                        <div class="col-sm-4" ><input  name="pack2name" placeholder="例如：一盒有10袋" class="form-control" data-bv-trigger="blur"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label" >小单位3数量</label>
+                        <div class="col-sm-4" ><input  name="pack3count" type="number" placeholder="例如：一袋有10根" class="form-control" data-bv-trigger="blur"></div>
+                        <label class="col-sm-2 control-label" >小单位3名称</label>
+                        <div class="col-sm-4" ><input  name="pack3name" placeholder="例如：一袋有10根" class="form-control" data-bv-trigger="blur"></div>
+                    </div>-->
+                </div>
+                <div class="tab-pane fade" id="detail">
+                    <div class="form-group">
+                        <div class="col-lg-12" >
+                            <input type="file" id="img2" multiple="multiple" name="file" style="margin-left: 12px;margin-top: 10px;">
+                            <input type="button" id="deletespan" style="color: orange;float: right;display: none" value="删除选中图片">
+                            <div id="imgbox2" style="width: 98%;height: 380px; overflow:auto;border: solid 1px lightgray;margin: auto;margin-top: 15px">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-5 col-lg-offset-3">
+                    <button id="formbtn-goods-update" type="button" class="btn btn-theme btn-lg " style="width: 45%;margin-left:27.5%;margin-top: 35px;">提 交</button><br>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="dialog-goods-create" class="modal" tabindex="-1"  data-backdrop="static" data-keyboard="false" data-width="900" data-height="650" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title">商品信息</h4>
+    </div>
+    <div class="modal-body">
+        <ul class="nav nav-tabs">
+            <li class="active"><a href="#homegoods" data-toggle="tab">基本信息</a></li>
+            <li><a href="#detailgoods" data-toggle="tab">商品详情</a></li>
+        </ul>
+        <form class="m-t form-horizontal" enctype="multipart/form-data" id="goods_form" role="form">
+            <div class="tab-content">
+                <div class="tab-pane fade in active" id="homegoods">
+                    <div class="form-group">
+                        <table>
+                            <tr>
+                                <td style="width:435px;">
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >商品名称</label>
+                                        <div class="col-lg-8" ><input  name="goodsname" placeholder="商品名称" class="form-control"  data-bv-trigger="blur" required="" ></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label">商品描述</label>
+                                        <div class="col-lg-8" ><input  name="goodsdesc" placeholder="描述商品的别名、特点等" class="form-control" required=""  data-bv-trigger="blur"  data-bv-notempty-message="商品描述不能为空"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label">商品数量</label>
+                                        <div class="col-lg-8" ><input  name="stocks" placeholder="商品库存量" class="form-control" required=""  data-bv-trigger="blur"  data-bv-notempty-message="商品描述不能为空"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >商品单位</label>
+                                        <div class="col-lg-8" ><input  name="unit" placeholder="例如：盒、袋等" class="form-control" required=""   data-bv-trigger="blur" data-bv-notempty-message="商品单位不能为空"></div>
+                                    </div>
+                                </td>
+                                <td style="width:440px;padding-left:200px;">
+                                    <div class="fileupload">
+                                        <img id="indeximg" src="" class="detailimg1" style="width:150px;height:150px;border: 1px solid #ddd"/>
+                                         <div class="btn btn-success fileinput-button" style="margin:10px 0 10px 20px">
+                                             <i class="fa fa-fw fa-upload"></i>
+                                          <span>上传图片<br/>(比例: 640 x 640)</span>
+                                          <input type="file" name="file" class="green_upload_btn">
+                                      </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >商品分类</label><input style="display:none;" placeholder="商品分类" class="form-control"  >
+                                        <div class="col-lg-8">
+                                            <select name="groupid" id="goodslist" class="form-control">
+
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >市场积分</label>
+                                        <div class="col-lg-8" ><input  name="marketexper" placeholder="市场积分" class="form-control"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >市场价格</label>
+                                        <div class="col-lg-8" ><input  name="marketprice" placeholder="市场价格" class="form-control"></div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >状 态</label>
+                                        <div class="col-lg-8" >
+                                            <select name="status" class="form-control" required=""   data-bv-trigger="blur"  data-bv-notempty-message="状态不能为空">
+                                                <option value="10" style="color:green;">正常</option>
+                                                <option value="20" style="color:#FF00FF;">待审批</option>
+                                                <option value="30">隐藏</option>
+                                                <option value="40">下架</option>
+                                                <option value="70" style="color:red;">过期</option>
+                                                <option value="80" style="color:red;">删除</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >兑换积分</label>
+                                        <div class="col-lg-8" ><input  name="sellexper" placeholder="兑换积分" class="form-control"></div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-4 control-label" >销售金额</label>
+                                        <div class="col-lg-8" ><input  name="sellprice" placeholder="销售金额" class="form-control"></div>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+
+                </div>
+                <div class="tab-pane fade" id="detailgoods">
+                    <div class="form-group">
+                        <div class="col-lg-12" >
+                            <input type="file" name="file" id="fileUpload" multiple="multiple" style="margin-left: 12px;margin-top: 10px;">
+                            <input type="button" id="deletespan1" style="color: orange;float: right;display: none" value="删除选中图片">
+                            <div id="imgbox" style="width: 98%;height: 380px;overflow:auto; border: solid 1px lightgray;margin: auto;margin-top: 15px">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-5 col-lg-offset-3">
+                    <button id="formbtn-goods-create" type="button" class="btn btn-theme btn-lg " style="width: 45%;margin-left:27.5%;margin-top: 20px;">提 交</button><br>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    leftgroupid="";
+    var settings = {
+        data : {
+            simpleData : {
+                enable : true,
+                isSimpleData : false, //数据是否采用简单 Array 格式，默认false
+                treeNodeKey : "id", //在isSimpleData格式下，当前节点id属性
+                treeNodeParentKey : "pId", //在isSimpleData格式下，当前节点的父节点id属性
+                showLine : true, //是否显示节点间的连线
+                checkable : true,
+                rootPId : 0,
+                expandFlag :true
+                //不设置rootId，则树栏目的pId则为null
+            }
+        },
+        edit : {
+            enable:true,
+            showRemoveBtn:false,
+            showRenameBtn:false,
+            drag:{
+                isCopy:true,
+                isMove:true,
+                prev:true,
+                next:true,
+                inner:true
+            }
+        },
+        callback : {
+            onRightClick : zTreeOnRightClick,
+            beforeClick: zTreeOnclick
+        }
+    };
+    var zNodes=[
+        {
+            name:"父节点1",open:true,children:[
+            {
+                name:"子节点11",open:true,children:[
+                {name:"子节点111",open:true},
+                {name:"子节点112",open:true},
+                {name:"子节点113",open:true}
+            ]},
+            {name:"子节点12",open:true},
+            {name:"子节点13"}
+            ]
+        },
+        {
+            name:"父节点2",open:true,children:[
+            {
+                name:"子节点21",open:true
+            },
+            {
+                name:"子节点22",open:true
+            },
+            {
+                name:"子节点23",open:true
+            }
+        ]
+        },
+        {
+            name:"父节点3",open:true,children:[
+            {
+                name:"子节点31",open:true
+            },
+            {
+                name:"子节点32",open:true
+            },
+            {
+                name:"子节点33",open:true
+            }
+        ]
+        }
+    ];
+    $(function(){
+        zTreeInit(settings,zNodes);
+    });
+    function zTreeInit(settings,zNodes){
+        $.fn.zTree.init($("#goodsTree"),settings,zNodes);
+        var treeObj = $.fn.zTree.getZTreeObj("goodsTree");
+        treeObj.expandAll(true);
+        initMenu();
+    }
+    //右击鼠标事件
+    function zTreeOnRightClick(event,treeId,treeNode){
+        event.preventDefault();//屏蔽系统右键事件
+        if(treeNode!=null){
+            var _top=event.clientY;
+            var _left=event.clientX;
+            node=treeNode;
+            $("#treeMenu").show().css({top:_top,left:_left});
+        }else{
+            node=null;
+        }
+        if(node!=null){
+           /* var parentNode = node.getParentNode();
+             if(parentNode!=null){
+             parentNodeName=parentNode.name;
+             }else{
+             parentNodeName="当前分类为最高分类";
+             }*/
+            parentNodeName=node.groupname;
+        }
+    }
+    //单机鼠标左键事件
+    function zTreeOnclick(treeId, treeNode, clickFlag) {
+        leftgroupid=treeNode.groupid;
+        mtable.api(true).draw(false);
+
+    }
+    //点击其他地方菜单消失
+    $(document).click(function(){
+        $("#treeMenu").hide();
+    });
+    //初始化编辑菜单
+    function initMenu(){
+        var menuUl=$("#treeMenuUl");
+        var menuLi=menuUl.find("li");
+        for(var v = 0; v<menuLi.length; v++){
+            menuLi.eq(v).unbind("click").click(function(){
+                menuLiClick(this);
+            });
+        }
+    }
+    //判断所选择的编辑项
+    function menuLiClick(self){
+        if(parentNodeName==undefined){//点击商品分类时
+            $("#parentname").val("商品分类");
+        }else{
+            $("#parentname").val(parentNodeName);
+        }
+        $("#parentname").attr("disabled",true);
+        if(self.value == "1"){
+            $("#dtitle-goods-group").html("新增商品分类");
+            $("#goods-group-name").html("新增分类名称");
+            $("#groupname").val("");
+            $("#dialog-goods-group-create").modal('show');
+
+        }else if(self.value == "2"){
+           /* $("#dtitle-goods-group").html("修改商品分类");
+            $("#goods-group-name").html("修改分类名称");
+            $("#dialog-goods-group-create").modal('show');*/
+        }else if(self.value == "3"){
+            deletegroup();
+        }else if(self.value == "4"){
+            leftgroupid=node.groupid;
+            mtable.api(true).draw(false);
+        }
+    }
+    //删除分类
+    function deletegroup() {
+        if("children" in node){
+          /*  $("#dialog-goods-group-delete").modal('show');
+            $("#deletename").val(node.groupname);
+            $("#deletename").attr("disabled",true);
+            $("#surecancel").html("确定删除当前分类及其所包含的所有子类吗？");*/
+          alert("不允许直接删除包含子类的分类");
+        }else{
+            $("#dialog-goods-group-delete").modal('show');
+           /* leftgroupid=node.groupid;
+            mtable.api(true).draw(false);*/
+          $("#surecancel").html("确定删除当前分类吗");
+            $("#deletename").val(node.groupname);
+            $("#deletename").attr("disabled",true);
+            console.log(node);
+        }
+        //点击确定或取消按钮
+        $(".buttn").unbind("click").click(function(){
+            if($(this).hasClass("sure")){
+                var data={};
+                data.groupid=node.groupid;
+                data.corpid=node.corpid;
+                data.delchildren=0;
+                $.ajax({
+                    url:"/pipes/corpgoods/deletegroups",
+                    type:"POST",
+                    dataType:"json",
+                    data:data,
+                    error:function () {
+                        alert("请求失败");
+                    },
+                    success:function (data) {
+                        $("#filter-goods-qrybtn").trigger("click");
+                        $("#dialog-goods-group-delete").modal('hide');
+
+                    }
+                });
+            }else{
+                $("#dialog-goods-group-delete").modal('hide');
+            }
+        });
+    }
+    //点击提交新增或修改商品分类
+    $("#formbtn-goods-group-update").click(function(){
+        var form=$("#form-goods-group");
+        var json=form.serializeJson();
+        if(node.groupid==undefined){
+            $("#groupid").val(node.children[0].groupid.split(".")[0]);
+        }else{
+            $("#groupid").val(node.groupid);
+        }
+        if("children" in node){
+            var nowid=pd(node);
+            json.groupid= $("#groupid").val()+"."+(Number(nowid)+1);
+        }else{
+            json.groupid= $("#groupid").val()+".101"
+        }
+        function pd(node){
+            for(var i=0;i<node.children.length;i++){
+                var firstarr=node.children[0].groupid.split(".");
+                var first=firstarr[firstarr.length-1]
+                var arr=node.children[i].groupid.split(".");
+                var lid=arr[arr.length-1];
+                if(lid>=first){
+                    first=lid;
+                }
+            }
+            return first;
+        }
+
+        json.corpid=$("#filter_corpid").val();
+        console.log(json.groupid);
+        console.log(json);
+        $.ajax({
+            url:"/pipes/corpgoods/creategroups",
+            type:"POST",
+            data:{bean: JSON.stringify(json)},
+            dataType:"json",
+            error:function(){
+                alert("请求失败")
+            },
+            success:function(data){
+                alert("添加成功");
+                $("#filter-goods-qrybtn").trigger("click");
+                $("#dialog-goods-group-create").modal("hide");
+
+            }
+        });
+
+    });
+    //选择企业向后台发送企业ID，查询商品树和商品列表
+    $("#filter-goods-qrybtn").click(function(){
+        var data={corpid: $('#filter_corpid').val().trim()};
+        //商品列表
+        goodstable(data);
+        $.ajax({
+            dataType: "json",
+            type: "POST",
+            data: data,
+            url: '/pipes/corpgoods/grouptree',
+            error: function () {//请求失败处理函数
+                alert('请求失败');
+            },
+            success:function(data){
+                var nodes= data;
+                var data=[{
+                        name:"商品分类",open:true,children:nodes
+                }];
+                zTreeInit(settings,data);
+                var treeObj = $.fn.zTree.getZTreeObj("goodsTree");
+                treeObj.expandAll(true);
+            }
+        });
+    });
+
+    //给企业增加选项，添加成功后查询左树右表，给商品分类赋值。
+    $(function () {
+        $.ajax({
+        cache: false,
+        dataType: "json",
+        type: "POST",
+        url: '/pipes/corp/list',
+        error: function () {//请求失败处理函数
+            alert('请求失败');
+        },
+        success: function (corps) {
+            $('#filter_corpid').find('option').remove();
+            var content = '';
+            var headcontent='';
+            for (var i = 0; i < corps.rows.length; i++) {
+                if( corps.rows[i].corpid==15000001){
+                    headcontent='<option value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>';
+                    continue;
+                }
+                content = content + '<option value="' + corps.rows[i].corpid + '">' + corps.rows[i].corpname + '</option>';
+            }
+            $("#filter_corpid").append(headcontent);
+            $("#filter_corpid").append(content);
+            $("#filter-goods-qrybtn").trigger("click");
+            $.ajax({
+                cache: false,
+                dataType: "json",
+                type: "POST",
+                data:{corpid:$("#filter_corpid").val()},
+                url: '/pipes/corpgoods/groups',
+                error: function () {//请求失败处理函数
+                    alert('请求失败');
+                },
+                success: function (corps) {
+                    var content = '';
+                    var headcontent = '';
+                    for (var i = 0; i < corps.length; i++) {
+                        content = content + '<option value="' + corps[i].groupid + '">' + corps[i].groupname + '</option>';
+                    }
+                    $("#goodslist").append(content);
+                    $("#updategoods").append(content);
+                }
+
+            });
+        }
+    });
+    });
+    //商品列表
+   function goodstable(data){
+       if (system_memberinfo && system_memberinfo.memberid) {
+           button=function(value){
+               var goods36id=value;
+               return '<a class="fa fa-pencil detailbtn" data-name='+goods36id+'></a>&nbsp;&nbsp;&nbsp;<a class="fa fa-eye detailbtn" data-name='+goods36id+'></a>'
+           };
+           stocks=function(value,type,full){
+               if(value=-1){
+                   return "无限库存"
+               }
+           };
+            mtable = $('#table-corpbillallot-sheet').dataTable({
+               ajax: {
+                   url: "/pipes/corpgoods/query",
+                   dataSrc:"data",
+                   data: function (f) {
+                       f.bean = JSON.stringify({
+                           corpid:$("#filter_corpid").val().trim(),
+                           groupid: leftgroupid
+                       });
+                       f.sort = 'createtime';
+                       f.order = 'DESC';
+                   }
+               },
+               columnDefs: [{
+                   /*     className: 'select-checkbox',*/
+                   targets: 0
+               }],
+               columns: [
+                   {"data": " ", render: $.defrender},
+                   {"data":"goodsname",render: $.defrender},
+                   {"data": "goodsdesc", render: $.defrender},
+                   {"data": "status", render: defStatusRender},
+                   {"data": "marketexper", render: $.defrender},
+                   {"data": "sellexper", render: $.defrender},
+                   {"data": "sellprice", render:  $.defrender},
+                   {"data": "stocks", render: stocks},
+                   {"data": "createtime", render: Date.DateFormatter},
+                   {"data": "goods36id", render: button},
+               ]
+           });
+          /* $('#filter-corpbillallot-qrybtn').bind("click", function () {
+               $('#table-corpbillallot-sheet').dataTable().fnPageChange(0);
+               mtable.api(true).draw(false);
+           });*/
+       }
+   }
+    //查看列表商品详情
+    $('tbody').on( 'click', '.detailbtn', function () {
+        if($(this).hasClass("fa-eye")){
+            $("#formbtn-goods-update").hide();
+            $("#img2").hide();
+            $("#fileupload-goods-btn").hide();
+        }else{
+            $("#formbtn-goods-update").show();
+            $("#fileupload-goods-btn").show();
+            $("#img2").show();
+        }
+        var data={};
+        data.goods36id=this.dataset.name;
+        $.ajax({
+            url:"/pipes/corpgoods/find",
+            dataType:"json",
+            type:"POST",
+            data:data,
+            error:function(){
+                alert("请求失败");
+            },
+            success:function (data) {
+                $("#dialog-goods-update").modal('show');
+                if(data.goodsimgs){
+                var arr=data.goodsimgs.split(";");
+                var imghtml="";
+                for(var i=0;i<arr.length-2;i++){
+                    var src="/dir/goods_1024/"+arr[0]+"";
+                    imghtml+='<div style="position: relative;width: 25%;height:50%;display: inline-block"><img class="detailimg"  src="/dir/goods_1024/'+arr[i+1]+'" style="width: 100%;height: 100%">' +
+                            '<div class="fa  fa-check-circle-o checkcircle" style="position: absolute;top: 0;right: 0;color: orange;font-size: 16px;display: none"></div></div>';
+                }
+                $("#imgbox2").empty();
+                $("#imgbox2").append(imghtml);
+                    $("#img-goods-img").attr("src",src);
+
+                }else{
+                    $("#imgbox2").empty();
+                }
+                loadData(data);
+            }
+        })
+    } );
+    //点击商品详情图片删除
+    $("#imgbox2").on('click',".detailimg",function(){
+        $("#deletespan").show();
+        $(this).parent().find(".checkcircle").toggle();
+    });
+    $("#deletespan").unbind("click").click(function(){
+        var arr=$(".checkcircle");
+        for(var i=0;i<arr.length;i++){
+            if(!(arr.eq(i).css("display")=="none")){
+                arr.eq(i).parent().remove();
+           /*     arr.eq(i).css("display","none");*/
+            }
+        }
+    });
+    //新增商品页面
+    $("#newGoods").unbind("click").click(function(){
+        $("#goods_form").form('reset');
+        $("#indeximg").attr("src","");
+        $("#imgbox").empty();
+       $("#dialog-goods-create").modal('show');
+    });
+    //新增商品图片删除
+    $("#imgbox").on('click',".detailimg1",function(){
+        $("#deletespan1").show();
+        $(this).parent().find(".checkcircle1").toggle();
+    });
+    $("#deletespan1").unbind("click").click(function(){
+        var arr=$(".checkcircle1");
+        for(var i=0;i<arr.length;i++){
+            if(!(arr.eq(i).css("display")=="none")){
+                arr.eq(i).parent().remove();
+                /*     arr.eq(i).css("display","none");*/
+            }
+        }
+    });
+    //点击提交新增商品
+    $("#formbtn-goods-create").click(function(){
+        var form=$("#goods_form");
+        var json=form.serializeJson();
+        var jsondata={};
+        json.corpid=$("#filter_corpid").val();
+        var goodsimg="";
+        for(var i=0;i<$(".detailimg1").length;i++){
+            var arr=$(".detailimg1")[i].src.split("/");
+            var arrimg=arr[arr.length-1]+";"
+            goodsimg+=arrimg;
+        }
+        json.goodsimgs=goodsimg;
+        create_update(json);
+    });
+    //点击提交更新商品
+    $("#formbtn-goods-update").click(function(){
+        var form=$("#form-goods-update");
+        var json=form.serializeJson();
+        var arr=[];
+        for(var key in json){
+            if(key=="goodsid"){
+                continue;
+            }
+            arr.push(key);
+        }
+        var json=form.serializeJson();
+        var jsondata={};
+        json.corpid=$("#filter_corpid").val();
+        var goodsimg="";
+        for(var i=0;i<$(".detailimg").length;i++){
+            var arr=$(".detailimg")[i].src.split("/");
+            var arrimg=arr[arr.length-1]+";"
+            goodsimg+=arrimg;
+        }
+        json.goodsimgs=goodsimg;
+      create_update(json,arr);
+    });
+    //提交/新增商品的方法
+    function create_update(form,data){
+        var json=form;
+        if(data){
+           /* json.corpid=$("#filter_corpid").val();
+            var goodsimg="";
+            for(var i=0;i<$(".detailimg").length;i++){
+                var arr=$(".detailimg")[i].src.split("/");
+                var arrimg=arr[arr.length-1]+";"
+                goodsimg+=arrimg;
+            }
+            json.goodsimgs=goodsimg;*/
+            var jsondata={"bean":$.objectToString(json)};
+            $.ajax({
+                url:"/pipes/corpgoods/update",
+                dataType:"json",
+                type:"post",
+                data:jsondata,
+                beforeSend: function (jqXHR, settings) {
+                    jqXHR.setRequestHeader('columns', '["goodsname","goodsdesc","stocks","unit","groupid","marketexper","marketprice","status","sellexper","sellprice","goodsimgs"]');
+                },
+                error:function () {
+                    alert("请求失败");
+                },
+                success:function(data){
+                    $("#dialog-goods-create").modal('hide');
+                    $("#dialog-goods-update").modal('hide');
+                    leftgroupid="";
+                    mtable.api(true).draw(false);
+                }
+
+            })
+        }else{
+            var jsondata={"bean":$.objectToString(json)};
+            $.ajax({
+                url:"/pipes/corpgoods/update",
+                dataType:"json",
+                type:"post",
+                data:jsondata,
+                error:function () {
+                    alert("请求失败");
+                },
+                success:function(data){
+                    $("#dialog-goods-create").modal('hide');
+                    $("#dialog-goods-update").modal('hide');
+                    leftgroupid="";
+                    mtable.api(true).draw(false);
+                }
+
+            })
+        }
+
+
+    }
+    //上传图片到服务器
+    $('#fileUpload').fileupload({
+        type: 'POST',
+        url: '/pipes/ueditor?action=uploadimage_goods',
+        done: function (e, data) {//设置文件上传完毕事件的回调函数
+            var json = JSON.parse(data.result);
+            var imghtml='<div style="position: relative;width: 25%;height:50%;display: inline-block"><img class="detailimg1"  src="/dir/goods_1024/'+json.fileid+'" style="width: 100%;height: 100%">' +
+                    '<div class="fa  fa-check-circle-o checkcircle1" style="position: absolute;top: 0;right: 0;color: orange;font-size: 16px;display: none"></div></div>';
+            $("#imgbox").append(imghtml);
+        }
+    });
+    $(".green_upload_btn").fileupload({
+        type: 'POST',
+        url: '/pipes/ueditor?action=uploadimage_goods',
+        done: function (e, data) {//设置文件上传完毕事件的回调函数
+            var json = JSON.parse(data.result);
+            $("#indeximg").attr("src","/dir/goods_1024/"+json.fileid+"");
+            $("#img-goods-img").attr("src","/dir/goods_1024/"+json.fileid+"");
+        }
+    });
+    $("#img2").fileupload({
+        type: 'POST',
+        url: '/pipes/ueditor?action=uploadimage_goods',
+        done: function (e, data) {//设置文件上传完毕事件的回调函数
+            var json = JSON.parse(data.result);
+            var imghtml='<div style="position: relative;width: 25%;height:50%;display: inline-block"><img class="detailimg"  src="/dir/goods_1024/'+json.fileid+'" style="width: 100%;height: 100%">' +
+                    '<div class="fa  fa-check-circle-o checkcircle" style="position: absolute;top: 0;right: 0;color: orange;font-size: 16px;display: none"></div></div>';
+            $("#imgbox2").append(imghtml);
+        }
+    });
+    //loadData将json值填充到Form表单中
+    function loadData(jsonStr){
+        var obj = eval(jsonStr);
+        var key,value,tagName,type,arr;
+        for(x in obj){
+            key = x;
+            value = obj[x];
+
+            $("[name='"+key+"'],[name='"+key+"[]']").each(function(){
+                tagName = $(this)[0].tagName;
+                type = $(this).attr('type');
+                if(tagName=='INPUT'){
+                    if(type=='radio'){
+                        $(this).attr('checked',$(this).val()==value);
+                    }else if(type=='checkbox'){
+                        arr = value.split(',');
+                        for(var i =0;i<arr.length;i++){
+                            if($(this).val()==arr[i]){
+                                $(this).attr('checked',true);
+                                break;
+                            }
+                        }
+                    }else{
+                        $(this).val(value);
+                    }
+                }else if(tagName=='SELECT' || tagName=='TEXTAREA'){
+                    $(this).val(value);
+                }
+
+            });
+        }
+    }
+
+</script>

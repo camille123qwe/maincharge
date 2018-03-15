@@ -1,0 +1,344 @@
+<div class="panel-box">
+    <div class="page-title">
+        <form class="filter-search" >
+            <div style="display: inline-block;margin: 0 50px 0 0;">
+                <label >选择代理商：</label>
+                <select id="filter_contract_agencyid" name="agencyid" style="width:150px;">
+                    <option value="0">全部代理商</option>
+                </select>
+            </div>
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <button type="button" id="filter-agencybillrecord-qrybtn" style='padding:2px 10px;'  class="btn btn-primary" >&nbsp;&nbsp;&nbsp;查询&nbsp;&nbsp;&nbsp;</button>
+            </div>
+        </form>
+    </div>
+    <div class="page-title tool-title" style="margin-top:10px;">        
+        <a id="button-agencybillrecord-create" href="javascript:void(0);"><i class="fa fa-plus"></i>新增代理商打款记录</a>
+    </div>
+    <div class="table-responsive">
+        <table id="table-agencybillrecord-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>代理商名称</th>
+                    <th>处理状态</th>
+                    <th>交易流水号</th>
+                    <th>流水快照图片名</th>
+                    <th>入账类型</th>
+                    <th>代理商打款账号</th>
+                    <th>公司接收账号</th>
+                    <th>打款金额</th>
+                    <th>打款交易时间</th>
+                    <th>创建时间</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="dialog-agencybillrecord-update" class="modal fade" tabindex="-1" data-width="800" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="billrecordclose">×</button>
+        <h4 id="dtitle-agencybillrecord-update" class="modal-title">修改代理商</h4>
+    </div>
+    <div class="modal-body">
+        <form id="form-agencybillrecord-update" class="m-t form-horizontal" role="form">
+            <input  name="agencybillrecordid" type="hidden">
+            <input name="billimg" id="billimg" type="hidden" class="form-control">
+            <div class="form-group">
+                <div class="col-lg-8">
+                    <!--   <div class="form-group">
+                           <label class="col-lg-3 control-label">代理商打款ID</label>
+                           <div class="col-lg-9"><input  name="agencybillid" id="billrecordId" placeholder="代理商打款ID" class="form-control" maxlength="128"  required  data-error="工商注册号不能为空"><div class="help-block with-errors"></div></div>
+                       </div>-->
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">选择代理商</label>
+                        <div class="col-lg-9"> <select id="selectAgencyId" name="nwagencyid" class="form-control" required></select>
+                            <div class="help-block with-errors"></div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">交易流水号</label>
+                        <div class="col-lg-9"><input name="chargeno" placeholder="交易流水号" class="form-control  datetimepicker"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">代理商打款账号</label>
+                        <div class="col-lg-9"><input name="agencybankno" placeholder="代理商打款账号" class="form-control"></div>
+                    </div>
+                    <div class="form-group">
+
+                        <label class="col-lg-3 control-label">公司接收账号</label>
+                        <div class="col-lg-9"><input name="receivbankno" type="tel" placeholder="公司接收账号" class="form-control"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">打款金额(元)</label>
+                        <div class="col-lg-9"><input name="money" type="tel" placeholder="打款金额" class="form-control"><div class="help-block with-errors"></div></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-3 control-label">打款交易时间</label>
+                        <div class="col-lg-9"><input name="receivbanktime"  placeholder="需与快照中的时间一致,格式例：20170101" class="form-control"></div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">处理状态</label>
+                        <div class="col-lg-8">
+                            <select id="selectAgencyStatus" name="chargestate" class="form-control">
+                                <option value="10">待处理</option>
+                                <option value="20" selected>已处理</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-lg-4 control-label">入账类型</label>
+                        <div class="col-lg-8">
+                            <select id="selecttypeStatus" name="acctype" class="form-control">
+                                <option value="10">对公入账</option>
+                                <option value="20">对私入账</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!--  <div class="form-group">
+                          &nbsp;
+                      </div>-->
+                    <div class="form-group col-lg-12" style="margin-left: 10px">
+                        <img id="quickbillimg" src="" style="width: 180px;height: 200px; display: block">
+                    </div>
+                    <div class="btn btn-success fileinput-button" style="margin-left: 50px;">
+                        <i class="fa fa-fw fa-upload"></i>
+                        <span>上传流水快照</span>
+                        <input id="fileupload-goods-btn"  type="file" name="file">
+                    </div>
+                </div>
+            </div>
+            <br>
+            <button id="formbtn-agencybillrecord-update" type="button" class="btn btn-theme btn-lg btn-block ">提 交</button><br>
+
+        </form>
+    </div>
+    <div id="tips-agencybillrecord-update" class="module-alert-tips"></div><br>
+</div>
+
+<script>
+    {
+        var topnwagencys = {};
+        global_topnwagencys = window['global_topnwagencys'] || [];
+        for (var i = 0; i < global_topnwagencys.length; i++) {
+            topnwagencys['' + global_topnwagencys[i].nwagencyid] = global_topnwagencys[i].username;
+            $("<option value=\"" + global_topnwagencys[i]["nwagencyid"] + "\">" + global_topnwagencys[i]["username"] + "</option>").appendTo($("#filter_contract_agencyid"));
+            $("<option value=\"" + global_topnwagencys[i]["nwagencyid"] + "\">" + global_topnwagencys[i]["username"] + "</option>").appendTo($("#selectAgencyId"));
+        }
+        var billrecordtimglink = function (billrecordimg, type, full) {
+            if (!billrecordimg) return "";
+            return "<a href='/dir/billimg/" + billrecordimg + "' target='_blank'>" + billrecordimg + "</a>";
+        };
+        var defagencyTyperecord = function (value, type, full) {
+            if (value == "10") return '<font color="red">待处理</font>';
+            if (value == "20") return '<font color="green">已处理</font>';
+            return "未知";
+        };
+        var defagencyaccTyperecord = function (value, type, full) {
+            if (value == "10") return '<font>对公入账</font>';
+            if (value == "20") return '<font>对私入账</font>';
+            return "未知";
+        };
+        if (system_memberinfo && system_memberinfo.memberid) {
+
+            //----------------------------------------------------
+            var mtable = $('#table-agencybillrecord-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/network/nwagency/agencycharges",
+                    dataSrc: "data",
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            nwagencyid: $('#filter_contract_agencyid').val().trim()
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    }
+                },
+                columnDefs: [{
+                        className: 'select-checkbox',
+                        targets: 0
+                    }],
+                columns: [
+                    {"data": " ", render: $.defrender},
+                    {"data": "nwagencyid", render: function (value, type, full) {
+                            return topnwagencys[value] || "<font color=#FF00FF>未知</font>";
+                        }},
+                    {"data": "chargestate", render: defagencyTyperecord},
+                    {"data": "chargeno", render: $.defrender},
+                    {"data": "billimg", render: billrecordtimglink},
+                    {"data": "acctype", render: defagencyaccTyperecord},
+                    {"data": "agencybankno", render: $.defrender},
+                    {"data": "receivbankno", render: $.defrender},
+                    {"data": "money", render: function (value, type, full) {
+                            return ((value || 0) / 100.0).fmoney(2);
+                        }},
+                    {"data": "receivbanktime", render: $.defrender},
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+            $('#filter-agencybillrecord-qrybtn').bind("click", function () {
+                $('#table-agencybillrecord-sheet').dataTable().fnPageChange(0);
+                mtable.api(true).draw(false);
+            });
+        }
+        //---------------上传图片到服务器-----------------------
+        $('#fileupload-goods-btn').fileupload({
+            type: 'POST',
+            url: '/pipes/ueditor?action=uploadimage_billimg',
+            done: function (e, data) {//设置文件上传完毕事件的回调函数
+                var json = JSON.parse(data.result);
+                console.log(json.fileid);
+                $("#billimg").val(json.fileid);
+                document.getElementById('quickbillimg').src = '/dir/billimg/' + json.fileid;
+
+            }
+        });
+        //-----------------------------------------------------------------
+        //-------------------------新增代理商打款记录-----------------------------
+        $('#button-agencybillrecord-create').bind("click", function () {
+            //$('#form-gfield-password').show();
+            $('#dtitle-agencybillrecord-update').html("新增代理商打款记录");
+            $("#tips-agencybillrecord-update").html('');
+            $("#form-agencybillrecord-update").form('reset');
+            document.getElementById('quickbillimg').src = " ";
+            $('#dialog-agencybillrecord-update').modal('show');
+            $("#form-agencybillrecord-update").find('input,select,textarea').attr("disabled", false);
+            $('#selectAgencyStatus').attr("disabled", true);
+            billrecordvali();
+        });
+        //-------------------------查询代理商打款记录-----------------------------------------------------
+        $('#button-agencybillrecord-update').bind("click", function () {
+            var data = mtable.api(true).row({selected: true}).data();
+            if (!data || !data.agencyid) {
+                alert("请选择一条记录！");
+                return;
+            }
+            data.money = data.money / 100;
+            $('#form-gfield-password').hide();
+            $('#dtitle-agencybillrecord-update').html("查询代理商打款记录");
+            $("#tips-agencybillrecord-update").html('');
+            $("#form-agencybillrecord-update").form('reset');
+            $("#form-agencybillrecord-update").form('load', data);
+            document.getElementById('quickbillimg').src = '/dir/billimg/' + $("#billimg").val();
+            $("#form-agencybillrecord-update").find('input,select,textarea').attr("disabled", true);
+            $('#dialog-agencybillrecord-update').modal('show');
+
+        });
+        //-------------------------点击提交按钮新增代理商打款记录--------------------------------------------
+
+        $("#formbtn-agencybillrecord-update").on("click", function () {
+            var form = $("#form-agencybillrecord-update");
+            var json = form.serializeJson();
+            json.money = json.money * 100;
+            json.chargestate = 20;
+            $('#form-agencybillrecord-update').bootstrapValidator('validate');
+            if ($('#form-agencybillrecord-update').data('bootstrapValidator').isValid()) {
+                $.ajax({
+                    cache: false,
+                    dataType: "json",
+                    type: "POST",
+                    url: '/pipes/network/nwagency/createcharges',
+                    data: {
+                        "bean": $.objectToString(json),
+                    },
+                    error: function () {//请求失败处理函数
+                        alert('请求失败');
+                    },
+                    success: function (data) {
+                        if (data && data.retcode && data.retcode > 0) {
+                            alert(data.retinfo);
+                        } else {
+                            alert("保存成功");
+                            $('#form-agencybillrecord-update').data('bootstrapValidator').destroy();
+                            $('#form-agencybillrecord-update').data('bootstrapValidator', null);
+                            $("#dialog-agencybillrecord-update").modal('hide');
+                            mtable.api(true).draw(false);
+                        }
+                    }
+                });
+            } else {
+                alert("验证失败，请按要求填写信息")
+            }
+        });
+        $("#billrecordclose").on("click", function () {
+            $('#form-agencybillrecord-update').data('bootstrapValidator').destroy();
+            $('#form-agencybillrecord-update').data('bootstrapValidator', null);
+        });
+        //---------------验证新增打款记录----------------------------------------------
+        function billrecordvali() {
+            $("#form-agencybillrecord-update").bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {/*输入框不同状态，显示图片的样式*/
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                fields: {
+                    chargeno: {
+                        message: 'The chargeno is not valid',
+                        validators: {
+                            notEmpty: {/*非空提示*/
+                                message: '交易流水号不能为空'
+                            },
+                            regexp: {/* 只需加此键值对 */
+                                regexp: /^[A-Za-z0-9]+$/,
+                                message: '交易流水号只能由字母数字组成'
+                            }
+                        }
+                    },
+                    agencybankno: {
+                        message: 'The agencybankno is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: '代理商打款账号不能为空'
+                            },
+                            regexp: {
+                                regexp: /^\d{11,19}$/,
+                                message: '代理商打款账号只能由数字组成，长度为11-19位'
+                            }
+                        }
+                    },
+                    receivbankno: {
+                        message: 'The receivbankno is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: '代理商打款账号不能为空'
+                            },
+                            regexp: {
+                                regexp: /^\d{11,19}$/,
+                                message: '公司接收账号只能由数字组成，长度为11-19位'
+                            }
+                        }
+                    },
+                    money: {
+                        message: 'The money is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: '打款金额不能为空'
+                            },
+                            regexp: {
+                                regexp: /^\d+$/,
+                                message: '打款金额只能由数字组成'
+                            }
+                        }
+                    },
+                    receivbanktime: {
+                        message: 'The receivbanktime is not valid',
+                        validators: {
+                            notEmpty: {
+                                message: '打款交易时间不能为空'
+                            },
+                            regexp: {
+                                regexp: /^\d{8}$/,
+                                message: '打款交易时间只能由数字组成,格式例:20170101'
+                            }
+                        }
+                    },
+                }
+            });
+        }
+    }
+</script>

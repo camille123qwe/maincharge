@@ -1,0 +1,152 @@
+<div class="page-title">
+   <h4>意见反馈</h4>
+</div>
+<div class="panel-box">
+    <div class="page-title">
+        <form class="filter-search" >
+            <div style="display: inline-block;margin: 0 30px 0 0;">
+                <select id="readstate" name="readstate" style="width:150px;">
+                    <option value="0">全部消息</option>
+                    <option value="10">未读</option>
+                    <option value="20">已读</option>
+                </select>
+            </div>
+            <i id="filter-brand-qrybtn" class="fa fa-search" style="position: static;"></i>
+            <input type="button" id = "readbutton" class="button" value="阅读" style="display: inline-block;margin: 0 50px 0 20px;">
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table id="table-advice-sheet" class="table table-hover" cellspacing="0" width="100%">
+            <thead>
+            <tr>
+                <th></th>
+                <th>id</th>
+                <th>用户类型</th>
+                <th>用户ID</th>
+                <th>门店ID</th>
+                <th>商户ID</th>
+                <th>是否已读</th>
+                <th>阅读时间</th>
+                <th>反馈意见内容</th>
+                <th>用户IP</th>
+                <th>创建时间</th>
+            </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+</div>
+<div id="mc" class="modal fade" style="overflow: hidden" tabindex="-1" data-width="850" data-backdrop="static" data-keyboard="false" style="display: none;">
+    <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" id="recordclose">×</button>
+    <!--    <h4 id="dtitle-mc-update" class="modal-title">新增视频监控账号</h4>-->
+    </div>
+    <div class="modal-body" style="overflow: hidden">
+        <textarea id="content" style="width: 650px;height: 550px;margin: auto;" class="form-control">
+
+        </textarea>
+    </div>
+</div>
+
+<script>
+    {
+        if (system_memberinfo && system_memberinfo.memberid) {
+            //----------------------------------------------------
+            var mtable = $('#table-advice-sheet').dataTable({
+                ajax: {
+                    url: "/pipes/feedback/query",
+                    data: function (f) {
+                        f.bean = JSON.stringify({
+                            readstate: $('#readstate').val().trim()
+                        });
+                        f.sort = 'createtime';
+                        f.order = 'DESC';
+                    }
+                },
+                columnDefs: [
+                    {
+                        className: 'select-checkbox',
+                        targets: 0
+                    },
+                    {
+                        targets:1,
+                        visible: false
+
+                    }
+                ],
+                columns: [
+                    {"data": "", render: $.defrender},
+                    {"data": "feedbackid", render: $.defrender},
+                    {"data": "usertype", render: function(value){
+                        if(value==10){
+                            return "C端用户"
+                        }else if(value==20){
+                            return "店员"
+                        }
+                        if(value==30){
+                            return　"店长/老板"
+                        }
+
+                    }},
+                    {"data": "userid", render: $.defrender},
+                    {"data": "storeid", render: $.defrender},
+                    {"data": "merchid", render:  $.defrender},
+                    {"data": "readstate", render: function(value){
+                        if(value==10){
+                            return "未读"
+                        }else{
+                            return "已读"
+                        }
+                    }},
+                    {"data": "readtime", render: Date.DateFormatter},
+                    {"data": "content", render: function(value){
+                        if(value){
+                            value = value+"";
+                            if(value.length<=10){
+                                return value;
+                            }else{
+                                return value.substr(0,8)+"……"
+                            }
+                        }else{
+                            return '无'
+                        }
+
+                    }},
+                    {"data": "cilentaddr", render: $.defrender},
+                    {"data": "createtime", render: Date.DateFormatter}
+                ]
+            });
+
+            $('#filter-brand-qrybtn').bind("click", function () {
+                mtable.api(true).draw(false);
+                $('#table-advice-sheet').dataTable().fnPageChange(0);
+
+            });
+            $("#readbutton").click(function(){
+                var data = mtable.api(true).row({selected: true}).data();
+                if(!data||!data.feedbackid){
+                    alert("请选择一条记录");
+                    return;
+                }
+                $.ajax({
+                    url:"/pipes/feedback/read/"+data.feedbackid,
+                    data:{},
+                    dataType:"JSON",
+                    type:"POST",
+                    success:function(res){
+                        if(res.retcode===0){
+                            $("#mc").modal('show');
+                            $("#content").text(data.content);
+                            mtable.api(true).draw(false);
+                        }
+                    },
+                    error:function(err){
+                        console.log(err);
+                    }
+                })
+            })
+
+        }
+    }
+
+</script>
